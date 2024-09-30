@@ -14,7 +14,6 @@ public class MMMDamage {
     public static float BulletDamage2Shield(float pDamage, float pMultiplier, float pPenetrationIndex){
         return pDamage*pMultiplier*(1F-pPenetrationIndex);
     }
-
     /**
      * 计算实体投射物对生命值的伤害
      * @param pDamage 投射物伤害

@@ -19,7 +19,6 @@ public class MMMArmor {
     public static float equivalentArmor(float pArmor, float pAngle){
         return (float) (pArmor/cos(pAngle));
     }
-
     /**
      * 获取方块护甲水平，护甲公式为：200*lg(1+爆炸抗性)*(方块硬度)
      * @param pBlock 要计算护甲水平的方块
