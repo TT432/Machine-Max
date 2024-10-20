@@ -1,6 +1,15 @@
 package io.github.tt432.machinemax.common.entity;
 
 import com.mojang.logging.LogUtils;
+import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.common.phys.PhysThreadController;
+import io.github.tt432.machinemax.utils.math.DMatrix3;
+import io.github.tt432.machinemax.utils.math.DMatrix3C;
+import io.github.tt432.machinemax.utils.math.DQuaternion;
+import io.github.tt432.machinemax.utils.ode.*;
+import io.github.tt432.machinemax.utils.ode.internal.DxMass;
+import io.github.tt432.machinemax.utils.ode.internal.Rotation;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,19 +25,19 @@ import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3d;
 import org.slf4j.Logger;
 
+import static io.github.tt432.machinemax.utils.MMMMath.sigmoidSignum;
 import static java.lang.Math.*;
-import static java.lang.Math.clamp;
 
 public class TestCarEntity extends VehicleEntity {
     public static final Logger LOGGER = LogUtils.getLogger();
     public Input input;
-    public float MAX_POWER = 100000;//最大功率100kW
-    public float ENG_ACC = 0.1F;//引擎加速系数
+    public float MAX_POWER = 80000;//最大功率80kW
+    public float ENG_ACC = 0.05F;//引擎加速系数
     public float ENG_DEC = 0.2F;//引擎减速系数
     public float REACT_T = 0.75F;//达到满舵所需时间
     public float MIN_TURNING_R = 5;//最小转弯半径
@@ -46,6 +55,13 @@ public class TestCarEntity extends VehicleEntity {
     private double lerpZ;
     private double lerpYRot;
     private double lerpXRot;
+    public float ZRot;
+    //以下为物理引擎相关
+    public volatile DBody dbody;
+    public volatile DMass dmass;
+    public volatile DJointGroup djointGroup;
+    public volatile DGeom dgeom;
+
     public TestCarEntity(EntityType<? extends VehicleEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.input = new Input();
@@ -55,55 +71,69 @@ public class TestCarEntity extends VehicleEntity {
         power=0;
         target_power=0;
         brake=true;
+        ZRot=0;
         selfDeltaMovement=new Vec3(0,0,0);
-        this.setBoundingBox(new AABB(0,0,0,1,1,1));
+        //以下为物理引擎相关
+        dbody = OdeHelper.createBody(PhysThread.world);//创建车体
+        dmass = OdeHelper.createMass();//创造质量属性
+        dmass.setBoxTotal(mass,2,2,2);//设置质量与转动惯量
+        dbody.setMass(dmass);//将设置好的质量属性赋予车体
+        dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
+        DMatrix3 R = new DMatrix3(1,0,0,0,1,0,0,0,1);
+        Rotation.dRFromEulerAngles(R,45,0,0);
+        dbody.setRotation(R);//设置旋转
+        dgeom = OdeHelper.createBox(2,2,2);
+        dgeom.setBody(dbody);//将碰撞体绑定到运动物体
+        dgeom.setOffsetPosition(0,1,0);
+        PhysThread.space.add(dgeom);//将碰撞体加入碰撞空间
     }
 
     @Override
     public void tick() {
-        super.tick();
         tickLerp();
         getControlInput();
         engineControl();
         rudderControl();
         if((this.getFirstPassenger() instanceof Player)){
             clampRotation(this.getFirstPassenger());}
-        move();
+        this.setPos(dbody.getPosition().get0(),dbody.getPosition().get1(),dbody.getPosition().get2());
+        //move();
+        MachineMax.LOGGER.info("pos:"+ this.getPosition(0));
         this.level().addParticle(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0,0);
+        super.tick();
     }
     public void move(){
         this.setYRot((this.getYRot() -(float) (max_ang*180/PI)));
+        ZRot= (float) (-max_ang*180/PI);
         selfDeltaMovement = this.getDeltaMovement().yRot((float) (getYRot()*PI/180)).add(acceleration().scale(0.05));
         this.setDeltaMovement(selfDeltaMovement.yRot((float) (-getYRot()*PI/180)));
         this.setPos(this.getPosition(1).add(this.getDeltaMovement()));
     }
     public Vec3 acceleration(){//计算受力进而求得加速度
         double fx=-0.8*this.mass*9.8*sigmoidSignum(this.selfDeltaMovement.x)//滑动摩擦阻力
-                -0.1*signum(this.selfDeltaMovement.x);//防止微动的补充阻力
+                -0.2*signum(this.selfDeltaMovement.x);//防止微动的补充阻力
         double fy=0;
         double fz=power/(20*abs(selfDeltaMovement.z)+1)//动力
                 -(0.1*this.mass*9.8*sigmoidSignum(this.selfDeltaMovement.z*0.5))//滚动摩擦阻力
                 -(0.5*0.5*pow(20*this.selfDeltaMovement.z,3))//空气阻力
-                -0.1*signum(this.selfDeltaMovement.z);//防止微动的补充阻力
+                -0.2*signum(this.selfDeltaMovement.z);//防止微动的补充阻力
         if (brake){
             fz=fz-(0.8*this.mass*9.8*sigmoidSignum(this.selfDeltaMovement.z*0.5));//刹车时的额外滑动摩擦阻力
         }
         return new Vec3(fx/mass,fy/mass,fz/mass);//受力转换为加速度
     }
-    public static double sigmoidSignum(double a){
-        return (2/(1+exp(-a))-1);
-    }
+
     private void engineControl(){
-        if (selfDeltaMovement.z>=-0.05&&input.forwardImpulse==1){//未在后退时按w则前进
+        if (selfDeltaMovement.z>=-0.1&&input.forwardImpulse==1){//未在后退时按w则前进
             target_power=MAX_POWER;
             brake=false;
-        }else if (selfDeltaMovement.z>0&&input.forwardImpulse==-1) {//前进时按s则刹车
+        }else if (selfDeltaMovement.z>0.1&&input.forwardImpulse==-1) {//前进时按s则刹车
             target_power=0;
             brake=true;
         }else if (selfDeltaMovement.z<=0.05&&input.forwardImpulse==-1) {//未在前进时按s则后退
             target_power=-MAX_POWER;
             brake=false;
-        }else if (selfDeltaMovement.z<0&&input.forwardImpulse==1) {//后退时按w则刹车
+        }else if (selfDeltaMovement.z<-0.1&&input.forwardImpulse==1) {//后退时按w则刹车
             target_power=0;
             brake=true;
         }else if(abs(selfDeltaMovement.z)<=0.05&&!input.up&&!input.down){//无输入且低速时自动刹车
@@ -170,6 +200,12 @@ public class TestCarEntity extends VehicleEntity {
     public boolean hurt(DamageSource pSource, float pAmount) {
         this.destroy(Items.AIR);
         return true;
+    }
+    @Override
+    public void remove(RemovalReason reason) {
+        dbody.destroy();
+        dgeom.destroy();
+        super.remove(reason);
     }
     /**
      * Applies this boat's yaw to the given entity. Used to update the orientation of its passenger.
