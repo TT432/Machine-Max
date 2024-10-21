@@ -128,7 +128,7 @@ public interface DBody {
 	 * After setting, the outcome of the simulation is undefined
 	 * if the new configuration is inconsistent with the joints/constraints
 	 * that are present.
-	 * @param R R
+	 * @param R 旋转矩阵
 	 */
 	void setRotation (DMatrix3C R);
 	/**
@@ -137,7 +137,7 @@ public interface DBody {
 	 * After setting, the outcome of the simulation is undefined
 	 * if the new configuration is inconsistent with the joints/constraints
 	 * that are present.
-	 * @param q q
+	 * @param q 四元数
 	 */
 	void setQuaternion (DQuaternionC q);
 	/**

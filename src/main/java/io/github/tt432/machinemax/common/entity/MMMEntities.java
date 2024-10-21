@@ -21,7 +21,7 @@ public class MMMEntities {
     public static final Supplier<EntityType<TestCarEntity>> TEST_CAR_ENTITY =
             ENTITIES.register("test_car",
                     () -> EntityType.Builder.of(TestCarEntity::new, MobCategory.MISC)
-                            .sized(2.2f,2.7f)
+                            .sized(2f,2f)
                             .build("test_car"));
     //以上为注册的实体列表
 }

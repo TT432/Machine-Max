@@ -10,17 +10,20 @@ import static io.github.tt432.machinemax.utils.ode.OdeHelper.areConnectedExcludi
 
 public class PhysThread extends Thread{
     public static volatile DWorld world;
-    public static volatile DSpace space;
+    public static volatile DSpace renderSpace;
+    public static volatile DSpace serverSpace;
     public static volatile DJointGroup contactGroup;
     @Override
     public void run() {//此乃物理计算的主线程
         OdeHelper.initODE2(0);//初始化物理库
         MachineMax.LOGGER.info("New phys thread started!");
-        world = OdeHelper.createWorld();//各个物体所处的世界，不处于同一世界的物体无法交互，或许可以用来做不同维度的处理,但是否会无法利用多线程优势？
+        world = OdeHelper.createWorld();//各个物体所处的世界，不处于同一世界的物体无法交互，或许可以用来做不同维度的处理，但是否会无法利用多线程优势？
         world.setGravity(0,-9.81,0);//设置重力
-        space = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概）
+        renderSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责客户端物体的碰撞
+        serverSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责服务端物体的碰撞
         contactGroup = OdeHelper.createJointGroup();
-        OdeHelper.createPlane(space,0,1,0,-60);//创造碰撞平面
+        OdeHelper.createPlane(renderSpace,0,1,0,-60);//创造碰撞平面
+        OdeHelper.createPlane(serverSpace,0,1,0,-60);//创造碰撞平面
         while(!isInterrupted()){//物理线程主循环
             step(false);//推进物理模拟计算进程
             try {
@@ -31,7 +34,8 @@ public class PhysThread extends Thread{
                 break;
             }
         }
-        space.destroy();
+        renderSpace.destroy();
+        serverSpace.destroy();
         world.destroy();
     }
 
@@ -40,7 +44,8 @@ public class PhysThread extends Thread{
      * @param paused -是否暂停了物理仿真进程
      */
     public void step(boolean paused){
-        space.collide(null,nearCallback);//碰撞检测
+        renderSpace.collide(null,nearCallback);//碰撞检测
+        serverSpace.collide(null,nearCallback);//碰撞检测
         if(!paused){
             world.quickStep(0.02);
         }
@@ -65,17 +70,16 @@ public class PhysThread extends Thread{
             return;
         }
 
-        DContactBuffer contacts = new DContactBuffer(64);   // up to MAX_CONTACTS contacts per box-box
-        for (i=0; i<64; i++) {
+        DContactBuffer contacts = new DContactBuffer(128);   // up to MAX_CONTACTS contacts per box-box
+        for (i=0; i<128; i++) {
             DContact contact = contacts.get(i);
-            contact.surface.mode = dContactBounce | dContactSoftCFM;
-            contact.surface.mu = 5000;
+            //contact.surface.mode = dContactBounce;
+            contact.surface.mu = 50000;
             contact.surface.rho = 1;
             contact.surface.bounce = 0.01;
-            contact.surface.bounce_vel = 0.5;
-            contact.surface.soft_cfm = 0;
+            contact.surface.bounce_vel = 0.1;
         }
-        int numc = OdeHelper.collide (o1,o2,64,contacts.getGeomBuffer());
+        int numc = OdeHelper.collide (o1,o2,128,contacts.getGeomBuffer());
         if (numc!=0) {
             for (i=0; i<numc; i++) {
                 DJoint c = OdeHelper.createContactJoint (world,contactGroup,contacts.get(i));

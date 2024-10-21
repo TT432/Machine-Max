@@ -7,6 +7,7 @@ import io.github.tt432.machinemax.common.phys.PhysThreadController;
 import io.github.tt432.machinemax.utils.math.DMatrix3;
 import io.github.tt432.machinemax.utils.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.math.DQuaternion;
+import io.github.tt432.machinemax.utils.math.DVector3;
 import io.github.tt432.machinemax.utils.ode.*;
 import io.github.tt432.machinemax.utils.ode.internal.DxMass;
 import io.github.tt432.machinemax.utils.ode.internal.Rotation;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3d;
+import org.joml.Quaternionf;
 import org.slf4j.Logger;
 
 import static io.github.tt432.machinemax.utils.MMMMath.sigmoidSignum;
@@ -55,11 +57,11 @@ public class TestCarEntity extends VehicleEntity {
     private double lerpZ;
     private double lerpYRot;
     private double lerpXRot;
-    public float ZRot;
+    private float ZRot;
     //以下为物理引擎相关
+    public Quaternionf q;
     public volatile DBody dbody;
     public volatile DMass dmass;
-    public volatile DJointGroup djointGroup;
     public volatile DGeom dgeom;
 
     public TestCarEntity(EntityType<? extends VehicleEntity> pEntityType, Level pLevel) {
@@ -78,14 +80,21 @@ public class TestCarEntity extends VehicleEntity {
         dmass = OdeHelper.createMass();//创造质量属性
         dmass.setBoxTotal(mass,2,2,2);//设置质量与转动惯量
         dbody.setMass(dmass);//将设置好的质量属性赋予车体
-        dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
-        DMatrix3 R = new DMatrix3(1,0,0,0,1,0,0,0,1);
-        Rotation.dRFromEulerAngles(R,45,0,0);
-        dbody.setRotation(R);//设置旋转
         dgeom = OdeHelper.createBox(2,2,2);
         dgeom.setBody(dbody);//将碰撞体绑定到运动物体
-        dgeom.setOffsetPosition(0,1,0);
-        PhysThread.space.add(dgeom);//将碰撞体加入碰撞空间
+        dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
+        this.setXRot((float) (random()*360));
+        this.setYRot((float) (random()*360));
+        this.setZRot(0);
+        DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
+        dbody.setQuaternion(dq);
+        //dgeom.setOffsetPosition(0,1,0);
+        if(this.level().isClientSide()){
+            PhysThread.renderSpace.add(dgeom);//将碰撞体加入碰撞空间
+        }else {
+            PhysThread.serverSpace.add(dgeom);//将碰撞体加入碰撞空间
+        }
+        q=new Quaternionf();
     }
 
     @Override
@@ -97,8 +106,16 @@ public class TestCarEntity extends VehicleEntity {
         if((this.getFirstPassenger() instanceof Player)){
             clampRotation(this.getFirstPassenger());}
         this.setPos(dbody.getPosition().get0(),dbody.getPosition().get1(),dbody.getPosition().get2());
+        DQuaternion dq = (DQuaternion) dbody.getQuaternion();
+        DVector3 heading = dq.toEulerDegrees();
+        setXRot((float) heading.get0());
+        setYRot((float) heading.get1());
+        setZRot((float) heading.get2());
+        q=new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
         //move();
-        MachineMax.LOGGER.info("pos:"+ this.getPosition(0));
+        MachineMax.LOGGER.info("heading:" + heading);
+        MachineMax.LOGGER.info("pitch:" + this.getXRot() + "yaw:" + this.getYRot() + "roll:" + this.getZRot());
+        //MachineMax.LOGGER.info("pos:" + this.getPosition(0));
         this.level().addParticle(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0,0);
         super.tick();
     }
@@ -250,16 +267,6 @@ public class TestCarEntity extends VehicleEntity {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
 
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return true;
-    }
-
     private void tickLerp() {
         if (this.isControlledByLocalInstance()) {
             this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
@@ -297,5 +304,13 @@ public class TestCarEntity extends VehicleEntity {
     @Override
     public float lerpTargetYRot() {
         return this.lerpSteps > 0 ? (float)this.lerpYRot : this.getYRot();
+    }
+
+    public float getZRot() {
+        return ZRot;
+    }
+
+    public void setZRot(float ZRot) {
+        this.ZRot = ZRot;
     }
 }
