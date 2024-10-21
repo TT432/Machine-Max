@@ -41,6 +41,7 @@ import io.github.tt432.machinemax.utils.ode.ragdoll.DRagdollConfig;
 import io.github.tt432.machinemax.utils.ode.DGeom.DNearCallback;
 import io.github.tt432.machinemax.utils.ode.DTriMesh.DTriCallback;
 import io.github.tt432.machinemax.utils.ode.DTriMesh.DTriRayCallback;
+import net.minecraft.world.entity.Entity;
 
 /**
  * This is the general helper class for ode4j.
@@ -529,12 +530,22 @@ public abstract class OdeHelper {
 	 * 
 	 * <p>REMARK: 
 	 * Default mass parameters are at position (0,0,0).
-	 * @param w world
+	 * @param world world
 	 * @return new body
 	 */
 	//ODE_API
-	public static DBody createBody (DWorld w){
-		return DxBody.dBodyCreate((DxWorld) w);
+	public static DBody createBody (DWorld world){
+		return DxBody.dBodyCreate((DxWorld) world);
+	}
+
+	/**
+	 * 在指定世界创建一个运动体
+	 * @param world 要将运动体放入的世界
+	 * @param entity 此运动体绑定的实体
+	 * @return 获得的运动体
+	 */
+	public static DBody createBody (DWorld world, Entity entity){
+		return DxBody.dBodyCreate((DxWorld) world, entity);
 	}
 
 	//ODE_API 

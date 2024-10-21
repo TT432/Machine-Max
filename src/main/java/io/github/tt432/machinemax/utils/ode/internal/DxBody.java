@@ -48,6 +48,7 @@ import io.github.tt432.machinemax.utils.ode.internal.Objects_H.DxPosR;
 import io.github.tt432.machinemax.utils.ode.internal.Objects_H.DxPosRC;
 import io.github.tt432.machinemax.utils.ode.internal.Objects_H.dxAutoDisable;
 import io.github.tt432.machinemax.utils.ode.internal.Objects_H.dxDampingParameters;
+import net.minecraft.world.entity.Entity;
 
 import java.util.Iterator;
 
@@ -82,7 +83,7 @@ public class DxBody extends DObject implements DBody {
 	static final int dxBodyMaxAngularSpeed			=128;  	// use maximum angular speed
 	private static final int dxBodyGyroscopic 				=256;	// use gyroscopic term
 
-
+	private Entity entityAttached;
 	//	  public dxJointNode firstjoint;	// list of attached joints
 	//TODO
 	public final Ref<DxJointNode> firstjoint = new Ref<>();	// list of attached joints
@@ -117,11 +118,10 @@ public class DxBody extends DObject implements DBody {
 	private final dxDampingParameters dampingp = new dxDampingParameters(); // damping parameters, depends on flags
 	double max_angular_speed;      // limit the angular velocity to this magnitude
 
-	protected DxBody(DxWorld w)
+	protected DxBody(DxWorld world)
 	{
-		super(w);
+		super(world);
 	}
-
 
 	DxWorld dBodyGetWorld ()
 	{
@@ -187,6 +187,12 @@ public class DxBody extends DObject implements DBody {
 		return b;
 	}
 
+	public static DxBody dBodyCreate (DxWorld w, Entity e)
+	{
+		DxBody b =dBodyCreate(w);
+		b.entityAttached=e;
+		return b;
+	}
 
 	//		public void dBodyDestroy (dxBody b)
 	public void dBodyDestroy ()
