@@ -1,16 +1,13 @@
 package io.github.tt432.machinemax.common.entity;
 
 import com.mojang.logging.LogUtils;
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.phys.PhysThread;
-import io.github.tt432.machinemax.common.phys.PhysThreadController;
-import io.github.tt432.machinemax.utils.math.DMatrix3;
-import io.github.tt432.machinemax.utils.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.math.DQuaternion;
 import io.github.tt432.machinemax.utils.math.DVector3;
-import io.github.tt432.machinemax.utils.ode.*;
-import io.github.tt432.machinemax.utils.ode.internal.DxMass;
-import io.github.tt432.machinemax.utils.ode.internal.Rotation;
+import io.github.tt432.machinemax.utils.ode.DBody;
+import io.github.tt432.machinemax.utils.ode.DGeom;
+import io.github.tt432.machinemax.utils.ode.DMass;
+import io.github.tt432.machinemax.utils.ode.OdeHelper;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,7 +25,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3d;
 import org.joml.Quaternionf;
 import org.slf4j.Logger;
 
@@ -76,7 +72,7 @@ public class TestCarEntity extends VehicleEntity {
         ZRot=0;
         selfDeltaMovement=new Vec3(0,0,0);
         //以下为物理引擎相关
-        dbody = OdeHelper.createBody(PhysThread.world);//创建车体
+        dbody = OdeHelper.createBody(PhysThread.world,this);//创建车体
         dmass = OdeHelper.createMass();//创造质量属性
         dmass.setBoxTotal(mass,2,2,2);//设置质量与转动惯量
         dbody.setMass(dmass);//将设置好的质量属性赋予车体
@@ -85,7 +81,7 @@ public class TestCarEntity extends VehicleEntity {
         dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
         this.setXRot((float) (random()*360));
         this.setYRot((float) (random()*360));
-        this.setZRot(0);
+        this.setZRot((float) (random()*360));
         DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
         dbody.setQuaternion(dq);
         //dgeom.setOffsetPosition(0,1,0);
@@ -113,8 +109,8 @@ public class TestCarEntity extends VehicleEntity {
         setZRot((float) heading.get2());
         q=new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
         //move();
-        MachineMax.LOGGER.info("heading:" + heading);
-        MachineMax.LOGGER.info("pitch:" + this.getXRot() + "yaw:" + this.getYRot() + "roll:" + this.getZRot());
+        //MachineMax.LOGGER.info("heading:" + heading);
+        //MachineMax.LOGGER.info("pitch:" + this.getXRot() + "yaw:" + this.getYRot() + "roll:" + this.getZRot());
         //MachineMax.LOGGER.info("pos:" + this.getPosition(0));
         this.level().addParticle(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0,0);
         super.tick();

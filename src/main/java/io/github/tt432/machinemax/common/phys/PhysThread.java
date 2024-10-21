@@ -19,6 +19,7 @@ public class PhysThread extends Thread{
         MachineMax.LOGGER.info("New phys thread started!");
         world = OdeHelper.createWorld();//各个物体所处的世界，不处于同一世界的物体无法交互，或许可以用来做不同维度的处理，但是否会无法利用多线程优势？
         world.setGravity(0,-9.81,0);//设置重力
+        world.setERP(0.1);
         renderSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责客户端物体的碰撞
         serverSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责服务端物体的碰撞
         contactGroup = OdeHelper.createJointGroup();
@@ -73,10 +74,10 @@ public class PhysThread extends Thread{
         DContactBuffer contacts = new DContactBuffer(128);   // up to MAX_CONTACTS contacts per box-box
         for (i=0; i<128; i++) {
             DContact contact = contacts.get(i);
-            //contact.surface.mode = dContactBounce;
+            contact.surface.mode = dContactBounce|dContactRolling|dContactApprox1;
             contact.surface.mu = 50000;
-            contact.surface.rho = 1;
-            contact.surface.bounce = 0.01;
+            contact.surface.rho = 0.01;
+            contact.surface.bounce = 0.001;
             contact.surface.bounce_vel = 0.1;
         }
         int numc = OdeHelper.collide (o1,o2,128,contacts.getGeomBuffer());
