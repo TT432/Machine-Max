@@ -28,7 +28,7 @@ public class PhysThread extends Thread{
             step(false);//推进物理模拟计算进程
             try {
                 //TODO:根据前文执行用时调整sleep时间？能做到吗？
-                Thread.sleep(20);//等待时间步长
+                Thread.sleep(10);//等待时间步长
             } catch (InterruptedException e) {
                 MachineMax.LOGGER.info("Stopping phys thread...");
                 break;
@@ -47,7 +47,7 @@ public class PhysThread extends Thread{
         renderSpace.collide(null,nearCallback);//碰撞检测
         serverSpace.collide(null,nearCallback);//碰撞检测
         if(!paused){
-            world.quickStep(0.02);
+            world.quickStep(0.01);
         }
         contactGroup.empty();//碰撞处理完成后移除所有碰撞点约束
     }
