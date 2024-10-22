@@ -26,10 +26,10 @@ import java.util.List;
 
 public class TestCarEntityRenderer extends EntityRenderer {
 
-    private static final ResourceLocation TEST_CAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/cube.png");
-    private static final ResourceLocation TEST_CAR_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/cube");
-    private static final ResourceLocation TEST_CAR_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/cube.animation");
-    private static final ResourceLocation TEST_CAR_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/cube.animation_controllers");
+    private static final ResourceLocation TEST_CAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/ae86.png");
+    private static final ResourceLocation TEST_CAR_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86");
+    private static final ResourceLocation TEST_CAR_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86.animation");
+    private static final ResourceLocation TEST_CAR_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86.animation_controllers");
 
     protected TestCarEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -43,7 +43,7 @@ public class TestCarEntityRenderer extends EntityRenderer {
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pEntity.getXRot()));//俯仰
         //pPoseStack.mulPose(Axis.ZP.rotationDegrees(((TestCarEntity)pEntity).getZRot()));//滚转
         //pPoseStack.mulPose(((TestCarEntity)pEntity).q);
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(-180));
+        //pPoseStack.mulPose(Axis.XP.rotationDegrees(-180));
         RenderType renderType = RenderType.entitySolid(TEST_CAR_TEXTURE);
         AnimationComponent animationComponent = new AnimationComponent();
         animationComponent.setup(TEST_CAR_ANI_CONTROLLER, TEST_CAR_ANIMATION);

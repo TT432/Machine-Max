@@ -1,0 +1,13 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"roll": {
+			"loop": true,
+			"bones": {
+				"Root": {
+					"rotation": [0, 0, "-q.roll"]
+				}
+			}
+		}
+	}
+}
