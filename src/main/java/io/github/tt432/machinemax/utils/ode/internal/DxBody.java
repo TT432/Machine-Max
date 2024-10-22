@@ -38,6 +38,7 @@ import static io.github.tt432.machinemax.utils.ode.internal.Rotation.dQMultiply0
 import static io.github.tt432.machinemax.utils.ode.internal.Rotation.dQfromR;
 import static io.github.tt432.machinemax.utils.ode.internal.Rotation.dRfromQ;
 
+import io.github.tt432.machinemax.common.entity.MMMBasicEntity;
 import io.github.tt432.machinemax.utils.math.*;
 import io.github.tt432.machinemax.utils.ode.*;
 import io.github.tt432.machinemax.utils.ode.internal.cpp4j.java.Ref;
@@ -82,8 +83,7 @@ public class DxBody extends DObject implements DBody {
 	static final int dxBodyAngularDamping 			=64;  	// use angular damping
 	static final int dxBodyMaxAngularSpeed			=128;  	// use maximum angular speed
 	private static final int dxBodyGyroscopic 				=256;	// use gyroscopic term
-
-	private Entity entityAttached;
+	private MMMBasicEntity attachedEntity;//此物理体所属的实体
 	//	  public dxJointNode firstjoint;	// list of attached joints
 	//TODO
 	public final Ref<DxJointNode> firstjoint = new Ref<>();	// list of attached joints
@@ -187,10 +187,10 @@ public class DxBody extends DObject implements DBody {
 		return b;
 	}
 
-	public static DxBody dBodyCreate (DxWorld w, Entity e)
+	public static DxBody dBodyCreate (DxWorld w, MMMBasicEntity e)
 	{
 		DxBody b =dBodyCreate(w);
-		b.entityAttached=e;
+		b.attachedEntity =e;
 		return b;
 	}
 
@@ -1554,5 +1554,13 @@ public class DxBody extends DObject implements DBody {
 			current = current.body_next;
 			return ret;
 		}
+	}
+
+	public MMMBasicEntity getAttachedEntity() {
+		return attachedEntity;
+	}
+
+	public void setAttachedEntity(MMMBasicEntity attachedEntity) {
+		this.attachedEntity = attachedEntity;
 	}
 }

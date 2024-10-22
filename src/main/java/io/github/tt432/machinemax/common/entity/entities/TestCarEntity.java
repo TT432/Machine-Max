@@ -1,7 +1,8 @@
-package io.github.tt432.machinemax.common.entity;
+package io.github.tt432.machinemax.common.entity.entities;
 
 import com.mojang.logging.LogUtils;
-import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.MMMBasicEntity;
+import io.github.tt432.machinemax.common.entity.bodycontrollers.CarController;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.math.DQuaternion;
 import io.github.tt432.machinemax.utils.math.DVector3;
@@ -9,7 +10,6 @@ import io.github.tt432.machinemax.utils.ode.DBody;
 import io.github.tt432.machinemax.utils.ode.DGeom;
 import io.github.tt432.machinemax.utils.ode.DMass;
 import io.github.tt432.machinemax.utils.ode.OdeHelper;
-import io.github.tt432.machinemax.utils.ode.internal.DxSpace;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,7 +21,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -33,7 +32,7 @@ import org.slf4j.Logger;
 import static io.github.tt432.machinemax.utils.MMMMath.sigmoidSignum;
 import static java.lang.Math.*;
 
-public class TestCarEntity extends VehicleEntity {
+public class TestCarEntity extends MMMBasicEntity {
     public static final Logger LOGGER = LogUtils.getLogger();
     public Input input;
     public float MAX_POWER = 80000;//最大功率80kW
@@ -62,7 +61,7 @@ public class TestCarEntity extends VehicleEntity {
     public volatile DMass dmass;
     public volatile DGeom dgeom;
 
-    public TestCarEntity(EntityType<? extends VehicleEntity> pEntityType, Level pLevel) {
+    public TestCarEntity(EntityType<? extends MMMBasicEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.input = new Input();
         mass=1200;
@@ -74,13 +73,14 @@ public class TestCarEntity extends VehicleEntity {
         ZRot=0;
         selfDeltaMovement=new Vec3(0,0,0);
         //以下为物理引擎相关
+        controller = new CarController(this);
         dbody = OdeHelper.createBody(PhysThread.world,this);//创建车体
         dmass = OdeHelper.createMass();//创造质量属性
         dmass.setBoxTotal(mass,40D/16,32D/16,72D/16);//设置质量与转动惯量
         dbody.setMass(dmass);//将设置好的质量属性赋予车体
-        dgeom = OdeHelper.createBox(40D/16,32D/16,72D/16);
+        dgeom = OdeHelper.createBox(40D/16,32D/16,72D/16);//创建一定尺寸的碰撞体
         dgeom.setBody(dbody);//将碰撞体绑定到运动物体
-        dgeom.setOffsetPosition(0,8D/16,-12D/16);
+        dgeom.setOffsetPosition(0,8D/16,-12D/16);//对齐碰撞体形状与模型形状
         dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
         this.setXRot((float) (random()*10));
         this.setYRot((float) (random()*10));
@@ -97,7 +97,6 @@ public class TestCarEntity extends VehicleEntity {
 
     @Override
     public void tick() {
-        tickLerp();
         getControlInput();
         engineControl();
         rudderControl();
@@ -263,52 +262,5 @@ public class TestCarEntity extends VehicleEntity {
 
     public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
-    }
-
-    private void tickLerp() {
-        if (this.isControlledByLocalInstance()) {
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-    }
-    @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYRot, float pXRot, int pSteps) {
-        this.lerpX = pX;
-        this.lerpY = pY;
-        this.lerpZ = pZ;
-        this.lerpYRot = (double)pYRot;
-        this.lerpXRot = (double)pXRot;
-        this.lerpSteps = 10;
-    }
-
-    @Override
-    public double lerpTargetX() {
-        return this.lerpSteps > 0 ? this.lerpX : this.getX();
-    }
-    @Override
-    public double lerpTargetY() {
-        return this.lerpSteps > 0 ? this.lerpY : this.getY();
-    }
-
-    @Override
-    public double lerpTargetZ() {
-        return this.lerpSteps > 0 ? this.lerpZ : this.getZ();
-    }
-
-    @Override
-    public float lerpTargetXRot() {
-        return this.lerpSteps > 0 ? (float)this.lerpXRot : this.getXRot();
-    }
-
-    @Override
-    public float lerpTargetYRot() {
-        return this.lerpSteps > 0 ? (float)this.lerpYRot : this.getYRot();
-    }
-
-    public float getZRot() {
-        return ZRot;
-    }
-
-    public void setZRot(float ZRot) {
-        this.ZRot = ZRot;
     }
 }

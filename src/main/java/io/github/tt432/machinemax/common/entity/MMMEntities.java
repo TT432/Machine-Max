@@ -1,10 +1,10 @@
 package io.github.tt432.machinemax.common.entity;
 
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.entities.TestCarEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;

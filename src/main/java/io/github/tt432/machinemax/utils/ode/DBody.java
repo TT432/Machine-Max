@@ -24,10 +24,12 @@
  *************************************************************************/
 package io.github.tt432.machinemax.utils.ode;
 
+import io.github.tt432.machinemax.common.entity.MMMBasicEntity;
 import io.github.tt432.machinemax.utils.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.math.DVector3;
 import io.github.tt432.machinemax.utils.math.DVector3C;
+import net.minecraft.world.entity.Entity;
 
 import java.util.Iterator;
 
@@ -67,7 +69,9 @@ import java.util.Iterator;
  */
 public interface DBody {
 
-	 /**
+	MMMBasicEntity getAttachedEntity();
+	void setAttachedEntity(MMMBasicEntity entity);
+	/**
 	  * Whenever a body has its position or rotation changed during the
 	  * timestep, the callback will be called (with body as the argument).
 	  * Use it to know which body may need an update in an external
