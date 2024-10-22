@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.entity;
 
 import com.mojang.logging.LogUtils;
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.math.DQuaternion;
 import io.github.tt432.machinemax.utils.math.DVector3;
@@ -8,6 +9,7 @@ import io.github.tt432.machinemax.utils.ode.DBody;
 import io.github.tt432.machinemax.utils.ode.DGeom;
 import io.github.tt432.machinemax.utils.ode.DMass;
 import io.github.tt432.machinemax.utils.ode.OdeHelper;
+import io.github.tt432.machinemax.utils.ode.internal.DxSpace;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -63,7 +65,7 @@ public class TestCarEntity extends VehicleEntity {
     public TestCarEntity(EntityType<? extends VehicleEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.input = new Input();
-        mass=1500;
+        mass=1200;
         turning_input=0;
         max_ang=0;
         power=0;
@@ -74,21 +76,21 @@ public class TestCarEntity extends VehicleEntity {
         //以下为物理引擎相关
         dbody = OdeHelper.createBody(PhysThread.world,this);//创建车体
         dmass = OdeHelper.createMass();//创造质量属性
-        dmass.setBoxTotal(mass,2,2,2);//设置质量与转动惯量
+        dmass.setBoxTotal(mass,40D/16,32D/16,72D/16);//设置质量与转动惯量
         dbody.setMass(dmass);//将设置好的质量属性赋予车体
-        dgeom = OdeHelper.createBox(2,2,2);
+        dgeom = OdeHelper.createBox(40D/16,32D/16,72D/16);
         dgeom.setBody(dbody);//将碰撞体绑定到运动物体
+        dgeom.setOffsetPosition(0,8D/16,-12D/16);
         dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
-        this.setXRot((float) (random()*360));
-        this.setYRot((float) (random()*360));
-        this.setZRot((float) (random()*360));
+        this.setXRot((float) (random()*10));
+        this.setYRot((float) (random()*10));
+        this.setZRot((float) (random()*10));
         DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
         dbody.setQuaternion(dq);
-        //dgeom.setOffsetPosition(0,1,0);
         if(this.level().isClientSide()){
-            PhysThread.renderSpace.add(dgeom);//将碰撞体加入碰撞空间
+            PhysThread.renderSpace.geomAddEnQueue(dgeom);//等待将碰撞体加入本地碰撞空间
         }else {
-            PhysThread.serverSpace.add(dgeom);//将碰撞体加入碰撞空间
+            PhysThread.serverSpace.geomAddEnQueue(dgeom);//等待将碰撞体加入服务器碰撞空间
         }
         q=new Quaternionf();
     }
@@ -110,7 +112,7 @@ public class TestCarEntity extends VehicleEntity {
         q=new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
         //move();
         //MachineMax.LOGGER.info("heading:" + heading);
-        //MachineMax.LOGGER.info("pitch:" + this.getXRot() + "yaw:" + this.getYRot() + "roll:" + this.getZRot());
+        //MachineMax.LOGGER.info(" pitch:" + this.getXRot() + " yaw:" + this.getYRot() + " roll:" + this.getZRot());
         //MachineMax.LOGGER.info("pos:" + this.getPosition(0));
         this.level().addParticle(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0,0);
         super.tick();

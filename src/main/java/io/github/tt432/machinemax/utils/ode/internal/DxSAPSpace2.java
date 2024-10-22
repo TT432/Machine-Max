@@ -141,7 +141,7 @@ public class DxSAPSpace2 extends DxSpace implements DSapSpace {
     }
 
     @Override
-    void add(DxGeom g) {
+    protected void add(DxGeom g) {
         CHECK_NOT_LOCKED(this);
         dAASSERT(g);
         dUASSERT(g.parent_space == null, "geom is already in a space");
@@ -152,7 +152,7 @@ public class DxSAPSpace2 extends DxSpace implements DSapSpace {
     }
 
     @Override
-    void remove(DxGeom g) {
+    protected void remove(DxGeom g) {
         CHECK_NOT_LOCKED(this);
         dAASSERT(g);
         dUASSERT(g.parent_space == this, "object is not in this space");

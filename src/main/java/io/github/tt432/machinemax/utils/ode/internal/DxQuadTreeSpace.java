@@ -483,7 +483,7 @@ public class DxQuadTreeSpace extends DxSpace implements DQuadTreeSpace {
 
 	//void dxQuadTreeSpace::add(dxGeom* g){
 	@Override
-	void add(DxGeom g){
+	protected void add(DxGeom g){
 		CHECK_NOT_LOCKED (this);
 		//Common.dAASSERT(g);
 		dUASSERT(g._qtIdxEx == null && g.getNextEx() == null,
@@ -499,7 +499,7 @@ public class DxQuadTreeSpace extends DxSpace implements DQuadTreeSpace {
 
 	//void dxQuadTreeSpace::remove(dxGeom* g){
 	@Override
-	void remove(DxGeom g){
+	protected void remove(DxGeom g){
 		CHECK_NOT_LOCKED(this);
 		//Common.dAASSERT(g);
 		dUASSERT(g.parent_space == this,"object is not in this space");

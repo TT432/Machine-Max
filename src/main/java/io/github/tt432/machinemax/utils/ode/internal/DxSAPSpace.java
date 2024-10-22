@@ -210,7 +210,7 @@ public class DxSAPSpace extends DxSpace implements DSapSpace {
 
 	//void dxSAPSpace::add( dxGeom* g )
 	@Override
-	void add( DxGeom g )
+	protected void add( DxGeom g )
 	{
 		CHECK_NOT_LOCKED (this);
 		//dAASSERT(g);
@@ -226,7 +226,7 @@ public class DxSAPSpace extends DxSpace implements DSapSpace {
 
 	//void dxSAPSpace::remove( dxGeom* g )
 	@Override
-	void remove( DxGeom g )
+	protected void remove( DxGeom g )
 	{
 		CHECK_NOT_LOCKED(this);
 		//dAASSERT(g);

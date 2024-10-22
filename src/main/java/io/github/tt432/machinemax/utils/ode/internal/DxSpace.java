@@ -25,6 +25,8 @@
 package io.github.tt432.machinemax.utils.ode.internal;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import io.github.tt432.machinemax.utils.ode.DAABB;
 import io.github.tt432.machinemax.utils.ode.DGeom;
@@ -65,6 +67,8 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 //	#define dSPACE_TLS_KIND_MANUAL_VALUE 0
 //	#endif
 
+	public Queue<DGeom> geomsToBeAdded = new LinkedList<>();//将要统一加入碰撞空间的碰撞体
+	public Queue<DGeom> geomsToBeRemoved = new LinkedList<>();//将要统一被从碰撞空间移除的碰撞体
 	protected int count;			// number of geoms in this space
 	//	  dxGeom *first;		// first geom in list
 	//	dxGeom first;		// first geom in list
@@ -83,7 +87,7 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 	// internal data structures, e.g. in collide() and collide2(). operations
 	// that modify the contents of the space are not permitted when the space
 	// is locked.
-	int lock_count;
+    public int lock_count;
 
 	/**
 	 * Turn all dirty geoms into clean geoms by computing their AABBs and any
@@ -139,14 +143,14 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 //	}
 
 
-	public void dSpaceAdd (DxGeom g)
+	protected void dSpaceAdd (DxGeom g)
 	{
 		CHECK_NOT_LOCKED ();
 		add (g);
 	}
 
 
-	void dSpaceRemove (DxGeom g)
+	protected void dSpaceRemove (DxGeom g)
 	{
 		CHECK_NOT_LOCKED ();
 		remove (g);
@@ -431,7 +435,7 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 	}
 
 
-	void add (DxGeom geom)
+	protected void add (DxGeom geom)
 	{
 		CHECK_NOT_LOCKED ();
 		//dAASSERT (geom);
@@ -450,7 +454,7 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 		dGeomMoved ();
 	}
 
-	void remove (DxGeom geom)
+	protected void remove (DxGeom geom)
 	{
 		CHECK_NOT_LOCKED ();
 		//dAASSERT (geom);
@@ -503,11 +507,10 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 //	public int getCleanup()
 //	{ return dSpaceGetCleanup (id()); }
 
-	@Override
-	public void add (DGeom x)
+	protected void add (DGeom x)
 	{ dSpaceAdd ((DxGeom) x); }
-	@Override
-	public void remove (DGeom x)
+
+	protected void remove (DGeom x)
 	{ dSpaceRemove ((DxGeom) x); }
 	@Override
 	public boolean query (DGeom x)
@@ -562,8 +565,36 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 
 			@Override
 			public void remove() {
-				throw new UnsupportedOperationException("remove");
-			}
+                Iterator.super.remove();
+            }
 		};
+	}
+
+	/**
+	 * 将碰撞体加入统一处理队列，等待实际添加到碰撞空间中
+	 * @param x 将要被统一加入碰撞空间移除的碰撞体
+	 */
+	public void geomAddEnQueue(DGeom x){
+		this.geomsToBeAdded.add(x);
+	}
+
+	/**
+	 * 将碰撞体加入统一处理队列，等待实际从碰撞空间中被移除
+	 * @param x 将要被统一从碰撞空间移除的碰撞体
+	 */
+	public void geomRemoveEnQueue(DGeom x){
+		this.geomsToBeRemoved.add(x);
+	}
+	/**
+	 * 统一对即将添加或移除的碰撞体进行处理，防止单独添加删除碰撞体时由于空间被锁定而导致的添加删除失败
+	 * 每一仿真步应调用一次以保证及时对碰撞体进行处理
+	 */
+	public void handleGeomAddAndRemove(){
+		while(!geomsToBeRemoved.isEmpty()){
+			this.remove(geomsToBeRemoved.remove());
+		}
+		while(!geomsToBeAdded.isEmpty()){
+			this.add(geomsToBeAdded.remove());
+		}
 	}
 }

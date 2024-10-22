@@ -40,8 +40,6 @@ public interface DSpace extends DGeom {
 	 */
 	void cleanGeoms();
 
-	void add (DGeom x);
-	void remove (DGeom x);
 	boolean query (DGeom x);
 
 	int getNumGeoms();
@@ -125,4 +123,19 @@ public interface DSpace extends DGeom {
 	 * @see OdeHelper#spaceCollide2(DGeom, DGeom, Object, DNearCallback)
 	 */
 	int getSublevel ();
+	/**
+	 * 将碰撞体加入统一处理队列，等待实际添加到碰撞空间中
+	 * @param x 将要被统一加入碰撞空间的碰撞体
+	 */
+	void geomAddEnQueue(DGeom x);
+	/**
+	 * 将碰撞体加入统一处理队列，等待实际从碰撞空间中被移除
+	 * @param x 将要被统一从碰撞空间移除的碰撞体
+	 */
+	void geomRemoveEnQueue(DGeom x);
+	/**
+	 * 统一对即将添加或移除的碰撞体进行处理，防止单独添加删除碰撞体时由于空间被锁定而导致的添加删除失败
+	 * 每一仿真步应调用一次以保证及时对碰撞体进行处理
+	 */
+	void handleGeomAddAndRemove();
 }
