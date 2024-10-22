@@ -9,9 +9,9 @@ import net.minecraft.world.entity.Entity;
  */
 public class BasicPhysController {
 
-    protected MMMBasicEntity controlledEntity;//此控制器控制的实体
+    protected MMBasicEntity controlledEntity;//此控制器控制的实体
 
-    public BasicPhysController(MMMBasicEntity entity){
+    public BasicPhysController(MMBasicEntity entity){
         this.controlledEntity=entity;
     }
     /**
@@ -25,7 +25,7 @@ public class BasicPhysController {
         return this.controlledEntity;
     }
 
-    public void setControlledEntity(MMMBasicEntity controlledEntity) {
+    public void setControlledEntity(MMBasicEntity controlledEntity) {
         this.controlledEntity = controlledEntity;
     }
 }

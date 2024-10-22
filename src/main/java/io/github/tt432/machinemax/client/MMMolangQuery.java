@@ -16,7 +16,7 @@ import static io.github.tt432.eyelib.molang.MolangValue.TRUE;
  * @author 甜粽子
  */
 @MolangMapping(value = "query", pureFunction = false)
-public final class MMMMolangQuery{
+public final class MMMolangQuery {
 
     @MolangFunction(value = "roll", description = "roll 角度（z rot）")
     public static float roll(MolangScope scope) {

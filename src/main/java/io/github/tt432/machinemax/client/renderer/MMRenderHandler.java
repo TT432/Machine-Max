@@ -1,6 +1,6 @@
 package io.github.tt432.machinemax.client.renderer;
 
-import io.github.tt432.machinemax.common.entity.MMMEntities;
+import io.github.tt432.machinemax.common.entity.MMEntities;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -11,9 +11,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
  * @Author 甜粽子
  */
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-public class MMMRenderHandler {
+public class MMRenderHandler {
     @SubscribeEvent//注册每个实体渲染器
     public static void onEntityRendererRegistry(EntityRenderersEvent.RegisterRenderers event){
-        event.registerEntityRenderer(MMMEntities.TEST_CAR_ENTITY.get(), TestCarEntityRenderer::new);
+        event.registerEntityRenderer(MMEntities.TEST_CAR_ENTITY.get(), TestCarEntityRenderer::new);
     }
 }

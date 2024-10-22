@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax;
 
 import com.mojang.logging.LogUtils;
-import io.github.tt432.machinemax.common.entity.MMMEntities;
+import io.github.tt432.machinemax.common.entity.MMEntities;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ public class MachineMax {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public MachineMax(IEventBus bus){
-        MMMEntities.ENTITIES.register(bus);//注册所有实体
+        MMEntities.ENTITIES.register(bus);//注册所有实体
     }
 
 }

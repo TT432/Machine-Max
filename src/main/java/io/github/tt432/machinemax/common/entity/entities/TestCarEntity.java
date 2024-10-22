@@ -1,8 +1,8 @@
 package io.github.tt432.machinemax.common.entity.entities;
 
 import com.mojang.logging.LogUtils;
-import io.github.tt432.machinemax.common.entity.MMMBasicEntity;
-import io.github.tt432.machinemax.common.entity.bodycontrollers.CarController;
+import io.github.tt432.machinemax.common.entity.MMBasicEntity;
+import io.github.tt432.machinemax.common.entity.physcontrollers.CarController;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.math.DQuaternion;
 import io.github.tt432.machinemax.utils.math.DVector3;
@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import static io.github.tt432.machinemax.utils.MMMMath.sigmoidSignum;
 import static java.lang.Math.*;
 
-public class TestCarEntity extends MMMBasicEntity {
+public class TestCarEntity extends MMBasicEntity {
     public static final Logger LOGGER = LogUtils.getLogger();
     public Input input;
     public float MAX_POWER = 80000;//最大功率80kW
@@ -61,7 +61,7 @@ public class TestCarEntity extends MMMBasicEntity {
     public volatile DMass dmass;
     public volatile DGeom dgeom;
 
-    public TestCarEntity(EntityType<? extends MMMBasicEntity> pEntityType, Level pLevel) {
+    public TestCarEntity(EntityType<? extends MMBasicEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.input = new Input();
         mass=1200;

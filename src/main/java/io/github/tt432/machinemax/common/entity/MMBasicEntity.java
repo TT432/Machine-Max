@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.Level;
 
-public abstract class MMMBasicEntity extends VehicleEntity {
+public abstract class MMBasicEntity extends VehicleEntity {
 
     public BasicPhysController controller;//实体指定的控制器
     public DBody[] parts;//实体连接的所有部件
@@ -21,7 +21,7 @@ public abstract class MMMBasicEntity extends VehicleEntity {
     private double lerpXRot;
     private float ZRot;
 
-    public MMMBasicEntity(EntityType<?> entityType, Level level) {
+    public MMBasicEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 

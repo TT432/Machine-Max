@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * 收录了模组添加的所有实体，并定义一些基本属性
  * @author 甜粽子
  */
-public class MMMEntities {
+public class MMEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, MachineMax.MOD_ID);
     //以下为注册的实体列表
     //测试用基本车辆

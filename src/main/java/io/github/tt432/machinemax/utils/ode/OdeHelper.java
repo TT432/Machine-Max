@@ -27,7 +27,7 @@ package io.github.tt432.machinemax.utils.ode;
 import java.io.File;
 import java.util.List;
 
-import io.github.tt432.machinemax.common.entity.MMMBasicEntity;
+import io.github.tt432.machinemax.common.entity.MMBasicEntity;
 import io.github.tt432.machinemax.utils.math.DVector3;
 import io.github.tt432.machinemax.utils.math.DVector3C;
 import io.github.tt432.machinemax.utils.ode.internal.*;
@@ -42,7 +42,6 @@ import io.github.tt432.machinemax.utils.ode.ragdoll.DRagdollConfig;
 import io.github.tt432.machinemax.utils.ode.DGeom.DNearCallback;
 import io.github.tt432.machinemax.utils.ode.DTriMesh.DTriCallback;
 import io.github.tt432.machinemax.utils.ode.DTriMesh.DTriRayCallback;
-import net.minecraft.world.entity.Entity;
 
 /**
  * This is the general helper class for ode4j.
@@ -545,7 +544,7 @@ public abstract class OdeHelper {
 	 * @param entity 此运动体绑定的实体
 	 * @return 获得的运动体
 	 */
-	public static DBody createBody (DWorld world, MMMBasicEntity entity){
+	public static DBody createBody (DWorld world, MMBasicEntity entity){
 		return DxBody.dBodyCreate((DxWorld) world, entity);
 	}
 
