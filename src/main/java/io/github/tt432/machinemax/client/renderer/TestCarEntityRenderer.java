@@ -13,6 +13,9 @@ import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.visitor.BuiltInBrModelRenderVisitors;
 import io.github.tt432.eyelib.client.render.visitor.ModelRenderVisitorList;
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
+import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
+import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -20,6 +23,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import org.joml.Quaternionf;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +42,11 @@ public class TestCarEntityRenderer extends EntityRenderer {
     @Override
     public void render(Entity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight){
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
+        DVector3 heading = ((TestCarEntity)pEntity).CORE_PART.dbody.getQuaternion().toEulerDegrees();
         pPoseStack.pushPose();
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(pEntityYaw));//将模型朝向与实体朝向相匹配
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(pEntity.getXRot()));//俯仰
-        //pPoseStack.mulPose(Axis.ZP.rotationDegrees(((TestCarEntity)pEntity).getZRot()));//滚转
-        //pPoseStack.mulPose(((TestCarEntity)pEntity).q);
-        //pPoseStack.mulPose(Axis.XP.rotationDegrees(-180));
+        pPoseStack.mulPose(Axis.YN.rotationDegrees((float)heading.get1()));//将模型朝向与实体朝向相匹配
+        pPoseStack.mulPose(Axis.XP.rotationDegrees((float)heading.get0()));//俯仰
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float)heading.get2()));//滚转
         RenderType renderType = RenderType.entitySolid(TEST_CAR_TEXTURE);
         AnimationComponent animationComponent = new AnimationComponent();
         animationComponent.setup(TEST_CAR_ANI_CONTROLLER, TEST_CAR_ANIMATION);
