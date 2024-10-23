@@ -64,6 +64,7 @@ public class TestCarEntityRenderer extends EntityRenderer {
                 infos,
                 new BrModelTextures.TwoSideInfoMap(new HashMap<>()),
                 new ModelRenderVisitorList(List.of(BuiltInBrModelRenderVisitors.BLANK.get())));
+        //TODO:参考万灵药Mod的狐狸尾巴，写出一个通用的模组实体渲染器，需要通过Layer实现对安装零部件的显示
         pPoseStack.popPose();
     }
 
