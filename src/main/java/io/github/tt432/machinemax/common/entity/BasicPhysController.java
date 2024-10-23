@@ -1,5 +1,6 @@
 package io.github.tt432.machinemax.common.entity;
 
+import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
 import net.minecraft.world.entity.Entity;
 
 /**
@@ -9,9 +10,9 @@ import net.minecraft.world.entity.Entity;
  */
 public class BasicPhysController {
 
-    protected MMBasicEntity controlledEntity;//此控制器控制的实体
+    protected BasicEntity controlledEntity;//此控制器控制的实体
 
-    public BasicPhysController(MMBasicEntity entity){
+    public BasicPhysController(BasicEntity entity){
         this.controlledEntity=entity;
     }
     /**
@@ -25,7 +26,7 @@ public class BasicPhysController {
         return this.controlledEntity;
     }
 
-    public void setControlledEntity(MMBasicEntity controlledEntity) {
+    public void setControlledEntity(BasicEntity controlledEntity) {
         this.controlledEntity = controlledEntity;
     }
 }
