@@ -70,9 +70,12 @@ public class TestCarEntity extends BasicEntity {
         DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
         CORE_PART.dbody.setQuaternion(dq);
         if(this.level().isClientSide()){
-            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeom);//等待将碰撞体加入本地碰撞空间
+            //TODO:改为将整个机体结构树中所有碰撞体加入碰撞空间
+            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeoms[0]);//等待将碰撞体加入本地碰撞空间
+            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeoms[1]);//等待将碰撞体加入本地碰撞空间
         }else {
-            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeom);//等待将碰撞体加入服务器碰撞空间
+            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeoms[0]);//等待将碰撞体加入服务器碰撞空间
+            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeoms[1]);//等待将碰撞体加入本地碰撞空间
         }
     }
 

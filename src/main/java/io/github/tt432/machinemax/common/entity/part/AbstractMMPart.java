@@ -11,6 +11,7 @@ import io.github.tt432.machinemax.utils.physics.ode.DGeom;
 import io.github.tt432.machinemax.utils.physics.ode.DMass;
 import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractMMPart {
@@ -22,6 +23,8 @@ public abstract class AbstractMMPart {
     static double BASIC_ARMOR;//(RHA mm)
     public static partTypes PART_TYPE;
 
+    int PART_SLOT_NUM;//此部件的身体部件及武器装备槽位数
+    int MOD_SLOT_NUM;//此部件的主被动模块槽位数
     public List<BasicPartSlot> children_parts;//连接的子代部件
     public AbstractMMPart father_part;//连接的上级部件
     public DVector3 attach_point;//本部件重心与父节点连接点的相对位置，即坐标原点与被连接点的相对位置
@@ -74,7 +77,7 @@ public abstract class AbstractMMPart {
     //TODO:摩擦力
     public DBody dbody;//部件对应的运动体
     public DMass dmass;//部件对应的质量与转动惯量
-    public DGeom dgeom;//部件对应的碰撞体
+    public DGeom[] dgeoms;//部件对应的碰撞体组(可用多个碰撞体拼合出一个部件的碰撞体积)
 
     public AbstractMMPart(BasicEntity attachedEntity){
         this.attachedEntity = attachedEntity;

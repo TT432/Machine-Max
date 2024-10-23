@@ -387,7 +387,6 @@ public class DQuaternion implements DQuaternionC {
 	 * @param yaw   yaw degrees
 	 * @return quaternion
 	 */
-	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
 	public static DQuaternion fromEulerDegrees(double pitch, double yaw, double roll) {
 		return fromEuler(Math.toRadians(pitch), Math.toRadians(yaw), Math.toRadians(roll));
 	}
@@ -396,13 +395,11 @@ public class DQuaternion implements DQuaternionC {
 	 * @param angles pitch, yaw and roll as degrees, i.e. 0..360.
 	 * @return Quaternion
 	 */
-	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
 	public static DQuaternion fromEulerDegrees(DVector3C angles) {
 		return fromEulerDegrees(angles.get0(), angles.get1(), angles.get2());
 	}
 
 	@Override
-	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
 	public DVector3 toEuler() {
 		DVector3 angles = new DVector3();
 		DQuaternion q = new DQuaternion(this);
@@ -427,7 +424,6 @@ public class DQuaternion implements DQuaternionC {
 	}
 
 	@Override
-	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
 	public DVector3 toEulerDegrees() {
 		return toEuler().eqToDegrees();
 	}
