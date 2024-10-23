@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
 import com.mojang.logging.LogUtils;
+import io.github.tt432.machinemax.common.entity.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.physcontroller.CarController;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
@@ -13,6 +14,7 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,64 +36,49 @@ import static java.lang.Math.*;
 public class TestCarEntity extends BasicEntity {
     public static final Logger LOGGER = LogUtils.getLogger();
     public Input input;
+    public float mass;
     public float MAX_POWER = 80000;//最大功率80kW
     public float ENG_ACC = 0.05F;//引擎加速系数
     public float ENG_DEC = 0.2F;//引擎减速系数
     public float REACT_T = 0.75F;//达到满舵所需时间
     public float MIN_TURNING_R = 5;//最小转弯半径
     public float MAX_TURNING_W = (float) (PI)/20;//最大转弯角速度
-    public float mass;//质量
     public float target_power;//目标输出功率
     public float power;//推进功率
     public float turning_input;//转向角输入
     public Vec3 selfDeltaMovement;//自身坐标系下的三轴每tick移动距离
     public boolean brake;
     public float max_ang;//单位时间最大转向角(rad)
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
-    private float ZRot;
-    //以下为物理引擎相关
-    public Quaternionf q;
-    public volatile DBody dbody;
-    public volatile DMass dmass;
-    public volatile DGeom dgeom;
 
     public TestCarEntity(EntityType<? extends BasicEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.input = new Input();
-        mass=1200;
+        this.CORE_PART=new TestCarChassisPart(this);
+        //TODO:new四个WheelPart出来，attach到ChassisPart
+        this.CONTROLLER = new CarController(this);
         turning_input=0;
         max_ang=0;
         power=0;
         target_power=0;
         brake=true;
-        ZRot=0;
+        this.setXRot((float) (random()*10-5));
+        this.setYRot((float) (random()*10-5));
+        this.setZRot((float) (random()*10-5));
         selfDeltaMovement=new Vec3(0,0,0);
-        //以下为物理引擎相关
-        controller = new CarController(this);
-        dbody = OdeHelper.createBody(PhysThread.world,this);//创建车体
-        dmass = OdeHelper.createMass();//创造质量属性
-        dmass.setBoxTotal(mass,40D/16,32D/16,72D/16);//设置质量与转动惯量
-        dbody.setMass(dmass);//将设置好的质量属性赋予车体
-        dgeom = OdeHelper.createBox(40D/16,32D/16,72D/16);//创建一定尺寸的碰撞体
-        dgeom.setBody(dbody);//将碰撞体绑定到运动物体
-        dgeom.setOffsetPosition(0,8D/16,-12D/16);//对齐碰撞体形状与模型形状
-        dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
-        this.setXRot((float) (random()*10));
-        this.setYRot((float) (random()*10));
-        this.setZRot((float) (random()*10));
+
+        CORE_PART.dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
         DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
-        dbody.setQuaternion(dq);
+        CORE_PART.dbody.setQuaternion(dq);
         if(this.level().isClientSide()){
-            PhysThread.renderSpace.geomAddEnQueue(dgeom);//等待将碰撞体加入本地碰撞空间
+            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeom);//等待将碰撞体加入本地碰撞空间
         }else {
-            PhysThread.serverSpace.geomAddEnQueue(dgeom);//等待将碰撞体加入服务器碰撞空间
+            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeom);//等待将碰撞体加入服务器碰撞空间
         }
-        q=new Quaternionf();
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -101,14 +88,12 @@ public class TestCarEntity extends BasicEntity {
         rudderControl();
         if((this.getFirstPassenger() instanceof Player)){
             clampRotation(this.getFirstPassenger());}
-        this.setPos(dbody.getPosition().get0(),dbody.getPosition().get1(),dbody.getPosition().get2());
-        DQuaternion dq = (DQuaternion) dbody.getQuaternion();
+        this.setPos(CORE_PART.dbody.getPosition().get0(),CORE_PART.dbody.getPosition().get1(),CORE_PART.dbody.getPosition().get2());
+        DQuaternion dq = (DQuaternion) CORE_PART.dbody.getQuaternion();
         DVector3 heading = dq.toEulerDegrees();
         setXRot((float) heading.get0());
         setYRot((float) heading.get1());
         setZRot((float) heading.get2());
-        q=new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
-        //move();
         //MachineMax.LOGGER.info("heading:" + heading);
         //MachineMax.LOGGER.info(" pitch:" + this.getXRot() + " yaw:" + this.getYRot() + " roll:" + this.getZRot());
         //MachineMax.LOGGER.info("pos:" + this.getPosition(0));
@@ -117,7 +102,6 @@ public class TestCarEntity extends BasicEntity {
     }
     public void move(){
         this.setYRot((this.getYRot() -(float) (max_ang*180/PI)));
-        ZRot= (float) (-max_ang*180/PI);
         selfDeltaMovement = this.getDeltaMovement().yRot((float) (getYRot()*PI/180)).add(acceleration().scale(0.05));
         this.setDeltaMovement(selfDeltaMovement.yRot((float) (-getYRot()*PI/180)));
         this.setPos(this.getPosition(1).add(this.getDeltaMovement()));
@@ -205,21 +189,7 @@ public class TestCarEntity extends BasicEntity {
             }
         }
     }
-    @Override
-    public boolean isPickable() {//不是是否可拾取而是是否可被选中
-        return !this.isRemoved();
-    }
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        this.destroy(Items.AIR);
-        return true;
-    }
-    @Override
-    public void remove(RemovalReason reason) {
-        dbody.destroy();
-        dgeom.destroy();
-        super.remove(reason);
-    }
+
     /**
      * Applies this boat's yaw to the given entity. Used to update the orientation of its passenger.
      */
@@ -247,11 +217,6 @@ public class TestCarEntity extends BasicEntity {
     @Override
     protected void addAdditionalSaveData(CompoundTag pCompound) {
 
-    }
-
-    @Override
-    public Item getDropItem() {
-        return Items.AIR;
     }
 
     @Override

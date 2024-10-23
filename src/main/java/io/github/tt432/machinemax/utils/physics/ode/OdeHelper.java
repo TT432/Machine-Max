@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.List;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.internal.*;
@@ -541,11 +542,11 @@ public abstract class OdeHelper {
 	/**
 	 * 在指定世界创建一个运动体
 	 * @param world 要将运动体放入的世界
-	 * @param entity 此运动体绑定的实体
+	 * @param part 此运动体绑定的部件
 	 * @return 获得的运动体
 	 */
-	public static DBody createBody (DWorld world, BasicEntity entity){
-		return DxBody.dBodyCreate((DxWorld) world, entity);
+	public static DBody createBody (DWorld world, AbstractMMPart part){
+		return DxBody.dBodyCreate((DxWorld) world, part);
 	}
 
 	//ODE_API 

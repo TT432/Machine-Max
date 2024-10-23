@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.common.entity;
+package io.github.tt432.machinemax.common.entity.physcontroller;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import net.minecraft.world.entity.Entity;
@@ -16,10 +16,10 @@ public class BasicPhysController {
         this.controlledEntity=entity;
     }
     /**
-     * 将力与力矩施加于各个物理体
+     * 将力与力矩施加于各个运动体
      */
     public void applyForceAndTorques(){
-        //物理模拟线程将会每计算帧调用一次此方法，因此应在这里写入所有要附加于物理体的力与力矩
+        //物理模拟线程将会每计算帧调用一次此方法，因此应在这里写入所有要附加于运动体的力与力矩
     }
 
     public Entity getControlledEntity() {

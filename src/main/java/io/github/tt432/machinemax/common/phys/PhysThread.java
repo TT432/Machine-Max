@@ -96,7 +96,7 @@ public class PhysThread extends Thread{
     }
 
     /**
-     * 调用所有实体物理控制器，根据控制律使力与力矩作用于指定碰撞空间的物理体
+     * 调用所有实体物理控制器，根据控制律使力与力矩作用于指定碰撞空间的运动体
      * @param space 生效的碰撞空间
      */
     private void applyAllControllers(DSpace space){
@@ -104,7 +104,7 @@ public class PhysThread extends Thread{
             //应用控制器前，先重置其状态
             for(DGeom g : space.getGeoms()){//获取所有碰撞体
                 if(g.getBody()!=null){
-                    BasicEntity e = g.getBody().getAttachedEntity();//获取碰撞体所附着的物理体所附着的实体
+                    BasicEntity e = g.getBody().getAttachedPart().getAttachedEntity();//获取碰撞体所附着的运动体所附着的实体
                     if(e.isControllerHandled()){//若附着实体的控制器在上次循环中已生效
                         e.setControllerHandled(false);//重置控制器状态
                     }
@@ -112,9 +112,9 @@ public class PhysThread extends Thread{
             }
             for(DGeom g : space.getGeoms()){//获取所有碰撞体
                 if(g.getBody()!=null){
-                    BasicEntity e = g.getBody().getAttachedEntity();//获取碰撞体所附着的物理体所附着的实体
+                    BasicEntity e = g.getBody().getAttachedPart().getAttachedEntity();//获取碰撞体所附着的运动体所附着的实体
                     if(!e.isControllerHandled() && e.getController() != null){//若附着实体的控制器在本次循环中未生效
-                        e.getController().applyForceAndTorques();//根据控制律，为每个物理体施加相应的力与力矩
+                        e.getController().applyForceAndTorques();//根据控制律，为每个运动体施加相应的力与力矩
                         e.setControllerHandled(true);//标记此实体的控制器已处理
                     }
                 }

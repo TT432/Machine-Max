@@ -16,15 +16,15 @@ public class MMArmor {
      * @param pAngle 入射角(投射物速度方向与装甲法线方向的夹角)
      * @return 等效护甲水平
      */
-    public static float equivalentArmor(float pArmor, float pAngle){
-        return (float) (pArmor/cos(pAngle));
+    public static double equivalentArmor(float pArmor, float pAngle){
+        return pArmor/cos(pAngle);
     }
     /**
      * 获取方块护甲水平，护甲公式为：200*lg(1+爆炸抗性)*(方块硬度)
      * @param pBlock 要计算护甲水平的方块
      * @return 给定方块的护甲水平
      */
-    public static float blockArmor(Block pBlock){
-        return (float)(200F*(log10(pBlock.getExplosionResistance()+1)*pBlock.defaultDestroyTime()));
+    public static double blockArmor(Block pBlock){
+        return 200D*(log10(pBlock.getExplosionResistance()+1)*pBlock.defaultDestroyTime());
     }
 }

@@ -11,7 +11,7 @@ public class MMDamage {
      * @param pPenetrationIndex 护盾穿透系数
      * @return 对护盾造成的实际伤害
      */
-    public static float BulletDamage2Shield(float pDamage, float pMultiplier, float pPenetrationIndex){
+    public static double BulletDamage2Shield(float pDamage, float pMultiplier, float pPenetrationIndex){
         return pDamage*pMultiplier*(1F-pPenetrationIndex);
     }
     /**
@@ -19,7 +19,7 @@ public class MMDamage {
      * @param pDamage 投射物伤害
      * @return 对生命值造成的实际伤害
      */
-    public static float BulletDamage2Health(float pDamage){
+    public static double BulletDamage2Health(float pDamage){
         return pDamage;
     }
 }

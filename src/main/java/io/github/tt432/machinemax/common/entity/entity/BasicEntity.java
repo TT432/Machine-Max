@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
-import io.github.tt432.machinemax.common.entity.BasicPhysController;
-import io.github.tt432.machinemax.common.entity.part.BasicPart;
+import io.github.tt432.machinemax.common.entity.physcontroller.BasicPhysController;
+import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -9,10 +9,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.Level;
 
-public abstract class BasicEntity extends VehicleEntity {
+public abstract class BasicEntity extends Entity {
 
-    public BasicPhysController controller;//实体指定的控制器
-    public BasicPart[] parts;//实体连接的所有部件
+    public BasicPhysController CONTROLLER;//实体指定的控制器
+    public AbstractMMPart CORE_PART;//实体连接的核心部件
     public boolean controllerHandled;//控制器是否已在单帧物理计算中生效
     private int lerpSteps;
     private double lerpX;
@@ -124,10 +124,10 @@ public abstract class BasicEntity extends VehicleEntity {
     }
 
     public BasicPhysController getController() {
-        return this.controller;
+        return this.CONTROLLER;
     }
 
     public void setController(BasicPhysController controller) {
-        this.controller = controller;
+        this.CONTROLLER = controller;
     }
 }
