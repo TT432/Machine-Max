@@ -1,7 +1,7 @@
-package io.github.tt432.machinemax.common.entity.physcontrollers;
+package io.github.tt432.machinemax.common.entity.physcontroller;
 
 import io.github.tt432.machinemax.common.entity.BasicPhysController;
-import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 
 public class CarController extends BasicPhysController {
 

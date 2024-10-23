@@ -27,7 +27,7 @@ package io.github.tt432.machinemax.utils.physics.ode;
 import java.io.File;
 import java.util.List;
 
-import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.internal.*;

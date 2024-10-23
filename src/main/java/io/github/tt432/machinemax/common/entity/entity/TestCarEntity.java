@@ -1,7 +1,7 @@
-package io.github.tt432.machinemax.common.entity.entities;
+package io.github.tt432.machinemax.common.entity.entity;
 
 import com.mojang.logging.LogUtils;
-import io.github.tt432.machinemax.common.entity.physcontrollers.CarController;
+import io.github.tt432.machinemax.common.entity.physcontroller.CarController;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;

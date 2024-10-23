@@ -38,7 +38,7 @@ import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dQM
 import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dQfromR;
 import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dRfromQ;
 
-import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.utils.physics.math.*;
 import io.github.tt432.machinemax.utils.physics.ode.*;
 import io.github.tt432.machinemax.utils.physics.ode.internal.cpp4j.java.Ref;

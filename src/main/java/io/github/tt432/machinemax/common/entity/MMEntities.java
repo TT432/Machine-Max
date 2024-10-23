@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.common.entity;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.entities.TestCarEntity;
+import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

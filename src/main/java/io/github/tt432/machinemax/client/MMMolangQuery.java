@@ -3,7 +3,7 @@ package io.github.tt432.machinemax.client;
 import io.github.tt432.eyelib.molang.MolangScope;
 import io.github.tt432.eyelib.molang.mapping.api.MolangFunction;
 import io.github.tt432.eyelib.molang.mapping.api.MolangMapping;
-import io.github.tt432.machinemax.common.entity.entities.TestCarEntity;
+import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 

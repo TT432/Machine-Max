@@ -1,7 +1,7 @@
-package io.github.tt432.machinemax.common.entity.entities;
+package io.github.tt432.machinemax.common.entity.entity;
 
 import io.github.tt432.machinemax.common.entity.BasicPhysController;
-import io.github.tt432.machinemax.utils.physics.ode.DBody;
+import io.github.tt432.machinemax.common.entity.part.BasicPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 public abstract class BasicEntity extends VehicleEntity {
 
     public BasicPhysController controller;//实体指定的控制器
-    public DBody[] parts;//实体连接的所有部件
+    public BasicPart[] parts;//实体连接的所有部件
     public boolean controllerHandled;//控制器是否已在单帧物理计算中生效
     private int lerpSteps;
     private double lerpX;

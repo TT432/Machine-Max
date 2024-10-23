@@ -24,7 +24,7 @@
  *************************************************************************/
 package io.github.tt432.machinemax.utils.physics.ode;
 
-import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.utils.physics.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;

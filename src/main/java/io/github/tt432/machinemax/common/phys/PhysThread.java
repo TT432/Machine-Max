@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.entities.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.utils.physics.ode.*;
 
 import static io.github.tt432.machinemax.utils.physics.ode.OdeConstants.*;
