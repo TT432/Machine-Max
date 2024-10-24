@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.entity;
 
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -17,7 +18,13 @@ import java.util.function.Supplier;
 public class MMEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, MachineMax.MOD_ID);
     //以下为注册的实体列表
-    //测试用基本车辆
+    //基本方块
+    public static final Supplier<EntityType<BasicEntity>> BASIC_ENTITY =
+            ENTITIES.register("basic_entity",
+                    () -> EntityType.Builder.of(BasicEntity::new, MobCategory.MISC)
+                            .sized(1f,1f)
+                            .build("basic_entity"));
+    //测试用车辆
     public static final Supplier<EntityType<TestCarEntity>> TEST_CAR_ENTITY =
             ENTITIES.register("test_car",
                     () -> EntityType.Builder.of(TestCarEntity::new, MobCategory.MISC)

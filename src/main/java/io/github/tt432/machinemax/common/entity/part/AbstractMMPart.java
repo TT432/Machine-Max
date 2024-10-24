@@ -10,11 +10,16 @@ import io.github.tt432.machinemax.utils.physics.ode.DBody;
 import io.github.tt432.machinemax.utils.physics.ode.DGeom;
 import io.github.tt432.machinemax.utils.physics.ode.DMass;
 import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractMMPart {
+    //部件模型资源路径
+    public static ResourceLocation PART_TEXTURE;
+    public static ResourceLocation PART_MODEL;
+    public static ResourceLocation PART_ANIMATION;
+    public static ResourceLocation PART_ANI_CONTROLLER;
 
     private BasicEntity attachedEntity;//此部件附着的实体
 
@@ -23,11 +28,11 @@ public abstract class AbstractMMPart {
     static double BASIC_ARMOR;//(RHA mm)
     public static partTypes PART_TYPE;
 
-    int PART_SLOT_NUM;//此部件的身体部件及武器装备槽位数
-    int MOD_SLOT_NUM;//此部件的主被动模块槽位数
-    public List<BasicPartSlot> children_parts;//连接的子代部件
     public AbstractMMPart father_part;//连接的上级部件
     public DVector3 attach_point;//本部件重心与父节点连接点的相对位置，即坐标原点与被连接点的相对位置
+    static int PART_SLOT_NUM;//此部件的身体部件及武器装备槽位数
+    static int MOD_SLOT_NUM;//此部件的主被动模块槽位数
+    public List<BasicPartSlot> children_parts;//连接的子代部件
     public List<BasicModuleSlot> modules;//安装的各类主被动模块
 
     private double health;//部件生命值
@@ -48,7 +53,6 @@ public abstract class AbstractMMPart {
         BACKPACK,//背包
         TURRET//炮塔(不包含武器)
     };
-
     //以下为物理运算相关参数，控制部件的运动受力
     final DVector3C MASS_CENTRE=new DVector3(0,0,0);//物理引擎要求重心位于运动体原点处
     //气动力相关系数

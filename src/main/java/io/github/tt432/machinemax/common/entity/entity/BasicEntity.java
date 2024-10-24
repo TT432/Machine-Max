@@ -3,13 +3,13 @@ package io.github.tt432.machinemax.common.entity.entity;
 import io.github.tt432.machinemax.common.entity.physcontroller.BasicPhysController;
 import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public abstract class BasicEntity extends Entity {
+public class BasicEntity extends Entity {
 
     public BasicPhysController CONTROLLER;//实体指定的控制器
     public AbstractMMPart CORE_PART;//实体连接的核心部件
@@ -22,8 +22,13 @@ public abstract class BasicEntity extends Entity {
     private double lerpXRot;
     private float ZRot;
 
-    public BasicEntity(EntityType<?> entityType, Level level) {
+    public BasicEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -49,12 +54,12 @@ public abstract class BasicEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(CompoundTag pCompound) {
 
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(CompoundTag pCompound) {
 
     }
 
@@ -107,14 +112,6 @@ public abstract class BasicEntity extends Entity {
         return this.lerpSteps > 0 ? (float)this.lerpYRot : this.getYRot();
     }
 
-    public float getZRot() {
-        return ZRot;
-    }
-
-    public void setZRot(float ZRot) {
-        this.ZRot = ZRot;
-    }
-
     public boolean isControllerHandled() {
         return controllerHandled;
     }
@@ -129,5 +126,13 @@ public abstract class BasicEntity extends Entity {
 
     public void setController(BasicPhysController controller) {
         this.CONTROLLER = controller;
+    }
+
+    public float getZRot() {
+        return ZRot;
+    }
+
+    public void setZRot(float ZRot) {
+        this.ZRot = ZRot;
     }
 }

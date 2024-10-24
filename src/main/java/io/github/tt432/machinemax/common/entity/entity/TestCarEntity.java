@@ -213,16 +213,6 @@ public class TestCarEntity extends BasicEntity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
-
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
-
-    }
-
-    @Override
     public boolean canCollideWith(Entity pEntity) {
         return canVehicleCollide(this, pEntity);
     }
