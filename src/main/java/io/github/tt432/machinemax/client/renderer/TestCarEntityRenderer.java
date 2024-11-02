@@ -30,10 +30,10 @@ import java.util.List;
 
 public class TestCarEntityRenderer extends EntityRenderer {
 
-    private static final ResourceLocation TEST_CAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/ae86.png");
-    private static final ResourceLocation TEST_CAR_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86");
-    private static final ResourceLocation TEST_CAR_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86.animation");
-    private static final ResourceLocation TEST_CAR_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/ae86.animation_controllers");
+    static final ResourceLocation TEST_CAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/mini_ev.png");
+    static final ResourceLocation TEST_CAR_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev");
+    static final ResourceLocation TEST_CAR_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev.animation");
+    static final ResourceLocation TEST_CAR_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev.animation_controllers");
 
     protected TestCarEntityRenderer(EntityRendererProvider.Context context) {
         super(context);

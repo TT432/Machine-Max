@@ -1176,6 +1176,7 @@ public class DxBody extends DObject implements DBody {
 	@Override
 	public void setPosition (double x, double y, double z)
 	{ dBodySetPosition (x,y,z); }
+
 	@Override
 	public void setPosition (DVector3C p)
 	{ dBodySetPosition(p); }

@@ -593,4 +593,15 @@ public interface DWorld {
 	void setMaxAngularSpeed (double max_speed);
 
 	void setTaskExecutor(TaskExecutor executor);
+
+	/**
+	 * 将运动体加入统一处理队列，等待实际从物理线程中被移除
+	 * @param x 将要被统一从物理线程移除的运动体
+	 */
+	void bodyRemoveEnQueue(DBody x);
+	/**
+	 * 统一对即将添加或移除的运动体进行处理，防止单独添加删除碰撞体时由于空间被锁定而导致的添加删除失败
+	 * 每一仿真步应调用一次以保证及时对运动体进行处理
+	 */
+	void handleBodyRemove();
 }

@@ -125,7 +125,6 @@ public interface DBody {
 	 * @param p p
 	 */
 	void setPosition (DVector3C p);
-
 	/**
 	 * Set the orientation of a body.
 	 * <p>REMARK:
