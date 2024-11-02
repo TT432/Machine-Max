@@ -35,6 +35,8 @@ import static io.github.tt432.machinemax.utils.physics.ode.internal.ErrorHandler
 
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
+import io.github.tt432.machinemax.utils.physics.ode.DBody;
+import io.github.tt432.machinemax.utils.physics.ode.DGeom;
 import io.github.tt432.machinemax.utils.physics.ode.DWorld;
 import io.github.tt432.machinemax.utils.physics.ode.internal.cpp4j.java.Ref;
 import io.github.tt432.machinemax.utils.physics.ode.internal.cpp4j.java.RefInt;
@@ -55,6 +57,9 @@ import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.B
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.alloc_block_fn_t;
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.free_block_fn_t;
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.shrink_block_fn_t;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class DxWorld extends DBase implements DWorld {
 
@@ -82,6 +87,8 @@ public class DxWorld extends DBase implements DWorld {
 	dxDampingParameters dampingp; // damping parameters
 	double max_angular_speed;      // limit the angular velocity to this magnitude
 
+	public Queue<DBody> bodysToBeRemoved = new LinkedList<>();//将要统一被从物理线程移除的运动体
+	
 	private Object userdata;
 
     //dxWorld();
@@ -882,6 +889,26 @@ public class DxWorld extends DBase implements DWorld {
 	public void setTaskExecutor(TaskExecutor executor) {
 		this.taskExecutor = executor;
 	}
+
+	/**
+	 * 将运动体加入统一处理队列，等待实际从物理线程中被移除
+	 * @param x 将要被统一从物理线程移除的运动体
+	 */
+	@Override
+	public void bodyRemoveEnQueue(DBody x){
+		this.bodysToBeRemoved.add(x);
+	}
+	/**
+	 * 统一对即将添加或移除的运动体进行处理，防止单独添加删除运动体时由于空间被锁定而导致的添加删除失败
+	 * 每一仿真步应调用一次以保证及时对运动体进行处理
+	 */
+	@Override
+	public void handleBodyRemove(){
+		while(!bodysToBeRemoved.isEmpty()){
+			(bodysToBeRemoved.remove()).destroy();
+		}
+	}
+
 	@Override
 	public void setGravity (double x, double y, double z)
 	{ dWorldSetGravity (x,y,z); }

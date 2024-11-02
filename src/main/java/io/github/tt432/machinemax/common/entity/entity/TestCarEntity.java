@@ -1,15 +1,15 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
 import com.mojang.logging.LogUtils;
+import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
 import io.github.tt432.machinemax.common.entity.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.physcontroller.CarController;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DBody;
-import io.github.tt432.machinemax.utils.physics.ode.DGeom;
-import io.github.tt432.machinemax.utils.physics.ode.DMass;
-import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
+import io.github.tt432.machinemax.utils.physics.math.DVector3C;
+import io.github.tt432.machinemax.utils.physics.ode.*;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,6 +21,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -30,11 +32,13 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.slf4j.Logger;
 
+import java.util.Iterator;
+
 import static io.github.tt432.machinemax.utils.MMMMath.sigmoidSignum;
 import static java.lang.Math.*;
 
 public class TestCarEntity extends BasicEntity {
-    public static final Logger LOGGER = LogUtils.getLogger();
+
     public Input input;
     public float mass;
     public float MAX_POWER = 80000;//最大功率80kW
@@ -54,54 +58,36 @@ public class TestCarEntity extends BasicEntity {
         super(pEntityType, pLevel);
         this.input = new Input();
         this.CORE_PART=new TestCarChassisPart(this);
-        //TODO:new四个WheelPart出来，attach到ChassisPart
-        this.CONTROLLER = new CarController(this);
+        this.setController(new CarController(this));
         turning_input=0;
         max_ang=0;
         power=0;
         target_power=0;
         brake=true;
-        this.setXRot((float) (random()*10-5));
-        this.setYRot((float) (random()*10-5));
-        this.setZRot((float) (random()*10-5));
+        this.setXRot((float) (random()*0));
+        this.setYRot((float) (random()*0));
+        this.setZRot((float) (random()*0));
         selfDeltaMovement=new Vec3(0,0,0);
-
-        CORE_PART.dbody.setPosition(this.getX(),this.getY(),this.getZ());//将位置同步到物理计算线程
-        DQuaternion dq = DQuaternion.fromEulerDegrees(this.getXRot(),this.getYRot(),this.getZRot());
-        CORE_PART.dbody.setQuaternion(dq);
-        if(this.level().isClientSide()){
-            //TODO:改为将整个机体结构树中所有碰撞体加入碰撞空间
-            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeoms[0]);//等待将碰撞体加入本地碰撞空间
-            PhysThread.renderSpace.geomAddEnQueue(CORE_PART.dgeoms[1]);//等待将碰撞体加入本地碰撞空间
-        }else {
-            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeoms[0]);//等待将碰撞体加入服务器碰撞空间
-            PhysThread.serverSpace.geomAddEnQueue(CORE_PART.dgeoms[1]);//等待将碰撞体加入本地碰撞空间
-        }
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
     }
 
     @Override
     public void tick() {
+        super.tick();
         getControlInput();
         engineControl();
         rudderControl();
         if((this.getFirstPassenger() instanceof Player)){
             clampRotation(this.getFirstPassenger());}
-        this.setPos(CORE_PART.dbody.getPosition().get0(),CORE_PART.dbody.getPosition().get1(),CORE_PART.dbody.getPosition().get2());
-        DQuaternion dq = (DQuaternion) CORE_PART.dbody.getQuaternion();
-        DVector3 heading = dq.toEulerDegrees();
-        setXRot((float) heading.get0());
-        setYRot((float) heading.get1());
-        setZRot((float) heading.get2());
+
         //MachineMax.LOGGER.info("heading:" + heading);
         //MachineMax.LOGGER.info(" pitch:" + this.getXRot() + " yaw:" + this.getYRot() + " roll:" + this.getZRot());
         //MachineMax.LOGGER.info("pos:" + this.getPosition(0));
+        //double v0 = ((DPRJoint)this.CORE_PART.children_parts.get(0).joints.getFirst()).getPosition();
+        //double v1 = ((DPRJoint)this.CORE_PART.children_parts.get(1).joints.getFirst()).getPosition();
+        //double v2 = ((DPRJoint)this.CORE_PART.children_parts.get(2).joints.getFirst()).getPosition();
+        //double v3 = ((DPRJoint)this.CORE_PART.children_parts.get(3).joints.getFirst()).getPosition();
+        //MachineMax.LOGGER.info("wheel_0 pos:" + v0 + " wheel_1 pos:" + v1 + " wheel_2 pos:" + v2 + " wheel_3 pos:" + v3);
         this.level().addParticle(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0,0);
-        super.tick();
     }
     public void move(){
         this.setYRot((this.getYRot() -(float) (max_ang*180/PI)));
