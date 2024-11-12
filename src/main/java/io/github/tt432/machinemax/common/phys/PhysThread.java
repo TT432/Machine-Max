@@ -18,7 +18,7 @@ public class PhysThread extends Thread {
     public static volatile DJointGroup contactGroup;
     public static volatile boolean isPaused = false;
     static final long step = 10;//物理线程计算步长(毫秒)
-
+    public static volatile long time = 0;
     @Override
     public void run() {//物理计算的主线程
         isPaused = false;
@@ -29,8 +29,7 @@ public class PhysThread extends Thread {
         world.setContactSurfaceLayer(0.001);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
         world.setERP(0.1);
         world.setCFM(0.00005);
-        world.setAutoDisableFlag(true);
-        world.setAutoDisableSteps(1);
+        //TODO:设置静止物体自动休眠以节约性能
         world.setQuickStepNumIterations(40);//设定迭代次数以提高物理计算精度
         world.setQuickStepW(1.3);
         world.setContactMaxCorrectingVel(20);
@@ -76,6 +75,7 @@ public class PhysThread extends Thread {
         renderSpace.handleGeomAddAndRemove();//增删待增删的碰撞体
         serverSpace.handleGeomAddAndRemove();
         world.handleBodyRemove();//删除待删除的运动体
+        time=System.nanoTime();
     }
 
     private DGeom.DNearCallback nearCallback = new DGeom.DNearCallback() {

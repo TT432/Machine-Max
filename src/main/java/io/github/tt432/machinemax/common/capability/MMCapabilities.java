@@ -27,18 +27,18 @@ public class MMCapabilities {
             EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "trans_z_capability"),
                     RotYInput.class);
 
-    @EventBusSubscriber(modid = MachineMax.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-    public static class EventBus {
-        @SubscribeEvent
-        private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-            event.registerEntity(
-                    TRANS_Z_CAPABILITY,
-                    EntityType.PLAYER,
-                    new TransZProvider());
-            event.registerEntity(
-                    ROT_Y_CAPABILITY,
-                    EntityType.PLAYER,
-                    new RotYProvider());
-        }
-    }
+//    @EventBusSubscriber(modid = MachineMax.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+//    public static class EventBus {
+//        @SubscribeEvent
+//        private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+//            event.registerEntity(
+//                    TRANS_Z_CAPABILITY,
+//                    EntityType.PLAYER,
+//                    new TransZProvider());
+//            event.registerEntity(
+//                    ROT_Y_CAPABILITY,
+//                    EntityType.PLAYER,
+//                    new RotYProvider());
+//        }
+//    }
 }

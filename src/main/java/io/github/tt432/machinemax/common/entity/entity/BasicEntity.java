@@ -1,7 +1,9 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import lombok.Getter;
@@ -79,7 +81,8 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
                         entityData.get(PHYS_POS).x,
                         entityData.get(PHYS_POS).y,
                         entityData.get(PHYS_POS).z);
-                posError = physSyncDeltaPos.copy().sub(corePart.dbody.getPosition());
+                posError = physSyncDeltaPos.copy();
+                MachineMax.LOGGER.info("pos sync time: " + PhysThread.time);
                 this.setPos(physSyncDeltaPos);
             }
         } else if (PHYS_SPD_L.equals(key)) {
@@ -89,6 +92,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
                         entityData.get(PHYS_SPD_L).y,
                         entityData.get(PHYS_SPD_L).z);
                 this.controller.setLinearVelEnqueue(physSyncDeltaSpdL);
+                MachineMax.LOGGER.info("lVel sync time: " + PhysThread.time);
             }
         } else if (PHYS_ROT.equals(key)) {//姿态同步
             if (this.level().isClientSide()) {
@@ -96,6 +100,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
                 Quaternionf physRot = entityData.get(PHYS_ROT);
                 physSyncDeltaRot = new DQuaternion(physRot.w, physRot.x, physRot.y, physRot.z);
                 this.setRot(physSyncDeltaRot);
+                MachineMax.LOGGER.info("rot sync time: " + PhysThread.time);
             }
         } else if (PHYS_SPD_A.equals(key)) {
             if (this.level().isClientSide()) {
@@ -104,6 +109,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
                         entityData.get(PHYS_SPD_A).y,
                         entityData.get(PHYS_SPD_A).z);
                 controller.setAngularVelEnqueue(physSyncDeltaSpdA);
+                MachineMax.LOGGER.info("aVel sync time: " + PhysThread.time);
             }
         }
         super.onSyncedDataUpdated(key);
@@ -121,11 +127,11 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
         }
         this.syncPoseToMainThread();//将实体位姿与物理计算结果同步
         if (!this.level().isClientSide()) {//服务端限定内容
-            //if (tickCount % 20 == 0) syncPoseToClient();//每秒更新一次需要同步的位姿
+            if (tickCount % 20 == 0) syncPoseToClient();//每秒更新一次需要同步的位姿
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
             //syncPoseFromServer();//将客户端实体位姿与服务端同步
-            //MachineMax.LOGGER.info("error: " + posError.length());
+            MachineMax.LOGGER.info("error: " + (posError.copy().sub(corePart.dbody.getPosition())).length());
         }
 
         super.tick();
