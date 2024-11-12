@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.utils;
+package io.github.tt432.machinemax.utils.control;
 
 /**
  * 一个简单的PD控制器，用于实现对各个可动部件的控制

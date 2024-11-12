@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.utils;
+package io.github.tt432.machinemax.utils.control;
 
 import io.github.tt432.machinemax.MachineMax;
 
@@ -16,9 +16,10 @@ public class PIDController {
     private double error;//实时误差
     private double error_last_frame;//前一次迭代的误差
     private double error_accumulated;//累积误差
+    private double error_accu_max;//累积误差上限
+    private double error_accu_min;//累积误差下限
     private double error_speed;//误差变化率
     private double STEP;//PID控制器的运行步长
-    //TODO:添加累积误差值域限制，防止其过分累积
 
     /**
      * 创造一个PID控制器，能够根据被控量的误差给出动态的控制量
@@ -28,8 +29,8 @@ public class PIDController {
      * @param d    微分系数：误差变化速度越大，控制量越大
      * @param step 控制器运行步长，通常与物理计算步长相同
      */
-    public PIDController(double p, double i, double d, double step) {
-        this.adjust(p, i, d, step);
+    public PIDController(double p, double i, double d, double step, double min, double max) {
+        this.adjust(p, i, d, step, min, max);
         this.resetError();
     }
 
@@ -41,10 +42,12 @@ public class PIDController {
      * @param d    微分系数：误差变化速度越大，控制量越大
      * @param step 控制器运行步长，通常与物理计算步长相同
      */
-    public void adjust(double p, double i, double d, double step) {
+    public void adjust(double p, double i, double d, double step, double min, double max) {
         this.P = p;
         this.I = i;
         this.D = d;
+        this.error_accu_max = max;
+        this.error_accu_min = min;
         if (step <= 0) {
             this.STEP = 0.1;
             MachineMax.LOGGER.error("PID's time step must be greater than 0!");
@@ -75,6 +78,9 @@ public class PIDController {
     public double step(double target, double actual) {
         this.error = target - actual;//更新记录的误差
         this.error_accumulated += error;
+        //限制累积误差上下限
+        if (error_accumulated > error_accu_max) error_accumulated = error_accu_max;
+        else if (error_accumulated < error_accu_min) error_accumulated = error_accu_min;
         this.error_speed = (this.error - this.error_last_frame) / this.STEP;
         //P
         double output = this.P * error;
