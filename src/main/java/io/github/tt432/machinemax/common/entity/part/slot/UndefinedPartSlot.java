@@ -1,22 +1,22 @@
 package io.github.tt432.machinemax.common.entity.part.slot;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
+import io.github.tt432.machinemax.common.entity.part.AbstractPart;
 
 /**
  * 占位符槽位类，不可安装任何部件
  */
 public class UndefinedPartSlot extends AbstractPartSlot {
-    public UndefinedPartSlot(AbstractMMPart owner) {
+    public UndefinedPartSlot(AbstractPart owner) {
         super(owner);
     }
 
     @Override
-    protected void attachJoint(AbstractMMPart part) {
+    protected void attachJoint(AbstractPart part) {
 
     }
 
     @Override
-    public boolean slotConditionCheck(AbstractMMPart part) {
+    public boolean slotConditionCheck(AbstractPart part) {
         return false;
     }
 }

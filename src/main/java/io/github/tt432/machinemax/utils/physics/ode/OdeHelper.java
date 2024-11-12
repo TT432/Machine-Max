@@ -27,8 +27,7 @@ package io.github.tt432.machinemax.utils.physics.ode;
 import java.io.File;
 import java.util.List;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
+import io.github.tt432.machinemax.common.entity.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.internal.*;
@@ -545,7 +544,7 @@ public abstract class OdeHelper {
 	 * @param part 此运动体绑定的部件
 	 * @return 获得的运动体
 	 */
-	public static DBody createBody (DWorld world, AbstractMMPart part){
+	public static DBody createBody (DWorld world, AbstractPart part){
 		return DxBody.dBodyCreate((DxWorld) world, part);
 	}
 

@@ -6,15 +6,13 @@ import io.github.tt432.machinemax.common.entity.part.slot.*;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
-import io.github.tt432.machinemax.utils.physics.ode.DGeom;
 import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
 import io.github.tt432.machinemax.utils.physics.ode.internal.DxGeom;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 
-public class TestCarChassisPart extends AbstractMMPart{
+public class TestCarChassisPart extends AbstractPart {
     //模型资源参数
     public static final ResourceLocation PART_TEXTURE= ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/mini_ev.png");
     public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev_chassis");
@@ -81,8 +79,10 @@ public class TestCarChassisPart extends AbstractMMPart{
         dgeoms=new DxGeom[1];
 
         dgeoms[0]=OdeHelper.createBox(40D/16,6D/16,72D/16);
+        //dgeoms[0]=OdeHelper.createBox(40D/16,35D/16,72D/16);
         dgeoms[0].setBody(dbody);
-        dgeoms[0].setOffsetPosition(0,3.5D/16,-4D/16);//对齐碰撞体形状与模型形状
+        dgeoms[0].setOffsetPosition(0,(3.5D)/16,-4D/16);//对齐碰撞体形状与模型形状
+        //dgeoms[0].setOffsetPosition(0,(3.5D+35D/2)/16,-4D/16);//对齐碰撞体形状与模型形状
     }
 
     @Override

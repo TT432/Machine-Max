@@ -1,9 +1,6 @@
 package io.github.tt432.machinemax.client.renderer;
 
 import io.github.tt432.machinemax.common.entity.MMEntities;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
-import io.github.tt432.machinemax.common.entity.part.TestCarChassisPart;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

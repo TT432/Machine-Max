@@ -4,12 +4,12 @@ import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public interface MMPartPhysParametersC {
+public interface PartPhysParametersC {
     /**
      * 根据运动体的相对运动状态，计算总的气动力系数
      * @return 运动体三个轴向的气动力系数
      */
-    default public DVector3 getAerodynamicForceCoef(AbstractMMPart part) {
+    default public DVector3 getAerodynamicForceCoef(AbstractPart part) {
         //气动力相关系数
         double BASIC_AIRDRAG_COEF_ZP=1;//空气阻力系数(前向)，一般较小
         double BASIC_AIRDRAG_COEF_ZN=1;//空气阻力系数(后向)，一般较小
@@ -69,7 +69,7 @@ public interface MMPartPhysParametersC {
      * 根据运动体的相对运动状态，计算总的水动力系数
      * @return 运动体三个轴向的水动力系数
      */
-    default public DVector3 getHydrodynamicForceCoef(AbstractMMPart part) {
+    default public DVector3 getHydrodynamicForceCoef(AbstractPart part) {
         //水动力相关系数
         double BASIC_WATERDRAG_COEF_ZP=1;//水阻力系数(前向)
         double BASIC_WATERDRAG_COEF_ZN=1;//水阻力系数(后向)

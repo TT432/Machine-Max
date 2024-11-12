@@ -24,8 +24,7 @@
  *************************************************************************/
 package io.github.tt432.machinemax.utils.physics.ode;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
+import io.github.tt432.machinemax.common.entity.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
@@ -69,8 +68,8 @@ import java.util.Iterator;
  */
 public interface DBody {
 
-	AbstractMMPart getAttachedPart();
-	void setAttachedPart(AbstractMMPart part);
+	AbstractPart getAttachedPart();
+	void setAttachedPart(AbstractPart part);
 	/**
 	  * Whenever a body has its position or rotation changed during the
 	  * timestep, the callback will be called (with body as the argument).

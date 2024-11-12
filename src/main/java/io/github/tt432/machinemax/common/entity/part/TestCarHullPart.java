@@ -8,7 +8,7 @@ import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
 import io.github.tt432.machinemax.utils.physics.ode.internal.DxGeom;
 import net.minecraft.resources.ResourceLocation;
 
-public class TestCarHullPart extends AbstractMMPart{
+public class TestCarHullPart extends AbstractPart {
     //模型资源参数
     public static final ResourceLocation PART_TEXTURE= ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/mini_ev.png");
     public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev_hull");

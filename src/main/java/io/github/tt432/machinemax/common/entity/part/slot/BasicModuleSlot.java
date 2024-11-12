@@ -1,7 +1,5 @@
 package io.github.tt432.machinemax.common.entity.part.slot;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
-
 public class BasicModuleSlot {
 
     boolean slotConditionCheck(){//TODO:这里需要一个模块类作为入参

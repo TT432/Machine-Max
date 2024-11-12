@@ -1,13 +1,10 @@
 package io.github.tt432.machinemax.common.entity.part.slot;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.part.AbstractMMPart;
+import io.github.tt432.machinemax.common.entity.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DHingeJoint;
 import io.github.tt432.machinemax.utils.physics.ode.DJoint;
-import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
-import io.github.tt432.machinemax.utils.physics.ode.internal.joints.DxJoint;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +15,9 @@ import java.util.List;
  * 部件槽位原型
  */
 abstract public class AbstractPartSlot {
-    public  AbstractMMPart slotOwnerPart;
+    public AbstractPart slotOwnerPart;
     @Getter
-    private AbstractMMPart childPart;//槽位保存的子部件
+    private AbstractPart childPart;//槽位保存的子部件
     @Setter
     @Getter
     protected DVector3 childPartAttachPos;//子代部件相对本部件质心的连接点位置
@@ -30,14 +27,14 @@ abstract public class AbstractPartSlot {
 
     public List<DJoint> joints = new ArrayList<>();//存储槽位包含的关节约束，以便访问
 
-    public AbstractPartSlot(AbstractMMPart owner){
+    public AbstractPartSlot(AbstractPart owner){
         this.slotOwnerPart = owner;
     }
     /**
      * 尝试将给定零件安装到此槽位
      * @param part 要安装的身体部件或武器装备
      */
-    public void attachPart(AbstractMMPart part){
+    public void attachPart(AbstractPart part){
         if(hasPart()) {
             MachineMax.LOGGER.error("Failed to attach the part, because the slot already has a part!");
         } else if (!slotConditionCheck(part)) {
@@ -45,17 +42,17 @@ abstract public class AbstractPartSlot {
         } else {
             this.childPart = part;
             part.father_part = this.slotOwnerPart;
+            part.attachedSlot = this;
             DVector3 pos = new DVector3();//临时变量
             this.slotOwnerPart.dbody.vectorToWorld(this.childPartAttachPos,pos);//获取连接点在世界坐标系下的位置
             part.dbody.setPosition(pos);//子部件重心对齐连接点
             part.dbody.setQuaternion(this.childPartAttachRot);//调整姿态
-            part.dbody.vectorToWorld(part.attach_point.scale(-1),pos);
-            part.dbody.setPosition(part.dbody.getPosition().reAdd(pos));//调整子部件连接位置
+            //TODO:令部件连接点不强制为部件重心位置
             attachJoint(part);
         }
     }
 
-    abstract protected void attachJoint(AbstractMMPart part);
+    abstract protected void attachJoint(AbstractPart part);
 
     /**
      * 将此槽位连接的部件与本部件断开连接
@@ -79,7 +76,7 @@ abstract public class AbstractPartSlot {
      * @param part 要检查的待安装部件
      * @return 给定零部件是否满足当前槽位安装条件
      */
-    public boolean slotConditionCheck(AbstractMMPart part){
+    public boolean slotConditionCheck(AbstractPart part){
         return true;//如有为此槽位指定安装条件的需要，继承此类并重载此方法
     }
 
