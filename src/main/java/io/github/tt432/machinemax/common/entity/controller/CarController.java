@@ -1,14 +1,9 @@
-package io.github.tt432.machinemax.common.entity.physcontroller;
+package io.github.tt432.machinemax.common.entity.controller;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.part.slot.AbstractPartSlot;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DHinge2Joint;
-import io.github.tt432.machinemax.utils.physics.ode.DHingeJoint;
-import io.github.tt432.machinemax.utils.physics.ode.DJoint;
-import io.github.tt432.machinemax.utils.physics.ode.DPRJoint;
 
-public class CarController extends BasicPhysController {
+public class CarController extends PhysController {
 
     public CarController(BasicEntity entity) {
         super(entity);

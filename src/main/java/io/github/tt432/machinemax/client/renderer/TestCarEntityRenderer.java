@@ -42,11 +42,14 @@ public class TestCarEntityRenderer extends EntityRenderer {
     @Override
     public void render(Entity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight){
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-        DVector3 heading = ((TestCarEntity)pEntity).CORE_PART.dbody.getQuaternion().toEulerDegrees();
+        DQuaternion dq = (DQuaternion) ((TestCarEntity)pEntity).corePart.dbody.getQuaternion();
+        DVector3 heading = dq.toEulerDegrees();
+        Quaternionf q = new Quaternionf(dq.get1(),dq.get2(),dq.get3(),dq.get0());
         pPoseStack.pushPose();
-        pPoseStack.mulPose(Axis.YN.rotationDegrees((float)heading.get1()));//将模型朝向与实体朝向相匹配
-        pPoseStack.mulPose(Axis.XP.rotationDegrees((float)heading.get0()));//俯仰
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float)heading.get2()));//滚转
+//        pPoseStack.mulPose(Axis.YN.rotationDegrees((float)heading.get1()));//将模型朝向与实体朝向相匹配
+//        pPoseStack.mulPose(Axis.XP.rotationDegrees((float)heading.get0()));//俯仰
+//        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float)heading.get2()));//滚转
+        pPoseStack.mulPose(q);
         RenderType renderType = RenderType.entitySolid(TEST_CAR_TEXTURE);
         AnimationComponent animationComponent = new AnimationComponent();
         animationComponent.setup(TEST_CAR_ANI_CONTROLLER, TEST_CAR_ANIMATION);

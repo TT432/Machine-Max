@@ -3,7 +3,7 @@ package io.github.tt432.machinemax.utils.formula;
  * 此类中集中收纳了本模组与伤害有关的机理公式，方便管理与调用
  * @author 甜粽子
 */
-public class MMDamage {
+public class Damage {
     /**
      * 计算实体投射物对护盾的伤害
      * @param pDamage 投射物伤害

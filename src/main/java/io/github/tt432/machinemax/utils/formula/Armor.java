@@ -9,7 +9,7 @@ import static java.lang.Math.log10;
  * 此类中集中收纳了本模组与护甲有关的机理公式，方便管理与调用
  * @author 甜粽子
  */
-public class MMArmor {
+public class Armor {
     /**
      * 考虑入射角的影响，计算不同入射角下的等效护甲水平
      * @param pArmor 基础护甲水平

@@ -21,6 +21,7 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 base {
@@ -101,7 +102,10 @@ dependencies {
 
     implementation "io.github.tt432:eyelib:21.1.2"//基岩版模型、动画、控制器支持
 
-    //implementation "org.ode4j:core:0.5.3"//物理引擎
+    implementation "org.openjdk.jmh:jmh-core:1.19"
+
+    implementation "org.openjdk.jmh:jmh-generator-annprocess:1.19"
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
