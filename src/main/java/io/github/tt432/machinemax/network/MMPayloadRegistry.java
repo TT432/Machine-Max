@@ -1,8 +1,10 @@
 package io.github.tt432.machinemax.network;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.network.handler.GroundInputPayloadHandler;
-import io.github.tt432.machinemax.network.payload.GroundInputPayload;
+import io.github.tt432.machinemax.network.handler.InputPayloadHandler;
+import io.github.tt432.machinemax.network.handler.MoveInputPayloadHandler;
+import io.github.tt432.machinemax.network.payload.RegularInputPayload;
+import io.github.tt432.machinemax.network.payload.MoveInputPayload;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -15,12 +17,20 @@ public class MMPayloadRegistry {
     public static void register(final RegisterPayloadHandlersEvent event){
         final PayloadRegistrar registrar = event.registrar("1.0.0");
         //注册网络包及其处理
-        registrar.playBidirectional(
-                GroundInputPayload.TYPE,
-                GroundInputPayload.STREAM_CODEC,
+        registrar.playBidirectional(//移动输入
+                MoveInputPayload.TYPE,
+                MoveInputPayload.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(
-                        GroundInputPayloadHandler::clientHandler,
-                        GroundInputPayloadHandler::serverHandler
+                        MoveInputPayloadHandler::clientHandler,
+                        MoveInputPayloadHandler::serverHandler
+                )
+        );
+        registrar.playBidirectional(//常规输入
+                RegularInputPayload.TYPE,
+                RegularInputPayload.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        InputPayloadHandler::clientHandler,
+                        InputPayloadHandler::serverHandler
                 )
         );
     }

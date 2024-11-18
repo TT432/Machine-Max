@@ -1,11 +1,14 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.*;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Arrays;
 
 /**
  * 此类为实体的控制器原型
@@ -21,6 +24,10 @@ public class PhysController {
     @Getter
     @Setter
     protected BasicEntity controlledEntity;//此控制器控制的实体
+    @Setter
+    protected byte[] rawMoveInput = new byte[6];//移动输入
+    @Setter
+    protected byte[] moveInputConflict = new byte[6];//移动输入冲突情况
     protected volatile boolean posNeedsUpdate = false;//是否需要更新位置
     protected DVector3 posToApply;//新位置
     protected volatile boolean lVelNeedsUpdate = false;//是否需要更新速度
@@ -65,7 +72,7 @@ public class PhysController {
      * @param z
      */
     public void setPositionEnqueue(double x, double y, double z) {
-        setPositionEnqueue(new DVector3(x,y,z));
+        setPositionEnqueue(new DVector3(x, y, z));
     }
 
     /**
@@ -87,6 +94,7 @@ public class PhysController {
             }
         }
     }
+
     /**
      * 待物理线程未在处理运动和碰撞时，设置实体速度
      *
@@ -95,7 +103,7 @@ public class PhysController {
      * @param z
      */
     public void setLinearVelEnqueue(double x, double y, double z) {
-        setLinearVelEnqueue(new DVector3(x,y,z));
+        setLinearVelEnqueue(new DVector3(x, y, z));
     }
 
     /**
@@ -130,13 +138,13 @@ public class PhysController {
     private void applySetRotation() {
         DMatrix3 rotT = controlledEntity.corePart.dbody.getRotation().reTranspose();//根节点旋转矩阵求逆，旋转矩阵的转置即其逆矩阵
         DMatrix3 newRot = new DMatrix3();
-        Rotation.dRfromQ(newRot,rotToApply);//新朝向，即新的根节点旋转矩阵
+        Rotation.dRfromQ(newRot, rotToApply);//新朝向，即新的根节点旋转矩阵
         newRot.eqMul(newRot, rotT);//构造一个调整用旋转矩阵，作用是逆转原本根节点的旋转，再将节点旋转至新的朝向
         controlledEntity.corePart.dbody.setQuaternion(rotToApply);//设置根部件的朝向
-        for(AbstractPart part : controlledEntity.corePart){
+        for (AbstractPart part : controlledEntity.corePart) {
             //调整子部件的朝向
             DMatrix3 rot = (DMatrix3) part.dbody.getRotation();//获取每个子部件的旋转矩阵
-            part.dbody.setRotation(rot.eqMul(newRot,rot));//叠加调整矩阵，旋转至新方向
+            part.dbody.setRotation(rot.eqMul(newRot, rot));//叠加调整矩阵，旋转至新方向
             //调整子部件相对根部件的位置
             DVector3 pos = new DVector3();
             part.father_part.dbody.getRelPointPos(part.attachedSlot.getChildPartAttachPos(), pos);//获取部件连接点的绝对坐标
@@ -144,6 +152,7 @@ public class PhysController {
             part.dbody.setPosition(pos);//移动子部件
         }
     }
+
     /**
      * 待物理线程未在处理运动和碰撞时，设置实体角速度
      *
@@ -152,7 +161,7 @@ public class PhysController {
      * @param z
      */
     public void setAngularVelEnqueue(double x, double y, double z) {
-        setAngularVelEnqueue(new DVector3(x,y,z));
+        setAngularVelEnqueue(new DVector3(x, y, z));
     }
 
     /**
