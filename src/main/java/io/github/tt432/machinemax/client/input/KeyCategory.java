@@ -1,5 +1,7 @@
 package io.github.tt432.machinemax.client.input;
 
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.settings.IKeyConflictContext;
 
 import static net.neoforged.neoforge.client.settings.KeyConflictContext.GUI;
@@ -31,7 +33,10 @@ public enum KeyCategory implements IKeyConflictContext, IKeyCategory {
 
         @Override
         public boolean isActive() {
-            return !GUI.isActive();
+            if(GUI.isActive()) return false;
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getVehicle() instanceof BasicEntity e) {
+                return e.getMode() == BasicEntity.controlMode.GROUND;
+            }else return false;
         }
 
         @Override
@@ -45,9 +50,11 @@ public enum KeyCategory implements IKeyConflictContext, IKeyCategory {
             return "key.category.machine_max.ship";
         }
 
-        @Override
         public boolean isActive() {
-            return !GUI.isActive();
+            if(GUI.isActive()) return false;
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getVehicle() instanceof BasicEntity e) {
+                return e.getMode() == BasicEntity.controlMode.SHIP;
+            }else return false;
         }
 
         @Override
@@ -61,9 +68,11 @@ public enum KeyCategory implements IKeyConflictContext, IKeyCategory {
             return "key.category.machine_max.plane";
         }
 
-        @Override
         public boolean isActive() {
-            return !GUI.isActive();
+            if(GUI.isActive()) return false;
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getVehicle() instanceof BasicEntity e) {
+                return e.getMode() == BasicEntity.controlMode.PLANE;
+            }else return false;
         }
 
         @Override
@@ -77,9 +86,11 @@ public enum KeyCategory implements IKeyConflictContext, IKeyCategory {
             return "key.category.machine_max.mech";
         }
 
-        @Override
         public boolean isActive() {
-            return !GUI.isActive();
+            if(GUI.isActive()) return false;
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getVehicle() instanceof BasicEntity e) {
+                return e.getMode() == BasicEntity.controlMode.MECH;
+            }else return false;
         }
 
         @Override
