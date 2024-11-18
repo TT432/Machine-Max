@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-public class RotYProvider implements ICapabilityProvider<Player,Void, RotYInput>, INBTSerializable<CompoundTag> {
+public class RotYProvider implements ICapabilityProvider<BasicEntity,Void, RotYInput>, INBTSerializable<CompoundTag> {
     private RotYInput input;
 
     private RotYInput create(){
@@ -20,7 +20,7 @@ public class RotYProvider implements ICapabilityProvider<Player,Void, RotYInput>
     }
     // 实现 ICapabilityProvider 接口的 getCapability 方法，用于获取能力实例
     @Override
-    public @Nullable RotYInput getCapability(Player object, Void context) {
+    public @Nullable RotYInput getCapability(BasicEntity object, Void context) {
         return create();
     }
     // 实现 INBTSerializable 接口的 serializeNBT 方法，用于将能力值保存到 NBT 数据中

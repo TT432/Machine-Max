@@ -1,6 +1,6 @@
-package io.github.tt432.machinemax.common.entity.part.slot;
+package io.github.tt432.machinemax.common.part.slot;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.ode.DFixedJoint;
 import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
 

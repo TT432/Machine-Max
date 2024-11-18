@@ -10,7 +10,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-public class TransZProvider implements ICapabilityProvider<Player,Void, TransZInput>, INBTSerializable<CompoundTag> {
+public class TransZProvider implements ICapabilityProvider<BasicEntity,Void, TransZInput>, INBTSerializable<CompoundTag> {
     private TransZInput input;
 
     private TransZInput create(){
@@ -19,7 +19,7 @@ public class TransZProvider implements ICapabilityProvider<Player,Void, TransZIn
     }
     // 实现 ICapabilityProvider 接口的 getCapability 方法，用于获取能力实例
     @Override
-    public @Nullable TransZInput getCapability(Player object, Void context) {
+    public @Nullable TransZInput getCapability(BasicEntity object, Void context) {
         return create();
     }
     // 实现 INBTSerializable 接口的 serializeNBT 方法，用于将能力值保存到 NBT 数据中

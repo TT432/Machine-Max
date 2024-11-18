@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.common.entity.part;
+package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 

@@ -1,7 +1,6 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
-import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.part.TestCarChassisPart;
+import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.controller.CarController;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;

@@ -24,21 +24,18 @@ public class MMCapabilities {
             EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "trans_z_capability"),
                     TransZInput.class);
     public static final EntityCapability<RotYInput, Void> ROT_Y_CAPABILITY =
-            EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "trans_z_capability"),
+            EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "rot_y_capability"),
                     RotYInput.class);
 
-//    @EventBusSubscriber(modid = MachineMax.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-//    public static class EventBus {
-//        @SubscribeEvent
-//        private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-//            event.registerEntity(
-//                    TRANS_Z_CAPABILITY,
-//                    EntityType.PLAYER,
-//                    new TransZProvider());
-//            event.registerEntity(
-//                    ROT_Y_CAPABILITY,
-//                    EntityType.PLAYER,
-//                    new RotYProvider());
-//        }
-//    }
+    @EventBusSubscriber(modid = MachineMax.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    public static class EventBus {
+        @SubscribeEvent
+        private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+            //TODO:整合TRANS能力，用.X.Y.Z做区分
+            event.registerEntity(
+                    TRANS_Z_CAPABILITY,
+                    MMEntities.TEST_CAR_ENTITY.get(),
+                    new TransZProvider());
+        }
+    }
 }

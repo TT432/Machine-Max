@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.common.entity.part.slot;
+package io.github.tt432.machinemax.common.part.slot;
 
 public class BasicModuleSlot {
 

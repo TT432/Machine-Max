@@ -3,10 +3,7 @@ package io.github.tt432.machinemax.common.phys;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.utils.physics.ode.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import org.openjdk.jmh.annotations.Benchmark;
 
 import static io.github.tt432.machinemax.utils.physics.ode.OdeConstants.*;
 import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnectedExcluding;
@@ -14,7 +11,7 @@ import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnecte
 public class PhysThread extends Thread {
     public static volatile DWorld world;
     public static volatile DSpace renderSpace;
-    public static volatile DSpace serverSpace;
+    public static volatile DSpace space;
     public static volatile DJointGroup contactGroup;
     public static volatile boolean isPaused = false;
     static final long step = 10;//物理线程计算步长(毫秒)
@@ -33,11 +30,12 @@ public class PhysThread extends Thread {
         world.setQuickStepNumIterations(40);//设定迭代次数以提高物理计算精度
         world.setQuickStepW(1.3);
         world.setContactMaxCorrectingVel(20);
+        //TODO:区分碰撞空间(常规)，命中判定空间(弹头刀刃等放进来)和自体碰撞空间(头发布料等有物理没碰撞的放进来)
         renderSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责客户端物体的碰撞
-        serverSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责服务端物体的碰撞
+        space = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责服务端物体的碰撞
         contactGroup = OdeHelper.createJointGroup();
         OdeHelper.createPlane(renderSpace, 0, 1, 0, -60);//创造碰撞平面
-        OdeHelper.createPlane(serverSpace, 0, 1, 0, -60);//创造碰撞平面
+        OdeHelper.createPlane(space, 0, 1, 0, -60);//创造碰撞平面
         while (!isInterrupted()) {//物理线程主循环
             long startTime = System.nanoTime();//记录开始时间
             step(isPaused);//推进物理模拟计算进程
@@ -51,7 +49,7 @@ public class PhysThread extends Thread {
                 MachineMax.LOGGER.info("Stopping phys thread...");
                 contactGroup.destroy();
                 renderSpace.destroy();
-                serverSpace.destroy();
+                space.destroy();
                 world.destroy();
                 break;
             }
@@ -66,14 +64,14 @@ public class PhysThread extends Thread {
     public void step(boolean paused) {
         if (!paused) {
             applyAllControllers(renderSpace);
-            applyAllControllers(serverSpace);
+            applyAllControllers(space);
             renderSpace.collide(null, nearCallback);//碰撞检测
-            serverSpace.collide(null, nearCallback);//碰撞检测
+            space.collide(null, nearCallback);//碰撞检测
             world.quickStep((double) step / 1000);
         }
         contactGroup.empty();//碰撞处理完成后移除所有碰撞点约束
         renderSpace.handleGeomAddAndRemove();//增删待增删的碰撞体
-        serverSpace.handleGeomAddAndRemove();
+        space.handleGeomAddAndRemove();
         world.handleBodyRemove();//删除待删除的运动体
         time=System.nanoTime();
     }

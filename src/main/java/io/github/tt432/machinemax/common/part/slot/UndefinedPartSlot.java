@@ -1,6 +1,6 @@
-package io.github.tt432.machinemax.common.entity.part.slot;
+package io.github.tt432.machinemax.common.part.slot;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 
 /**
  * 占位符槽位类，不可安装任何部件

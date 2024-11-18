@@ -13,7 +13,7 @@ import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.visitor.BuiltInBrModelRenderVisitors;
 import io.github.tt432.eyelib.client.render.visitor.ModelRenderVisitorList;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.TestCarChassisPart;
+import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

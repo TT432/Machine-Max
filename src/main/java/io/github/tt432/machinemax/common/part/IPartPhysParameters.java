@@ -1,15 +1,13 @@
-package io.github.tt432.machinemax.common.entity.part;
+package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public interface PartPhysParametersC {
+public interface IPartPhysParameters {
     /**
      * 根据运动体的相对运动状态，计算总的气动力系数
      * @return 运动体三个轴向的气动力系数
      */
-    default public DVector3 getAerodynamicForceCoef(AbstractPart part) {
+    default DVector3 getAerodynamicForceCoef(AbstractPart part) {
         //气动力相关系数
         double BASIC_AIRDRAG_COEF_ZP=1;//空气阻力系数(前向)，一般较小
         double BASIC_AIRDRAG_COEF_ZN=1;//空气阻力系数(后向)，一般较小
@@ -42,34 +40,11 @@ public interface PartPhysParametersC {
         }
         return coef;
     }
-    static AttributeSupplier.Builder createLivingAttributes() {
-        return AttributeSupplier.builder()
-                .add(Attributes.MAX_HEALTH)
-                .add(Attributes.KNOCKBACK_RESISTANCE)
-                .add(Attributes.MOVEMENT_SPEED)
-                .add(Attributes.ARMOR)
-                .add(Attributes.ARMOR_TOUGHNESS)
-                .add(Attributes.MAX_ABSORPTION)
-                .add(Attributes.STEP_HEIGHT,0)
-                .add(Attributes.SCALE)
-                .add(Attributes.GRAVITY,0)//屏蔽原版重力，交由物理引擎控制
-                .add(Attributes.SAFE_FALL_DISTANCE)
-                .add(Attributes.FALL_DAMAGE_MULTIPLIER,0)//屏蔽原版掉落伤害
-                .add(Attributes.JUMP_STRENGTH)
-                .add(Attributes.OXYGEN_BONUS)
-                .add(Attributes.BURNING_TIME)
-                .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE)
-                .add(Attributes.WATER_MOVEMENT_EFFICIENCY)
-                .add(Attributes.MOVEMENT_EFFICIENCY)
-                .add(Attributes.ATTACK_KNOCKBACK)
-                .add(net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED)
-                .add(net.neoforged.neoforge.common.NeoForgeMod.NAMETAG_DISTANCE);
-    }
     /**
      * 根据运动体的相对运动状态，计算总的水动力系数
      * @return 运动体三个轴向的水动力系数
      */
-    default public DVector3 getHydrodynamicForceCoef(AbstractPart part) {
+    default DVector3 getHydrodynamicForceCoef(AbstractPart part) {
         //水动力相关系数
         double BASIC_WATERDRAG_COEF_ZP=1;//水阻力系数(前向)
         double BASIC_WATERDRAG_COEF_ZN=1;//水阻力系数(后向)

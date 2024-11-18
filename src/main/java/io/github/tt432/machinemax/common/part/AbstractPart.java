@@ -1,8 +1,8 @@
-package io.github.tt432.machinemax.common.entity.part;
+package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.slot.BasicModuleSlot;
-import io.github.tt432.machinemax.common.entity.part.slot.AbstractPartSlot;
+import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
+import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
@@ -13,7 +13,7 @@ import lombok.Setter;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class AbstractPart implements Iterable<AbstractPart>, PartPhysParametersC {
+public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysParameters {
     //基础属性
     @Getter
     @Setter
@@ -101,7 +101,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, PartPhysPa
             }
         } else {
             for(DGeom geom : dgeoms){
-                PhysThread.serverSpace.geomAddEnQueue(geom);
+                PhysThread.space.geomAddEnQueue(geom);
             }
         }
     }
@@ -113,7 +113,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, PartPhysPa
             }
         } else {
             for(DGeom geom : dgeoms){
-                PhysThread.serverSpace.geomRemoveEnQueue(geom);
+                PhysThread.space.geomRemoveEnQueue(geom);
             }
         }
     }

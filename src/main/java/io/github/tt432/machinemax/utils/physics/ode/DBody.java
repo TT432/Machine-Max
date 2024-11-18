@@ -24,7 +24,7 @@
  *************************************************************************/
 package io.github.tt432.machinemax.utils.physics.ode;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DMatrix3C;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
@@ -67,806 +67,968 @@ import java.util.Iterator;
  * From odecpp.h.
  */
 public interface DBody {
+    /**
+     * 获取运动体的数值ID作为标识符
+     * @return 运动体的ID
+     */
+    int getId();
 
-	AbstractPart getAttachedPart();
-	void setAttachedPart(AbstractPart part);
-	/**
-	  * Whenever a body has its position or rotation changed during the
-	  * timestep, the callback will be called (with body as the argument).
-	  * Use it to know which body may need an update in an external
-	  * structure (like a 3D engine).
-	  */
-	 interface BodyMoveCallBack {
-		 void run(DBody b);
-	 }
+    AbstractPart getAttachedPart();
 
-	
-	//~dBody()
-	void DESTRUCTOR();
-	/**
-	 * Destroy a body.
-	 * 
-	 * <p>REMARK:
-	 * All joints that are attached to this body will be put into limbo:
-	 * i.e. unattached and not affecting the simulation, but they will NOT be
-	 * deleted.
-	 */
-	void destroy();
+    void setAttachedPart(AbstractPart part);
 
-	/**
-	 * Set the body's user-data pointer.
-	 * @param data arbitraty pointer
-	 */
-	void setData (Object data);
-	/**
-	 * Get the body's user-data pointer.
-	 * @return a pointer to the user's data.
-	 */
-	Object getData();
-
-	/**
-	 * Set position of a body.
-	 * <p>REMARK:
-	 * After setting, the outcome of the simulation is undefined
-	 * if the new configuration is inconsistent with the joints/constraints
-	 * that are present.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void setPosition (double x, double y, double z);
-	/**
-	 * Set position of a body.
-	 * <p>REMARK:
-	 * After setting, the outcome of the simulation is undefined
-	 * if the new configuration is inconsistent with the joints/constraints
-	 * that are present.
-	 * @param p p
-	 */
-	void setPosition (DVector3C p);
-	/**
-	 * Set the orientation of a body.
-	 * <p>REMARK:
-	 * After setting, the outcome of the simulation is undefined
-	 * if the new configuration is inconsistent with the joints/constraints
-	 * that are present.
-	 * @param R 旋转矩阵
-	 */
-	void setRotation (DMatrix3C R);
-	/**
-	 * Set the orientation of a body.
-	 * <p>REMARK:
-	 * After setting, the outcome of the simulation is undefined
-	 * if the new configuration is inconsistent with the joints/constraints
-	 * that are present.
-	 * @param q 四元数
-	 */
-	void setQuaternion (DQuaternionC q);
-	/**
-	 * Set the linear velocity of a body.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void setLinearVel (double x, double y, double z);
-	/**
-	 * Set the linear velocity of a body.
-	 * @param v v
-	 */
-	void setLinearVel (DVector3C v);
-	/**
-	 * Add to the linear velocity of a body.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void addLinearVel (double x, double y, double z);
-	/**
-	 * Add to the linear velocity of a body.
-	 * @param v v
-	 */
-	void addLinearVel (DVector3C v);
-
-	/**
-	 * Set the angular velocity of a body.
-	 * The velocity must be provided in radians/timeunit.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void setAngularVel (double x, double y, double z);
-
-	/**
-	 * Set the angular velocity of a body.
-	 * The velocity must be provided in radians/timeunit.
-	 * @param v v
-	 */
-	void setAngularVel (DVector3C v);
-
-	/**
-	 * Get the position of a body.
-	 * <p>REMARK:
-	 * When getting, the returned values are pointers to internal data structures,
-	 * so the vectors are valid until any changes are made to the rigid body
-	 * system structure.
-	 * @return position vector
-	 */
-	DVector3C getPosition();
-	/**
-	 * Get the rotation of a body.
-	 * @return pointer to a 4x3 rotation matrix.
-	 */
-	DMatrix3C getRotation();
-	/**
-	 * Get the rotation of a body.
-	 * @return pointer to 4 scalars that represent the quaternion.
-	 */
-	DQuaternionC getQuaternion();
-	/**
-	 * Get the linear velocity of a body.
-	 * @return vector
-	 */
-	DVector3C getLinearVel();
-	/**
-	 * Get the angular velocity of a body.
-	 * @return vector
-	 */
-	DVector3C getAngularVel();
-
-	//  void setMass (final dMass *mass)
-	//  { dBodySetMass (_id,mass); }
-	//void setMass (final dMass &mass)
-	//  { setMass (&mass); }
-	/**
-	 * Set the mass of a body.
-	 * @param mass mass
-	 */
-	void setMass (DMassC mass);
-	/**
-	 * Get the mass of a body.
-	 * @return mas
-	 */
-	DMassC getMass ();
+    /**
+     * Whenever a body has its position or rotation changed during the
+     * timestep, the callback will be called (with body as the argument).
+     * Use it to know which body may need an update in an external
+     * structure (like a 3D engine).
+     */
+    interface BodyMoveCallBack {
+        void run(DBody b);
+    }
 
 
-	/**
-	 * Retrieves the world attached to the given body.
-	 * @return World object
-	 */
-	DWorld getWorld();
+    //~dBody()
+    void DESTRUCTOR();
+
+    /**
+     * Destroy a body.
+     *
+     * <p>REMARK:
+     * All joints that are attached to this body will be put into limbo:
+     * i.e. unattached and not affecting the simulation, but they will NOT be
+     * deleted.
+     */
+    void destroy();
+
+    /**
+     * Set the body's user-data pointer.
+     *
+     * @param data arbitraty pointer
+     */
+    void setData(Object data);
+
+    /**
+     * Get the body's user-data pointer.
+     *
+     * @return a pointer to the user's data.
+     */
+    Object getData();
+
+    /**
+     * Set position of a body.
+     * <p>REMARK:
+     * After setting, the outcome of the simulation is undefined
+     * if the new configuration is inconsistent with the joints/constraints
+     * that are present.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void setPosition(double x, double y, double z);
+
+    /**
+     * Set position of a body.
+     * <p>REMARK:
+     * After setting, the outcome of the simulation is undefined
+     * if the new configuration is inconsistent with the joints/constraints
+     * that are present.
+     *
+     * @param p p
+     */
+    void setPosition(DVector3C p);
+
+    /**
+     * Set the orientation of a body.
+     * <p>REMARK:
+     * After setting, the outcome of the simulation is undefined
+     * if the new configuration is inconsistent with the joints/constraints
+     * that are present.
+     *
+     * @param R 旋转矩阵
+     */
+    void setRotation(DMatrix3C R);
+
+    /**
+     * Set the orientation of a body.
+     * <p>REMARK:
+     * After setting, the outcome of the simulation is undefined
+     * if the new configuration is inconsistent with the joints/constraints
+     * that are present.
+     *
+     * @param q 四元数
+     */
+    void setQuaternion(DQuaternionC q);
+
+    /**
+     * Set the linear velocity of a body.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void setLinearVel(double x, double y, double z);
+
+    /**
+     * Set the linear velocity of a body.
+     *
+     * @param v v
+     */
+    void setLinearVel(DVector3C v);
+
+    /**
+     * Add to the linear velocity of a body.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void addLinearVel(double x, double y, double z);
+
+    /**
+     * Add to the linear velocity of a body.
+     *
+     * @param v v
+     */
+    void addLinearVel(DVector3C v);
+
+    /**
+     * Set the angular velocity of a body.
+     * The velocity must be provided in radians/timeunit.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void setAngularVel(double x, double y, double z);
+
+    /**
+     * Set the angular velocity of a body.
+     * The velocity must be provided in radians/timeunit.
+     *
+     * @param v v
+     */
+    void setAngularVel(DVector3C v);
+
+    /**
+     * Get the position of a body.
+     * <p>REMARK:
+     * When getting, the returned values are pointers to internal data structures,
+     * so the vectors are valid until any changes are made to the rigid body
+     * system structure.
+     *
+     * @return position vector
+     */
+    DVector3C getPosition();
+
+    /**
+     * Get the rotation of a body.
+     *
+     * @return pointer to a 4x3 rotation matrix.
+     */
+    DMatrix3C getRotation();
+
+    /**
+     * Get the rotation of a body.
+     *
+     * @return pointer to 4 scalars that represent the quaternion.
+     */
+    DQuaternionC getQuaternion();
+
+    /**
+     * Get the linear velocity of a body.
+     *
+     * @return vector
+     */
+    DVector3C getLinearVel();
+
+    /**
+     * Get the angular velocity of a body.
+     *
+     * @return vector
+     */
+    DVector3C getAngularVel();
+
+    //  void setMass (final dMass *mass)
+    //  { dBodySetMass (_id,mass); }
+    //void setMass (final dMass &mass)
+    //  { setMass (&mass); }
+
+    /**
+     * Set the mass of a body.
+     *
+     * @param mass mass
+     */
+    void setMass(DMassC mass);
+
+    /**
+     * Get the mass of a body.
+     *
+     * @return mas
+     */
+    DMassC getMass();
 
 
-	/**
-	 * Set auto disable linear average threshold.
-	 * @param threshold threshold
-	 */
-	void setAutoDisableLinearThreshold (double threshold);
-	/**
-	 * Get auto disable linear average threshold.
-	 * @return the threshold
-	 */
-	double getAutoDisableLinearThreshold();
-	/**
-	 * Set auto disable angular average threshold.
-	 * @param threshold threshold
-	 */
-	void setAutoDisableAngularThreshold (double threshold);
-	/**
-	 * Get auto disable angular average threshold.
-	 * @return the threshold
-	 */
-	double getAutoDisableAngularThreshold();
-	/**
-	 * Set auto disable steps.
-	 * @param steps the nr of steps.
-	 */
-	void setAutoDisableSteps (int steps);
-	/**
-	 * Get auto steps a body must be thought of as idle to disable
-	 * @return the nr of steps
-	 */
-	int getAutoDisableSteps();
-	/**
-	 * Set auto disable time.
-	 * @param time nr of seconds.
-	 */
-	void setAutoDisableTime (double time);
-	/**
-	 * Get auto disable time.
-	 * @return nr of seconds
-	 */
-	double getAutoDisableTime();
-	/**
-	 * Set auto disable flag.
-	 * @param do_auto_disable 0 or 1
-	 */
-	void setAutoDisableFlag (boolean do_auto_disable);
-	/**
-	 * Get auto disable flag.
-	 * @return 0 or 1
-	 */
-	boolean getAutoDisableFlag();
-	/**
-	 * Get auto disable average size (samples count).
-	 * @return the nr of steps/size.
-	 */
-	int getAutoDisableAverageSamplesCount();
-	/**
-	 * Set auto disable average buffer size (average steps).
-	 * @param average_samples_count the nr of samples to review.
-	 */
-	void setAutoDisableAverageSamplesCount(int average_samples_count);
-	/**
-	 * Set auto disable defaults.
-	 * <p>REMARK:
-	 * Set the values for the body to those set as default for the world.
-	 */
-	void setAutoDisableDefaults();
+    /**
+     * Retrieves the world attached to the given body.
+     *
+     * @return World object
+     */
+    DWorld getWorld();
 
 
-	/**
-	 * Add force at centre of mass of body in absolute coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 */
-	void addForce (double fx, double fy, double fz);
-	/**
-	 * Add force at centre of mass of body in absolute coordinates.
-	 * @param f f
-	 */
-	void addForce (DVector3C f);
-	/**
-	 * Add torque at centre of mass of body in absolute coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 */
-	void addTorque (double fx, double fy, double fz);
-	/**
-	 * Add torque at centre of mass of body in absolute coordinates.
-	 * @param t t
-	 */
-	void addTorque (DVector3C t);
+    /**
+     * Set auto disable linear average threshold.
+     *
+     * @param threshold threshold
+     */
+    void setAutoDisableLinearThreshold(double threshold);
 
-	/**
-	 * Add force at centre of mass of body in coordinates relative to body.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 */
-	void addRelForce (double fx, double fy, double fz);
-	/**
-	 * Add force at centre of mass of body in coordinates relative to body.
-	 * @param f f
-	 */
-	void addRelForce (DVector3C f);
-	/**
-	 * Add torque at centre of mass of body in coordinates relative to body.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 */
-	void addRelTorque (double fx, double fy, double fz);
-	/**
-	 * Add torque at centre of mass of body in coordinates relative to body.
-	 * @param t t
-	 */
-	void addRelTorque (DVector3C t);
+    /**
+     * Get auto disable linear average threshold.
+     *
+     * @return the threshold
+     */
+    double getAutoDisableLinearThreshold();
 
-	/**
-	 * Add force at specified point in body in global coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 */
-	void addForceAtPos (double fx, double fy, double fz,
-			double px, double py, double pz);
-	/**
-	 * Add force at specified point in body in global coordinates.
-	 * @param f f
-	 * @param p p
-	 */
-	void addForceAtPos (DVector3C f, DVector3C p);
+    /**
+     * Set auto disable angular average threshold.
+     *
+     * @param threshold threshold
+     */
+    void setAutoDisableAngularThreshold(double threshold);
 
-	/**
-	 * Add force at specified point in body in local coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 */
-	void addForceAtRelPos (double fx, double fy, double fz,
-			double px, double py, double pz);
-	/**
-	 * Add force at specified point in body in local coordinates.
-	 * @param f f
-	 * @param p p
-	 */
-	void addForceAtRelPos (DVector3C f, DVector3C p);
+    /**
+     * Get auto disable angular average threshold.
+     *
+     * @return the threshold
+     */
+    double getAutoDisableAngularThreshold();
 
-	/**
-	 * Add force at specified point in body in global coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 */
-	void addRelForceAtPos (double fx, double fy, double fz,
-			double px, double py, double pz);
-	/**
-	 * Add force at specified point in body in global coordinates.
-	 * @param f f
-	 * @param p p
-	 */
-	void addRelForceAtPos (DVector3C f, DVector3C p);
+    /**
+     * Set auto disable steps.
+     *
+     * @param steps the nr of steps.
+     */
+    void setAutoDisableSteps(int steps);
 
-	/**
-	 * Add force at specified point in body in local coordinates.
-	 * @param fx fx
-	 * @param fy fy
-	 * @param fz fz
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 */
-	void addRelForceAtRelPos (double fx, double fy, double fz,
-			double px, double py, double pz);
-	/**
-	 * Add force at specified point in body in local coordinates.
-	 * @param f f
-	 * @param p p
-	 */
-	void addRelForceAtRelPos (DVector3C f, DVector3C p);
+    /**
+     * Get auto steps a body must be thought of as idle to disable
+     *
+     * @return the nr of steps
+     */
+    int getAutoDisableSteps();
 
-	/**
-	 * Return the current accumulated force vector.
-	 * <p>REMARK:
-	 * The returned values are pointers to internal data structures, so
-	 * the vectors are only valid until any changes are made to the rigid
-	 * body system.
-	 * @return points to an array of 3 reals.
-	 */
-	DVector3C getForce();
-	/**
-	 * Return the current accumulated torque vector.
-	 * <p>REMARK:
-	 * The returned values are pointers to internal data structures, so
-	 * the vectors are only valid until any changes are made to the rigid
-	 * body system.
-	 * @return points to an array of 3 reals.
-	 */
-	DVector3C getTorque();
-	/**
-	 * Set the body force accumulation vector.
-	 * <p>REMARK:
-	 * This is mostly useful to zero the force and torque for deactivated bodies
-	 * before they are reactivated, in the case where the force-adding functions
-	 * were called on them while they were deactivated.
-	 * @param x x
-	 * @param y y
-	 * @param z Z
-	 */
-	void setForce (double x, double y, double z);
-	/**
-	 * Set the body force accumulation vector.
-	 * <p>REMARK:
-	 * This is mostly useful to zero the force and torque for deactivated bodies
-	 * before they are reactivated, in the case where the force-adding functions
-	 * were called on them while they were deactivated.
-	 * @param f f
-	 */
-	void setForce (DVector3C f);
-	/**
-	 * Set the body torque accumulation vector.
-	 * <p>REMARK:
-	 * This is mostly useful to zero the force and torque for deactivated bodies
-	 * before they are reactivated, in the case where the force-adding functions
-	 * were called on them while they were deactivated.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void setTorque (double x, double y, double z);
-	/**
-	 * Set the body torque accumulation vector.
-	 * <p>REMARK:
-	 * This is mostly useful to zero the force and torque for deactivated bodies
-	 * before they are reactivated, in the case where the force-adding functions
-	 * were called on them while they were deactivated.
-	 * @param t t
-	 */
-	void setTorque (DVector3C t);
+    /**
+     * Set auto disable time.
+     *
+     * @param time nr of seconds.
+     */
+    void setAutoDisableTime(double time);
+
+    /**
+     * Get auto disable time.
+     *
+     * @return nr of seconds
+     */
+    double getAutoDisableTime();
+
+    /**
+     * Set auto disable flag.
+     *
+     * @param do_auto_disable 0 or 1
+     */
+    void setAutoDisableFlag(boolean do_auto_disable);
+
+    /**
+     * Get auto disable flag.
+     *
+     * @return 0 or 1
+     */
+    boolean getAutoDisableFlag();
+
+    /**
+     * Get auto disable average size (samples count).
+     *
+     * @return the nr of steps/size.
+     */
+    int getAutoDisableAverageSamplesCount();
+
+    /**
+     * Set auto disable average buffer size (average steps).
+     *
+     * @param average_samples_count the nr of samples to review.
+     */
+    void setAutoDisableAverageSamplesCount(int average_samples_count);
+
+    /**
+     * Set auto disable defaults.
+     * <p>REMARK:
+     * Set the values for the body to those set as default for the world.
+     */
+    void setAutoDisableDefaults();
 
 
-	/**
-	 * Get world position of a relative point on body.
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void getRelPointPos (double px, double py, double pz, DVector3 result);
-	/**
-	 * Get world position of a relative point on body.
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void getRelPointPos (DVector3C p, DVector3 result);
+    /**
+     * Add force at centre of mass of body in absolute coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     */
+    void addForce(double fx, double fy, double fz);
 
-	/**
-	 * Get velocity vector in global coords of a relative point on body.
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void getRelPointVel (double px, double py, double pz, DVector3 result);
-	/**
-	 * Get velocity vector in global coords of a relative point on body.
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void getRelPointVel (DVector3C p, DVector3 result);
+    /**
+     * Add force at centre of mass of body in absolute coordinates.
+     *
+     * @param f f
+     */
+    void addForce(DVector3C f);
 
-	/**
-	 * Get velocity vector in global coords of a globally
-	 * specified point on a body.
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void getPointVel (double px, double py, double pz, DVector3 result);
-	/**
-	 * Get velocity vector in global coords of a globally
-	 * specified point on a body.
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void getPointVel (DVector3C p, DVector3 result);
+    /**
+     * Add torque at centre of mass of body in absolute coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     */
+    void addTorque(double fx, double fy, double fz);
 
-	/**
-	 * Takes a point in global coordinates and returns
-	 * the point's position in body-relative coordinates.
-	 * <p>REMARK:
-	 * This is the inverse of dBodyGetRelPointPos()
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void getPosRelPoint (double px, double py, double pz, DVector3 result);
-	/**
-	 * Takes a point in global coordinates and returns
-	 * the point's position in body-relative coordinates.
-	 * <p>REMARK:
-	 * This is the inverse of dBodyGetRelPointPos()
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void getPosRelPoint (DVector3C p, DVector3 result);
+    /**
+     * Add torque at centre of mass of body in absolute coordinates.
+     *
+     * @param t t
+     */
+    void addTorque(DVector3C t);
 
-	/**
-	 * Convert from local to world coordinates.
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void vectorToWorld (double px, double py, double pz, DVector3 result);
-	/**
-	 * Convert from local to world coordinates.
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void vectorToWorld (DVector3C p, DVector3 result);
+    /**
+     * Add force at centre of mass of body in coordinates relative to body.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     */
+    void addRelForce(double fx, double fy, double fz);
 
-	/**
-	 * Convert from world to local coordinates.
-	 * @param px px
-	 * @param py py
-	 * @param pz pz
-	 * @param result will contain the result.
-	 */
-	void vectorFromWorld (double px, double py, double pz, DVector3 result);
-	/**
-	 * Convert from world to local coordinates.
-	 * @param p p
-	 * @param result will contain the result.
-	 */
-	void vectorFromWorld (DVector3C p, DVector3 result);
+    /**
+     * Add force at centre of mass of body in coordinates relative to body.
+     *
+     * @param f f
+     */
+    void addRelForce(DVector3C f);
 
-	/**
-	 * Controls the way a body's orientation is updated at each timestep.
-	 * 
-	 * <p>REMARK:
-	 * Note however that high speed rotations can result in many types of
-	 * error in a simulation, and the finite mode will only fix one of those
-	 * sources of error.
-	 * 
-	 * @param mode can be 0 or 1:
-	 * <ul>
-	 * <li> 0: An ``infinitesimal'' orientation update is used.
-	 * This is fast to compute, but it can occasionally cause inaccuracies
-	 * for bodies that are rotating at high speed, especially when those
-	 * bodies are joined to other bodies.
-	 * This is the default for every new body that is created.</li>
-	 * <li> 1: A ``finite'' orientation update is used. 
-	 * This is more costly to compute, but will be more accurate for high
-	 * speed rotations.</li>
-	 * </ul>
-	 */
-	void setFiniteRotationMode (boolean mode);
+    /**
+     * Add torque at centre of mass of body in coordinates relative to body.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     */
+    void addRelTorque(double fx, double fy, double fz);
 
-	/**
-	 * Sets the finite rotation axis for a body.
-	 * 
-	 * <p>REMARK:
-	 * This is axis only has meaning when the finite rotation mode is set
-	 * If this axis is zero (0,0,0), full finite rotations are performed on
-	 * the body.
-	 * If this axis is nonzero, the body is rotated by performing a partial finite
-	 * rotation along the axis direction followed by an infinitesimal rotation
-	 * along an orthogonal direction.
-	 * 
-	 * <p>REMARK:
-	 * This can be useful to alleviate certain sources of error caused by quickly
-	 * spinning bodies. For example, if a car wheel is rotating at high speed
-	 * you can call this function with the wheel's hinge axis as the argument to
-	 * try and improve its behavior.
-	 * @param x x
-	 * @param y y
-	 * @param z z
-	 */
-	void setFiniteRotationAxis (double x, double y, double z);
-	/**
-	 * Sets the finite rotation axis for a body.
-	 * 
-	 * <p>REMARK:
-	 * This is axis only has meaning when the finite rotation mode is set
-	 * If this axis is zero (0,0,0), full finite rotations are performed on
-	 * the body.
-	 * If this axis is nonzero, the body is rotated by performing a partial finite
-	 * rotation along the axis direction followed by an infinitesimal rotation
-	 * along an orthogonal direction.
-	 * 
-	 * <p>REMARK:
-	 * This can be useful to alleviate certain sources of error caused by quickly
-	 * spinning bodies. For example, if a car wheel is rotating at high speed
-	 * you can call this function with the wheel's hinge axis as the argument to
-	 * try and improve its behavior.
-	 * @param a a
-	 */
-	void setFiniteRotationAxis (DVector3C a);
+    /**
+     * Add torque at centre of mass of body in coordinates relative to body.
+     *
+     * @param t t
+     */
+    void addRelTorque(DVector3C t);
 
-	/**
-	 * Get the way a body's orientation is updated each timestep.
-	 * @return the mode 0 (infitesimal) or 1 (finite).
-	 */
-	boolean getFiniteRotationMode();
-	/**
-	 * Get the finite rotation axis.
-	 * @param result will contain the axis.
-	 */
-	void getFiniteRotationAxis (DVector3 result);
+    /**
+     * Add force at specified point in body in global coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     * @param px px
+     * @param py py
+     * @param pz pz
+     */
+    void addForceAtPos(double fx, double fy, double fz,
+                       double px, double py, double pz);
 
-	/**
-	 * Get the number of joints that are attached to this body.
-	 * @return nr of joints
-	 */
-	int getNumJoints();
-	/**
-	 * Return a joint attached to this body, given by index.
-	 * @param index valid range is  0 to n-1 where n is the value returned by
-	 * dBodyGetNumJoints().
-	 * @return Joint object
-	 */
-	DJoint getJoint (int index);
+    /**
+     * Add force at specified point in body in global coordinates.
+     *
+     * @param f f
+     * @param p p
+     */
+    void addForceAtPos(DVector3C f, DVector3C p);
 
-	/**
-	 * Set rigid body to dynamic state (default).
-	 */
-	void setDynamic();
-	/**
-	 * Set rigid body to kinematic state.
-	 * When in kinematic state the body isn't simulated as a dynamic
-	 * body (it's "unstoppable", doesn't respond to forces),
-	 * but can still affect dynamic bodies (e.g. in joints).
-	 * Kinematic bodies can be controlled by position and velocity.
-	 * 
-	 * <p>NOTE: A kinematic body has infinite mass. If you set its mass
-	 * to something else, it loses the kinematic state and behaves
-	 * as a normal dynamic body.
-	 */
-	void setKinematic();
-	/**
-	 * Check wether a body is in kinematic state.
-	 * @return 1 if a body is kinematic or 0 if it is dynamic.
-	 */
-	boolean isKinematic();
+    /**
+     * Add force at specified point in body in local coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     * @param px px
+     * @param py py
+     * @param pz pz
+     */
+    void addForceAtRelPos(double fx, double fy, double fz,
+                          double px, double py, double pz);
 
-	/**
-	 * Manually enable a body.
-	 */
-	void enable();
-	/**
-	 * Manually disable a body.
-	 * 
-	 * <p>REMARK:
-	 * A disabled body that is connected through a joint to an enabled body will
-	 * be automatically re-enabled at the next simulation step.
-	 */
-	void disable();
-	/**
-	 * Check wether a body is enabled.
-	 * @return 1 if a body is currently enabled or 0 if it is disabled.
-	 */
-	boolean isEnabled();
+    /**
+     * Add force at specified point in body in local coordinates.
+     *
+     * @param f f
+     * @param p p
+     */
+    void addForceAtRelPos(DVector3C f, DVector3C p);
+
+    /**
+     * Add force at specified point in body in global coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     * @param px px
+     * @param py py
+     * @param pz pz
+     */
+    void addRelForceAtPos(double fx, double fy, double fz,
+                          double px, double py, double pz);
+
+    /**
+     * Add force at specified point in body in global coordinates.
+     *
+     * @param f f
+     * @param p p
+     */
+    void addRelForceAtPos(DVector3C f, DVector3C p);
+
+    /**
+     * Add force at specified point in body in local coordinates.
+     *
+     * @param fx fx
+     * @param fy fy
+     * @param fz fz
+     * @param px px
+     * @param py py
+     * @param pz pz
+     */
+    void addRelForceAtRelPos(double fx, double fy, double fz,
+                             double px, double py, double pz);
+
+    /**
+     * Add force at specified point in body in local coordinates.
+     *
+     * @param f f
+     * @param p p
+     */
+    void addRelForceAtRelPos(DVector3C f, DVector3C p);
+
+    /**
+     * Return the current accumulated force vector.
+     * <p>REMARK:
+     * The returned values are pointers to internal data structures, so
+     * the vectors are only valid until any changes are made to the rigid
+     * body system.
+     *
+     * @return points to an array of 3 reals.
+     */
+    DVector3C getForce();
+
+    /**
+     * Return the current accumulated torque vector.
+     * <p>REMARK:
+     * The returned values are pointers to internal data structures, so
+     * the vectors are only valid until any changes are made to the rigid
+     * body system.
+     *
+     * @return points to an array of 3 reals.
+     */
+    DVector3C getTorque();
+
+    /**
+     * Set the body force accumulation vector.
+     * <p>REMARK:
+     * This is mostly useful to zero the force and torque for deactivated bodies
+     * before they are reactivated, in the case where the force-adding functions
+     * were called on them while they were deactivated.
+     *
+     * @param x x
+     * @param y y
+     * @param z Z
+     */
+    void setForce(double x, double y, double z);
+
+    /**
+     * Set the body force accumulation vector.
+     * <p>REMARK:
+     * This is mostly useful to zero the force and torque for deactivated bodies
+     * before they are reactivated, in the case where the force-adding functions
+     * were called on them while they were deactivated.
+     *
+     * @param f f
+     */
+    void setForce(DVector3C f);
+
+    /**
+     * Set the body torque accumulation vector.
+     * <p>REMARK:
+     * This is mostly useful to zero the force and torque for deactivated bodies
+     * before they are reactivated, in the case where the force-adding functions
+     * were called on them while they were deactivated.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void setTorque(double x, double y, double z);
+
+    /**
+     * Set the body torque accumulation vector.
+     * <p>REMARK:
+     * This is mostly useful to zero the force and torque for deactivated bodies
+     * before they are reactivated, in the case where the force-adding functions
+     * were called on them while they were deactivated.
+     *
+     * @param t t
+     */
+    void setTorque(DVector3C t);
 
 
-	/**
-	 * Set whether the body is influenced by the world's gravity or not.
-	 * <p>REMARK:
-	 * Newly created bodies are always influenced by the world's gravity.
-	 * @param mode when nonzero gravity affects this body.
-	 */
-	void setGravityMode (boolean mode);
-	/**
-	 * Get whether the body is influenced by the world's gravity or not.
-	 * @return nonzero means gravity affects this body.
-	 */
-	boolean getGravityMode();
+    /**
+     * Get world position of a relative point on body.
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void getRelPointPos(double px, double py, double pz, DVector3 result);
 
-	boolean isConnectedTo (DBody body);
+    /**
+     * Get world position of a relative point on body.
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void getRelPointPos(DVector3C p, DVector3 result);
 
-	/**
-	 * Get the body's linear damping scale.
-	 * @return damping value
-	 */
-	double getLinearDamping();
-	/**
-	 * Set the body's linear damping scale.
-	 * 
-	 * <p>REMARK: From now on the body will not use the world's linear damping
-	 * scale until dBodySetDampingDefaults() is called.
-	 * @param scale The linear damping scale. Should be in the interval [0, 1].
-	 * @see #setDampingDefaults()
-	 */
-	void setLinearDamping(double scale);
-	/**
-	 * Get the body's angular damping scale.
-	 * 
-	 * <p>REMARK: If the body's angular damping scale was not set, this function
-	 * returns the world's angular damping scale.
-	 * @return damping value
-	 */
-	double getAngularDamping();
-	/**
-	 * Set the body's angular damping scale.
-	 * 
-	 * <p>REMARK: From now on the body will not use the world's angular damping
-	 * scale until dBodyResetAngularDamping() is called.
-	 * @param scale The angular damping scale. Should be in the interval [0, 1].
-	 */
-	void setAngularDamping(double scale);
-	/**
-	 * Convenience function to set linear and angular scales at once.
-	 * @param linear_scale The linear damping scale. Should be in the interval [0, 1].
-	 * @param angular_scale The angular damping scale. Should be in the interval [0, 1].
-	 * @see #setLinearDamping(double)
-	 * @see #setAngularDamping(double)
-	 */
-	void setDamping(double linear_scale, double angular_scale);
-	/**
-	 * Get the body's linear damping threshold.
-	 * @return threshold value
-	 */
-	double getLinearDampingThreshold();
-	/**
-	 * Set the body's linear damping threshold.
-	 * @param threshold The linear threshold to be used. Damping
-	 *      is only applied if the linear speed is above this limit.
-	 */
-	void setLinearDampingThreshold(double threshold);
-	/**
-	 * Get the body's angular damping threshold.
-	 * @return threshold value
-	 */
-	double getAngularDampingThreshold();
-	/**
-	 * Set the body's angular damping threshold.
-	 * @param threshold The angular threshold to be used. Damping is
-	 *      only used if the angular speed is above this limit.
-	 */
-	void setAngularDampingThreshold(double threshold);
-	/**
-	 * Resets the damping settings to the current world's settings.
-	 */
-	void setDampingDefaults();
+    /**
+     * Get velocity vector in global coords of a relative point on body.
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void getRelPointVel(double px, double py, double pz, DVector3 result);
 
-	/**
-	 * Get the body's maximum angular speed.
-	 * @return speed limit
-	 * @see DWorld#getMaxAngularSpeed()
-	 */
-	double getMaxAngularSpeed();
-	/**
-	 * Set the body's maximum angular speed.
-	 * 
-	 * The default value is dInfinity, but it's a good idea to limit
-	 * it at less than 500 if the body has the gyroscopic term
-	 * enabled.
-	 * @param max_speed speed limit
-	 * @see DWorld#setMaxAngularSpeed(double)
-	 */
-	void setMaxAngularSpeed(double max_speed);
+    /**
+     * Get velocity vector in global coords of a relative point on body.
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void getRelPointVel(DVector3C p, DVector3 result);
 
-	/**
-	 * Get the body's gyroscopic state.
-	 *
-	 * @return nonzero if gyroscopic term computation is enabled (default),
-	 * zero otherwise.
-	 */
-	boolean getGyroscopicMode();
-	/**
-	 * Enable/disable the body's gyroscopic term.
-	 *
-	 * Disabling the gyroscopic term of a body usually improves
-	 * stability. It also helps turning spining objects, like cars'
-	 * wheels.
-	 *
-	 * @param enabled   nonzero (default) to enable gyroscopic term, 0
-	 * to disable.
-	 */
-	void setGyroscopicMode(boolean enabled);
+    /**
+     * Get velocity vector in global coords of a globally
+     * specified point on a body.
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void getPointVel(double px, double py, double pz, DVector3 result);
+
+    /**
+     * Get velocity vector in global coords of a globally
+     * specified point on a body.
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void getPointVel(DVector3C p, DVector3 result);
+
+    /**
+     * Takes a point in global coordinates and returns
+     * the point's position in body-relative coordinates.
+     * <p>REMARK:
+     * This is the inverse of dBodyGetRelPointPos()
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void getPosRelPoint(double px, double py, double pz, DVector3 result);
+
+    /**
+     * Takes a point in global coordinates and returns
+     * the point's position in body-relative coordinates.
+     * <p>REMARK:
+     * This is the inverse of dBodyGetRelPointPos()
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void getPosRelPoint(DVector3C p, DVector3 result);
+
+    /**
+     * Convert from local to world coordinates.
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void vectorToWorld(double px, double py, double pz, DVector3 result);
+
+    /**
+     * Convert from local to world coordinates.
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void vectorToWorld(DVector3C p, DVector3 result);
+
+    /**
+     * Convert from world to local coordinates.
+     *
+     * @param px     px
+     * @param py     py
+     * @param pz     pz
+     * @param result will contain the result.
+     */
+    void vectorFromWorld(double px, double py, double pz, DVector3 result);
+
+    /**
+     * Convert from world to local coordinates.
+     *
+     * @param p      p
+     * @param result will contain the result.
+     */
+    void vectorFromWorld(DVector3C p, DVector3 result);
+
+    /**
+     * Controls the way a body's orientation is updated at each timestep.
+     *
+     * <p>REMARK:
+     * Note however that high speed rotations can result in many types of
+     * error in a simulation, and the finite mode will only fix one of those
+     * sources of error.
+     *
+     * @param mode can be 0 or 1:
+     *             <ul>
+     *             <li> 0: An ``infinitesimal'' orientation update is used.
+     *             This is fast to compute, but it can occasionally cause inaccuracies
+     *             for bodies that are rotating at high speed, especially when those
+     *             bodies are joined to other bodies.
+     *             This is the default for every new body that is created.</li>
+     *             <li> 1: A ``finite'' orientation update is used.
+     *             This is more costly to compute, but will be more accurate for high
+     *             speed rotations.</li>
+     *             </ul>
+     */
+    void setFiniteRotationMode(boolean mode);
+
+    /**
+     * Sets the finite rotation axis for a body.
+     *
+     * <p>REMARK:
+     * This is axis only has meaning when the finite rotation mode is set
+     * If this axis is zero (0,0,0), full finite rotations are performed on
+     * the body.
+     * If this axis is nonzero, the body is rotated by performing a partial finite
+     * rotation along the axis direction followed by an infinitesimal rotation
+     * along an orthogonal direction.
+     *
+     * <p>REMARK:
+     * This can be useful to alleviate certain sources of error caused by quickly
+     * spinning bodies. For example, if a car wheel is rotating at high speed
+     * you can call this function with the wheel's hinge axis as the argument to
+     * try and improve its behavior.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     */
+    void setFiniteRotationAxis(double x, double y, double z);
+
+    /**
+     * Sets the finite rotation axis for a body.
+     *
+     * <p>REMARK:
+     * This is axis only has meaning when the finite rotation mode is set
+     * If this axis is zero (0,0,0), full finite rotations are performed on
+     * the body.
+     * If this axis is nonzero, the body is rotated by performing a partial finite
+     * rotation along the axis direction followed by an infinitesimal rotation
+     * along an orthogonal direction.
+     *
+     * <p>REMARK:
+     * This can be useful to alleviate certain sources of error caused by quickly
+     * spinning bodies. For example, if a car wheel is rotating at high speed
+     * you can call this function with the wheel's hinge axis as the argument to
+     * try and improve its behavior.
+     *
+     * @param a a
+     */
+    void setFiniteRotationAxis(DVector3C a);
+
+    /**
+     * Get the way a body's orientation is updated each timestep.
+     *
+     * @return the mode 0 (infitesimal) or 1 (finite).
+     */
+    boolean getFiniteRotationMode();
+
+    /**
+     * Get the finite rotation axis.
+     *
+     * @param result will contain the axis.
+     */
+    void getFiniteRotationAxis(DVector3 result);
+
+    /**
+     * Get the number of joints that are attached to this body.
+     *
+     * @return nr of joints
+     */
+    int getNumJoints();
+
+    /**
+     * Return a joint attached to this body, given by index.
+     *
+     * @param index valid range is  0 to n-1 where n is the value returned by
+     *              dBodyGetNumJoints().
+     * @return Joint object
+     */
+    DJoint getJoint(int index);
+
+    /**
+     * Set rigid body to dynamic state (default).
+     */
+    void setDynamic();
+
+    /**
+     * Set rigid body to kinematic state.
+     * When in kinematic state the body isn't simulated as a dynamic
+     * body (it's "unstoppable", doesn't respond to forces),
+     * but can still affect dynamic bodies (e.g. in joints).
+     * Kinematic bodies can be controlled by position and velocity.
+     *
+     * <p>NOTE: A kinematic body has infinite mass. If you set its mass
+     * to something else, it loses the kinematic state and behaves
+     * as a normal dynamic body.
+     */
+    void setKinematic();
+
+    /**
+     * Check wether a body is in kinematic state.
+     *
+     * @return 1 if a body is kinematic or 0 if it is dynamic.
+     */
+    boolean isKinematic();
+
+    /**
+     * Manually enable a body.
+     */
+    void enable();
+
+    /**
+     * Manually disable a body.
+     *
+     * <p>REMARK:
+     * A disabled body that is connected through a joint to an enabled body will
+     * be automatically re-enabled at the next simulation step.
+     */
+    void disable();
+
+    /**
+     * Check wether a body is enabled.
+     *
+     * @return 1 if a body is currently enabled or 0 if it is disabled.
+     */
+    boolean isEnabled();
 
 
-	/**
-	 * Set the 'moved' callback of a body.
-	 *
-	 * Whenever a body has its position or rotation changed during the
-	 * timestep, the callback will be called (with body as the argument).
-	 * Use it to know which body may need an update in an external
-	 * structure (like a 3D engine).
-	 *
-	 * @param callback the callback to be invoked when the body moves. Set to zero
-	 * to disable.
-	 */
-	void setMovedCallback(BodyMoveCallBack callback);
+    /**
+     * Set whether the body is influenced by the world's gravity or not.
+     * <p>REMARK:
+     * Newly created bodies are always influenced by the world's gravity.
+     *
+     * @param mode when nonzero gravity affects this body.
+     */
+    void setGravityMode(boolean mode);
+
+    /**
+     * Get whether the body is influenced by the world's gravity or not.
+     *
+     * @return nonzero means gravity affects this body.
+     */
+    boolean getGravityMode();
+
+    boolean isConnectedTo(DBody body);
+
+    /**
+     * Get the body's linear damping scale.
+     *
+     * @return damping value
+     */
+    double getLinearDamping();
+
+    /**
+     * Set the body's linear damping scale.
+     *
+     * <p>REMARK: From now on the body will not use the world's linear damping
+     * scale until dBodySetDampingDefaults() is called.
+     *
+     * @param scale The linear damping scale. Should be in the interval [0, 1].
+     * @see #setDampingDefaults()
+     */
+    void setLinearDamping(double scale);
+
+    /**
+     * Get the body's angular damping scale.
+     *
+     * <p>REMARK: If the body's angular damping scale was not set, this function
+     * returns the world's angular damping scale.
+     *
+     * @return damping value
+     */
+    double getAngularDamping();
+
+    /**
+     * Set the body's angular damping scale.
+     *
+     * <p>REMARK: From now on the body will not use the world's angular damping
+     * scale until dBodyResetAngularDamping() is called.
+     *
+     * @param scale The angular damping scale. Should be in the interval [0, 1].
+     */
+    void setAngularDamping(double scale);
+
+    /**
+     * Convenience function to set linear and angular scales at once.
+     *
+     * @param linear_scale  The linear damping scale. Should be in the interval [0, 1].
+     * @param angular_scale The angular damping scale. Should be in the interval [0, 1].
+     * @see #setLinearDamping(double)
+     * @see #setAngularDamping(double)
+     */
+    void setDamping(double linear_scale, double angular_scale);
+
+    /**
+     * Get the body's linear damping threshold.
+     *
+     * @return threshold value
+     */
+    double getLinearDampingThreshold();
+
+    /**
+     * Set the body's linear damping threshold.
+     *
+     * @param threshold The linear threshold to be used. Damping
+     *                  is only applied if the linear speed is above this limit.
+     */
+    void setLinearDampingThreshold(double threshold);
+
+    /**
+     * Get the body's angular damping threshold.
+     *
+     * @return threshold value
+     */
+    double getAngularDampingThreshold();
+
+    /**
+     * Set the body's angular damping threshold.
+     *
+     * @param threshold The angular threshold to be used. Damping is
+     *                  only used if the angular speed is above this limit.
+     */
+    void setAngularDampingThreshold(double threshold);
+
+    /**
+     * Resets the damping settings to the current world's settings.
+     */
+    void setDampingDefaults();
+
+    /**
+     * Get the body's maximum angular speed.
+     *
+     * @return speed limit
+     * @see DWorld#getMaxAngularSpeed()
+     */
+    double getMaxAngularSpeed();
+
+    /**
+     * Set the body's maximum angular speed.
+     * <p>
+     * The default value is dInfinity, but it's a good idea to limit
+     * it at less than 500 if the body has the gyroscopic term
+     * enabled.
+     *
+     * @param max_speed speed limit
+     * @see DWorld#setMaxAngularSpeed(double)
+     */
+    void setMaxAngularSpeed(double max_speed);
+
+    /**
+     * Get the body's gyroscopic state.
+     *
+     * @return nonzero if gyroscopic term computation is enabled (default),
+     * zero otherwise.
+     */
+    boolean getGyroscopicMode();
+
+    /**
+     * Enable/disable the body's gyroscopic term.
+     * <p>
+     * Disabling the gyroscopic term of a body usually improves
+     * stability. It also helps turning spining objects, like cars'
+     * wheels.
+     *
+     * @param enabled nonzero (default) to enable gyroscopic term, 0
+     *                to disable.
+     */
+    void setGyroscopicMode(boolean enabled);
 
 
-	/**
-	 * Return the first geom associated with the body.
-	 *
-	 * You can traverse through the geoms by repeatedly calling
-	 * dBodyGetNextGeom().
-	 *
-	 * @return the first geom attached to this body, or null.
-	 */
-    DGeom getFirstGeom ();
+    /**
+     * Set the 'moved' callback of a body.
+     * <p>
+     * Whenever a body has its position or rotation changed during the
+     * timestep, the callback will be called (with body as the argument).
+     * Use it to know which body may need an update in an external
+     * structure (like a 3D engine).
+     *
+     * @param callback the callback to be invoked when the body moves. Set to zero
+     *                 to disable.
+     */
+    void setMovedCallback(BodyMoveCallBack callback);
 
 
-	/**
-	 * Returns the next geom associated with the same body.
-	 * @param geom a geom attached to some body.
-	 * @return the next geom attached to the same body, or 0.
-	 * @see DBody#getFirstGeom()
-	 * @deprecated May be replaced by a more Java-like API. Please use getGeomIterator() instead
-	 */
+    /**
+     * Return the first geom associated with the body.
+     * <p>
+     * You can traverse through the geoms by repeatedly calling
+     * dBodyGetNextGeom().
+     *
+     * @return the first geom attached to this body, or null.
+     */
+    DGeom getFirstGeom();
+
+
+    /**
+     * Returns the next geom associated with the same body.
+     *
+     * @param geom a geom attached to some body.
+     * @return the next geom attached to the same body, or 0.
+     * @see DBody#getFirstGeom()
+     * @deprecated May be replaced by a more Java-like API. Please use getGeomIterator() instead
+     */
     @Deprecated
-    DGeom getNextGeom (DGeom geom);
+    DGeom getNextGeom(DGeom geom);
 
-	/**
-	 * @return an iterator over all geoms associated with with body.
-	 */
-	Iterator<DGeom> getGeomIterator();
+    /**
+     * @return an iterator over all geoms associated with with body.
+     */
+    Iterator<DGeom> getGeomIterator();
 
 }

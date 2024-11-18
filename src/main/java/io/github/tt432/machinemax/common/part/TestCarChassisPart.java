@@ -1,8 +1,8 @@
-package io.github.tt432.machinemax.common.entity.part;
+package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.slot.*;
+import io.github.tt432.machinemax.common.part.slot.*;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;

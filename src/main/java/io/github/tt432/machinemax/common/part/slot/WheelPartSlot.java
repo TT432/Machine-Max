@@ -1,12 +1,11 @@
-package io.github.tt432.machinemax.common.entity.part.slot;
+package io.github.tt432.machinemax.common.part.slot;
 
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DHinge2Joint;
-import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
+import io.github.tt432.machinemax.utils.physics.ode.*;
 
-public class SteeringWheelPartSlot extends AbstractPartSlot {
-    public SteeringWheelPartSlot(AbstractPart owner) {
+public class WheelPartSlot extends AbstractPartSlot {
+    public WheelPartSlot(AbstractPart owner) {
         super(owner);
     }
 

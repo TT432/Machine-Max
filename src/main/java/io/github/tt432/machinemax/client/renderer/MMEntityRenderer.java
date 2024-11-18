@@ -13,7 +13,7 @@ import io.github.tt432.eyelib.client.render.visitor.BuiltInBrModelRenderVisitors
 import io.github.tt432.eyelib.client.render.visitor.ModelRenderVisitorList;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.client.renderer.MultiBufferSource;

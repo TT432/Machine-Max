@@ -2,8 +2,7 @@ package io.github.tt432.machinemax.common.entity.entity;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
-import io.github.tt432.machinemax.common.entity.part.AbstractPart;
-import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import lombok.Getter;
@@ -20,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
@@ -29,7 +29,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
     private PhysController controller = new PhysController(this);//实体指定的控制器，默认为基础控制器
     @Setter
     @Getter
-    private controlMode mode = BasicEntity.controlMode.GROUND;
+    private controlMode mode = BasicEntity.controlMode.GROUND;//采用的控制模式，决定接收的按键输入方案
     public AbstractPart corePart;//实体连接的核心部件
     @Setter
     @Getter
@@ -38,7 +38,6 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
     private int physRotSyncTick;
     private DVector3 physSyncDeltaPos;
     private DVector3 physSyncDeltaSpdL;
-    //private DVector3 physSyncDeltaRot;
     private DQuaternion physSyncDeltaRot;
     private DVector3 physSyncDeltaSpdA;
     private DVector3 posError = new DVector3();
