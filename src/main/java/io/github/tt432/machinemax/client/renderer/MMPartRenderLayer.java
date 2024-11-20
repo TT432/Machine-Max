@@ -2,12 +2,12 @@ package io.github.tt432.machinemax.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import io.github.tt432.eyelib.Eyelib;
 import io.github.tt432.eyelib.capability.RenderData;
 import io.github.tt432.eyelib.capability.component.AnimationComponent;
 import io.github.tt432.eyelib.client.ClientTickHandler;
 import io.github.tt432.eyelib.client.animation.BrAnimator;
 import io.github.tt432.eyelib.client.loader.BrModelLoader;
-import io.github.tt432.eyelib.client.render.BrModelTextures;
 import io.github.tt432.eyelib.client.render.ModelRenderer;
 import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.visitor.BuiltInBrModelRenderVisitors;
@@ -23,9 +23,9 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import java.util.HashMap;
 import java.util.List;
 
-public class MMPartRenderLayer extends RenderLayer<BasicEntity, MMEmptyModel<BasicEntity>>{
+public class MMPartRenderLayer extends RenderLayer<BasicEntity, MMEmptyModel<BasicEntity>> {
 
-    public MMPartRenderLayer(RenderLayerParent<BasicEntity,MMEmptyModel<BasicEntity>> renderer) {
+    public MMPartRenderLayer(RenderLayerParent<BasicEntity, MMEmptyModel<BasicEntity>> renderer) {
         super(renderer);
     }
 
@@ -35,23 +35,22 @@ public class MMPartRenderLayer extends RenderLayer<BasicEntity, MMEmptyModel<Bas
         //TODO:检查模型本体和Layer的旋转
         pPoseStack.mulPose(Axis.XP.rotationDegrees(180));//很奇怪，Layer添加的模型翻了个面，转回来
         pPoseStack.mulPose(Axis.YN.rotationDegrees(90));//很奇怪，Layer添加的模型翻了个面，转回来
-        getParentModel().root.translateAndRotate(pPoseStack);
         AnimationComponent animationComponent = new AnimationComponent();
         animationComponent.setup(TestCarChassisPart.PART_ANI_CONTROLLER, TestCarChassisPart.PART_ANIMATION);//加载动画控制器和动画包
         var infos = BrAnimator.tickAnimation(animationComponent,//播放动画
                 RenderData.getComponent(pLivingEntity).getScope(), ClientTickHandler.getTick() + partialTick);
         RenderType renderType = RenderType.entitySolid(TestCarChassisPart.PART_TEXTURE);
-        ModelRenderer.render(new RenderParams(
+        Eyelib.getRenderHelper().render(new RenderParams(
                         pLivingEntity,
                         pPoseStack.last().copy(),
                         pPoseStack,
                         renderType,
+                        TestCarChassisPart.PART_TEXTURE,
+                        true,
                         pBuffer.getBuffer(renderType),
                         pPackedLight,
                         LivingEntityRenderer.getOverlayCoords(pLivingEntity, 0)
-                ), BrModelLoader.getModel(TestCarChassisPart.PART_MODEL), infos,
-                new BrModelTextures.TwoSideInfoMap(new HashMap<>()),
-                new ModelRenderVisitorList(List.of(BuiltInBrModelRenderVisitors.BLANK.get())));
+                ), BrModelLoader.getModel(TestCarChassisPart.PART_MODEL), infos);
         pPoseStack.popPose();
     }
 }

@@ -18,22 +18,4 @@ public class MMRenderHandler {
 
         event.registerEntityRenderer(MMEntities.TEST_CAR_ENTITY.get(), TestCarEntityRenderer::new);
     }
-    @SubscribeEvent//注册模型部件渲染器
-    public static void onLayersAdding(EntityRenderersEvent.AddLayers event) {
-        event.getSkins().forEach(model -> {
-            if (event.getRenderer(MMEntities.TEST_CAR_ENTITY.get()) instanceof MMEntityRenderer renderer) {
-                //TODO:想办法拿到渲染中的实体
-                //BasicEntity entity = ;//获取要渲染的实体
-                //TODO:想办法拿到实例化的Part对象
-                //renderer.addLayer(new MMPartRenderLayer(renderer));//首先渲染根部件模型
-//                for(AbstractMMPart part : entity.CORE_PART){
-//                    renderer.addLayer(new MMPartRenderLayer(renderer, part));//再渲染所有与之连接的部件的模型
-//                }
-            }
-        });
-    }
-    @SubscribeEvent//注册Layer附着点（？
-    public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event){
-        event.registerLayerDefinition(MMEmptyModel.LAYER_LOCATION, MMEmptyModel::createBodyLayer);
-    }
 }
