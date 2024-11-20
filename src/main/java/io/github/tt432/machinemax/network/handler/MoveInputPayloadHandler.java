@@ -15,6 +15,7 @@ public class MoveInputPayloadHandler {
 
     public static void clientHandler(final MoveInputPayload payload, final IPayloadContext context) {
         //将其他玩家的输入同步至本机，以在客户端模拟其他玩家的操作
+        //TODO:测试操作延迟情况
         Player player = context.player();
         if (player.getVehicle() instanceof BasicEntity e && e.getController() != null) {
             e.getController().setRawMoveInput(payload.input());

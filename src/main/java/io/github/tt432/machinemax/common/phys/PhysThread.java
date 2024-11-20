@@ -14,7 +14,7 @@ public class PhysThread extends Thread {
     public static volatile DSpace space;
     public static volatile DJointGroup contactGroup;
     public static volatile boolean isPaused = false;
-    static final long step = 10;//物理线程计算步长(毫秒)
+    public static final long step = 10;//物理线程计算步长(毫秒)
     public static volatile long time = 0;
     @Override
     public void run() {//物理计算的主线程
@@ -23,8 +23,8 @@ public class PhysThread extends Thread {
         MachineMax.LOGGER.info("New phys thread started!");
         world = OdeHelper.createWorld();//各个物体所处的世界，不处于同一世界的物体无法交互，或许可以用来做不同维度的处理，但是否会无法利用多线程优势？
         world.setGravity(0, -9.81, 0);//设置重力
-        world.setContactSurfaceLayer(0.001);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
-        world.setERP(0.1);
+        world.setContactSurfaceLayer(0.01);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
+        world.setERP(0.25);
         world.setCFM(0.00005);
         //TODO:设置静止物体自动休眠以节约性能
         world.setQuickStepNumIterations(40);//设定迭代次数以提高物理计算精度
