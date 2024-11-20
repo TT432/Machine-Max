@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.unknown",
+				"identifier": "geometry.mini_ev_chassis",
 				"texture_width": 512,
 				"texture_height": 512,
 				"visible_bounds_width": 7,
@@ -154,7 +154,14 @@
 						{"origin": [-18.5, -7.00499, -33.3881], "size": [37, 3, 2], "pivot": [0, -6.30499, -31.6881], "rotation": [15, 0, 0], "uv": [171, 55]},
 						{"origin": [-4, -7.30499, -26.4131], "size": [2, 3, 6], "uv": [167, 188]},
 						{"origin": [2, -7.30499, -26.4131], "size": [2, 3, 6], "uv": [102, 178]}
-					]
+					],
+					"locators": {
+						"wheel_t_left_front": [18, -6, -33],
+						"wheel_t_right_front": {
+							"offset": [-18, -6, -32],
+							"rotation": [0, 0, -180]
+						}
+					}
 				}
 			]
 		}

@@ -20,7 +20,7 @@ version = mod_version
 group = mod_group_id
 
 repositories {
-    mavenLocal()
+//    mavenLocal()
     mavenCentral()
 }
 
@@ -31,7 +31,7 @@ base {
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-//minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 //minecraft.accessTransformers.entry public net.minecraft.client.Minecraft textureManager # textureManager
 
 // Default run configurations.
@@ -100,7 +100,7 @@ dependencies {
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    implementation "io.github.tt432:eyelib:21.1.2"//基岩版模型、动画、控制器支持
+    implementation "io.github.tt432:eyelib:21.1.5"//基岩版模型、动画、控制器支持
 
     implementation "org.openjdk.jmh:jmh-core:1.19"
 
