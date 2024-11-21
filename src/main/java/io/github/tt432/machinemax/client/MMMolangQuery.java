@@ -24,7 +24,7 @@ public final class MMMolangQuery {
     public static float roll(MolangScope scope) {
         return entityFloat(scope, e -> (e instanceof TestCarEntity) ? (((TestCarEntity) e).getZRot()) : (0));
     }
-
+    //TODO:作用域为部件的位姿信息Molang
     @MolangFunction(value = "part_rel_pos_x", description = "部件相对父部件的相对x坐标")
     public static float part_rel_pos_x(MolangScope scope) {
         return partFloat(scope, p -> {

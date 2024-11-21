@@ -12,8 +12,8 @@ public class SteeringWheelPartSlot extends AbstractPartSlot {
     public double kp;//悬挂刚度系数，单位N/m
     public double kd;//悬挂阻尼系数，单位N/(m/s)
 
-    public SteeringWheelPartSlot(AbstractPart owner, double kp, double kd) {
-        super(owner);
+    public SteeringWheelPartSlot(AbstractPart owner, String locator, double kp, double kd) {
+        super(owner, locator);
         this.kp = kp;
         this.kd = kd;
     }
@@ -26,21 +26,21 @@ public class SteeringWheelPartSlot extends AbstractPartSlot {
         slotOwnerPart.dbody.getRelPointPos(childPartAttachPos, pos);
         ((DHinge2Joint) joints.getFirst()).setAnchor(pos);
         ((DHinge2Joint) joints.getFirst()).setAxes(0, -1, 0, -1, 0, 0);
-        ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0*Math.PI/4);//限制轮胎转角
-        ((DHinge2Joint) joints.getFirst()).setParamHiStop(0*Math.PI/4);
+        ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0 * Math.PI / 4);//限制轮胎转角
+        ((DHinge2Joint) joints.getFirst()).setParamHiStop(0 * Math.PI / 4);
 //        ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0);//限制轮胎转角
 //        ((DHinge2Joint) joints.getFirst()).setParamHiStop(0);
         //设置转向驱动
-        joints.add(OdeHelper.createAMotorJoint(part.dbody.getWorld()));
-        joints.get(1).attach(slotOwnerPart.dbody, part.dbody);
-        ((DAMotorJoint) joints.get(1)).setMode(DAMotorJoint.AMotorMode.dAMotorEuler);
-        ((DAMotorJoint) joints.get(1)).setAxis(0,1,0,1,0);
-        ((DAMotorJoint) joints.get(1)).setAxis(1,2,1,0,0);
-        ((DAMotorJoint) joints.get(1)).setParamLoStop2(-Math.PI/4);//限制轮胎转角
-        ((DAMotorJoint) joints.get(1)).setParamHiStop2(Math.PI/4);
+//        joints.add(OdeHelper.createAMotorJoint(part.dbody.getWorld()));
+//        joints.get(1).attach(slotOwnerPart.dbody, part.dbody);
+//        ((DAMotorJoint) joints.get(1)).setMode(DAMotorJoint.AMotorMode.dAMotorEuler);
+//        ((DAMotorJoint) joints.get(1)).setAxis(0,1,0,1,0);
+//        ((DAMotorJoint) joints.get(1)).setAxis(1,2,1,0,0);
+//        ((DAMotorJoint) joints.get(1)).setParamLoStop2(-Math.PI/4);//限制轮胎转角
+//        ((DAMotorJoint) joints.get(1)).setParamHiStop2(Math.PI/4);
         //设置减震器属性
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) PhysThread.step /1000*kp)/(((double) PhysThread.step /1000*kp)+kd));
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1/(((double) PhysThread.step /1000*kp)+kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) PhysThread.step / 1000 * kp) / (((double) PhysThread.step / 1000 * kp) + kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1 / (((double) PhysThread.step / 1000 * kp) + kd));
     }
 
     @Override

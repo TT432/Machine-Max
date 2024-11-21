@@ -5,8 +5,8 @@ import io.github.tt432.machinemax.utils.physics.ode.DFixedJoint;
 import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
 
 public class HullPartSlot extends AbstractPartSlot {
-    public HullPartSlot(AbstractPart owner) {
-        super(owner);
+    public HullPartSlot(AbstractPart owner, String locator) {
+        super(owner,locator);
     }
 
     @Override

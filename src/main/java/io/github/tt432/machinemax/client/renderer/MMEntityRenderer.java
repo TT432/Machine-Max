@@ -36,9 +36,9 @@ public class MMEntityRenderer extends LivingEntityRenderer<BasicEntity, EntityMo
     @Override
     public void render(BasicEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         super.render(entity, 0, partialTicks, poseStack, buffer, packedLight);
-        var corePart = ((BasicEntity) entity).corePart;
+        var corePart = entity.corePart;
         if (corePart != null && corePart.dbody != null) {//若实体已指定部件，且部件已指定运动体，则根据运动体姿态控制实体旋转
-            DQuaternion dq = ((DQuaternion) ((BasicEntity) entity).corePart.dbody.getQuaternion());
+            DQuaternion dq = ((DQuaternion) entity.corePart.dbody.getQuaternion());
             DVector3 heading = dq.toEulerDegrees();
             //Quaternionf q = new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
             poseStack.pushPose();

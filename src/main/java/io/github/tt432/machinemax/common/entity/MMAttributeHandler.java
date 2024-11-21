@@ -1,7 +1,5 @@
 package io.github.tt432.machinemax.common.entity;
 
-import io.github.tt432.machinemax.client.renderer.MMEntityRenderer;
-import io.github.tt432.machinemax.client.renderer.TestCarEntityRenderer;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;

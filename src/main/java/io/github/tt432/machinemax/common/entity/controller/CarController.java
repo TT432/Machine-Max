@@ -26,8 +26,8 @@ public class CarController extends PhysController {
 
     @Override
     public void applyAllEffects() {
-        drive();
-        steer();
+//        drive();
+//        steer();
         super.applyAllEffects();
     }
 
@@ -49,7 +49,7 @@ public class CarController extends PhysController {
         rudderControl();
         DAMotorJoint motor;
         for (int i = 0; i < 4; i++) {
-            motor = (DAMotorJoint) controlledEntity.corePart.children_parts.get(i).joints.get(1);
+//            motor = (DAMotorJoint) controlledEntity.corePart.children_parts.get(i).joints.get(1);
             controlledEntity.corePart.children_parts.get(i).getChildPart().dbody.setFiniteRotationAxis(0,0,0);
         }
     }

@@ -10,8 +10,8 @@ public class WheelPartSlot extends AbstractPartSlot {
     public double kp;//悬挂刚度系数，单位N/m
     public double kd;//悬挂阻尼系数，单位N/(m/s)
 
-    public WheelPartSlot(AbstractPart owner, double kp, double kd) {
-        super(owner);
+    public WheelPartSlot(AbstractPart owner, String locator, double kp, double kd) {
+        super(owner, locator);
         this.kp = kp;
         this.kd = kd;
     }
@@ -27,8 +27,8 @@ public class WheelPartSlot extends AbstractPartSlot {
         ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0);//限制轮胎转角
         ((DHinge2Joint) joints.getFirst()).setParamHiStop(0);
         //设置减震器属性
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) PhysThread.step /1000*kp)/(((double) PhysThread.step /1000*kp)+kd));
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1/(((double) PhysThread.step /1000*kp)+kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) PhysThread.step / 1000 * kp) / (((double) PhysThread.step / 1000 * kp) + kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1 / (((double) PhysThread.step / 1000 * kp) + kd));
     }
 
     @Override
