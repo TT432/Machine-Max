@@ -88,9 +88,9 @@ public class PhysController {
     private void applySetPosition() {
         if (controlledEntity.corePart != null) {
             DVector3 delta = new DVector3(posToApply).sub(controlledEntity.corePart.dbody.getPosition());
-            controlledEntity.corePart.dbody.setPosition(posToApply);//将根部件移动到新位置
             for (AbstractPart part : controlledEntity.corePart) {
-                part.dbody.setPosition(part.dbody.getPosition().reAdd(delta));//根据坐标相对变化量，移动每个部件的位置
+                if (part == controlledEntity.corePart) part.dbody.setPosition(posToApply);//将根部件移动到新位置
+                else part.dbody.setPosition(part.dbody.getPosition().reAdd(delta));//根据坐标相对变化量，移动每个子孙部件的位置
             }
         }
     }
@@ -119,9 +119,9 @@ public class PhysController {
     private void applySetLinearVel() {
         if (controlledEntity.corePart != null) {
             DVector3 delta = new DVector3(lVelToApply).sub(controlledEntity.corePart.dbody.getLinearVel());
-            controlledEntity.corePart.dbody.setLinearVel(lVelToApply);//设置根部件速度
             for (AbstractPart part : controlledEntity.corePart) {
-                part.dbody.setLinearVel(part.dbody.getLinearVel().reAdd(delta));//根据坐标相对变化量，改变每个部件的速度
+                if (part == controlledEntity.corePart) part.dbody.setLinearVel(lVelToApply);//设置根部件速度
+                else part.dbody.setLinearVel(part.dbody.getLinearVel().reAdd(delta));//根据坐标相对变化量，改变每个部件的速度
             }
         }
     }
@@ -140,16 +140,17 @@ public class PhysController {
         DMatrix3 newRot = new DMatrix3();
         Rotation.dRfromQ(newRot, rotToApply);//新朝向，即新的根节点旋转矩阵
         newRot.eqMul(newRot, rotT);//构造一个调整用旋转矩阵，作用是逆转原本根节点的旋转，再将节点旋转至新的朝向
-        controlledEntity.corePart.dbody.setQuaternion(rotToApply);//设置根部件的朝向
         for (AbstractPart part : controlledEntity.corePart) {
-            //调整子部件的朝向
-            DMatrix3 rot = (DMatrix3) part.dbody.getRotation();//获取每个子部件的旋转矩阵
-            part.dbody.setRotation(rot.eqMul(newRot, rot));//叠加调整矩阵，旋转至新方向
-            //调整子部件相对根部件的位置
-            DVector3 pos = new DVector3();
-            part.father_part.dbody.getRelPointPos(part.attachedSlot.getChildPartAttachPos(), pos);//获取部件连接点的绝对坐标
-            //TODO:令部件连接点不强制为部件重心位置
-            part.dbody.setPosition(pos);//移动子部件
+            if (part == controlledEntity.corePart) part.dbody.setQuaternion(rotToApply);//设置根部件的朝向
+            else {//调整子部件的朝向
+                DMatrix3 rot = (DMatrix3) part.dbody.getRotation();//获取每个子部件的旋转矩阵
+                part.dbody.setRotation(rot.eqMul(newRot, rot));//叠加调整矩阵，旋转至新方向
+                //调整子部件相对根部件的位置
+                DVector3 pos = new DVector3();
+                part.father_part.dbody.getRelPointPos(part.attachedSlot.getChildPartAttachPos(), pos);//获取部件连接点的绝对坐标
+                //TODO:令部件连接点不强制为部件重心位置
+                part.dbody.setPosition(pos);//移动子部件
+            }
         }
     }
 
@@ -177,9 +178,9 @@ public class PhysController {
     private void applySetAngularVel() {
         if (controlledEntity.corePart != null) {
             DVector3 delta = new DVector3(aVelToApply).sub(controlledEntity.corePart.dbody.getAngularVel());
-            controlledEntity.corePart.dbody.setAngularVel(aVelToApply);//设置根部件速度
             for (AbstractPart part : controlledEntity.corePart) {
-                part.dbody.setAngularVel(part.dbody.getAngularVel().reAdd(delta));//根据坐标相对变化量，改变每个部件的速度
+                if (part == controlledEntity.corePart) part.dbody.setAngularVel(aVelToApply);//设置根部件速度
+                else part.dbody.setAngularVel(part.dbody.getAngularVel().reAdd(delta));//根据坐标相对变化量，改变每个部件的速度
             }
         }
     }

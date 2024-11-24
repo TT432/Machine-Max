@@ -126,8 +126,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
             if (corePart != null) {
                 setPos(this.getX(), this.getY(), this.getZ());//将所有部件的位置同步到物理计算线程
                 setRot(this.getXRot(), this.getYRot(), this.getZRot());//将所有部件的姿态同步到物理计算线程
-                corePart.addAllGeomsToSpace();//将核心部件加入碰撞空间
-                for (AbstractPart part : this.corePart) part.addAllGeomsToSpace();//再将所有连接着的子部件添加进碰撞空间
+                for (AbstractPart part : this.corePart) part.addAllGeomsToSpace();//将所有部件添加进碰撞空间
             }
         }
         this.syncPoseToMainThread();//将实体位姿与物理计算结果同步
@@ -231,8 +230,10 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
         double totalMass = this.corePart.dmass.getMass();//获取根部件质量
         DVector3 massCentre = this.corePart.dbody.getPosition().reScale(totalMass);//获取根部件质心位置，并以质量为权重
         for (AbstractPart part : this.corePart) {
-            massCentre.add(part.dbody.getPosition().reScale(part.dmass.getMass()));
-            totalMass += part.dmass.getMass();//计算总重
+            if(part!=this.corePart){
+                massCentre.add(part.dbody.getPosition().reScale(part.dmass.getMass()));
+                totalMass += part.dmass.getMass();//计算总重
+            }
         }
         massCentre.scale(1 / totalMass);//加权平均求质心位置
         return massCentre;
@@ -282,8 +283,6 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
                 part.removeAllGeomsInSpace();
                 part.removeBodyInWorld();
             }
-            corePart.removeAllGeomsInSpace();
-            corePart.removeBodyInWorld();
         }
         super.remove(reason);
     }

@@ -77,9 +77,10 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
 
     class DFIterator implements Iterator<AbstractPart> {
         int index = 0;
-
+        boolean first = true;
         @Override
         public boolean hasNext() {
+            if (first) return true;
             if (PART_SLOT_NUM == 0) {
                 return false;
             }
@@ -98,6 +99,10 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
 
         @Override
         public AbstractPart next() {
+            if(first){//首先返回部件本身
+                first=false;
+                return AbstractPart.this;
+            }
             index++;
             return AbstractPart.this.children_parts.get(index - 1).getChildPart();
         }

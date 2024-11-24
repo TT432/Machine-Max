@@ -43,24 +43,33 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
         animationComponent.setup(pEntity.corePart.getAniController(), pEntity.corePart.getAnimation());
         var infos = BrAnimator.tickAnimation(animationComponent,
                 RenderData.getComponent(pEntity).getScope(), ClientTickHandler.getTick() + pPartialTick);
-        RenderParams renderParams = new RenderParams(
-                pEntity,
-                pPoseStack.last().copy(),
-                pPoseStack,
-                renderType,
-                pEntity.corePart.getTexture(),
-                true,
-                pBuffer.getBuffer(renderType),
-                pPackedLight,
-                OverlayTexture.NO_OVERLAY//控制受伤变红与tnt爆炸前闪烁，载具不需要这个
-        );
-        pEntity.corePart.renderHelper = Eyelib.getRenderHelper().render(renderParams, BrModelLoader.getModel(pEntity.corePart.getModel()), infos);//渲染根部件
-        for (AbstractPart part : pEntity.corePart) {//遍历根部件的所有子孙部件
-            part.father_part.renderHelper.renderOnLocator(
-                    part.attachedSlot.locatorName, //在子部件所连接的槽位的对应locator处
-                    BrModelLoader.getModel(part.getModel()), //渲染子部件模型
-                    //TODO:各个部件使用不同的贴图
-                    BoneRenderInfos.EMPTY);
+        RenderParams renderParams;
+        for (AbstractPart part : pEntity.corePart) {//遍历根部件及其所有子孙部件
+            renderParams = new RenderParams(//渲染参数
+                    pEntity,
+                    pPoseStack.last().copy(),
+                    pPoseStack,
+                    renderType,
+                    part.getTexture(),
+                    true,
+                    pBuffer.getBuffer(renderType),
+                    pPackedLight,
+                    OverlayTexture.NO_OVERLAY//控制受伤变红与tnt爆炸前闪烁，载具不需要这个
+            );
+            if (part == pEntity.corePart) {//渲染根部件
+                part.renderHelper = Eyelib.getRenderHelper().render(
+                        renderParams,
+                        BrModelLoader.getModel(pEntity.corePart.getModel()),
+                        infos
+                );
+            } else {//渲染子部件
+                part.father_part.renderHelper.renderOnLocator(
+                        renderParams,
+                        part.attachedSlot.locatorName, //在子部件所连接的槽位的对应locator处
+                        BrModelLoader.getModel(part.getModel()), //渲染子部件模型
+                        BoneRenderInfos.EMPTY
+                );
+            }
         }
         pPoseStack.popPose();
     }
