@@ -1,0 +1,26 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"part": {
+			"loop": true,
+			"bones": {
+				"RightFrontWheel": {
+					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y", "q.part_rel_rot_z"],
+					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+				},
+				"LeftFrontWheel": {
+					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y", "q.part_rel_rot_z"],
+					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+				},
+				"RightBackWheel": {
+					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y", "q.part_rel_rot_z"],
+					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+				},
+				"LeftBackWheel": {
+					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y", "q.part_rel_rot_z"],
+					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+				}
+			}
+		}
+	}
+}

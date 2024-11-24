@@ -16,8 +16,8 @@ public class TestCarChassisPart extends AbstractPart {
     //模型资源参数
     public static final ResourceLocation PART_TEXTURE= ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"textures/entity/mini_ev.png");
     public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev_chassis");
-    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev_chassis.animation");
-    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev_chassis.animation_controllers");
+    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev.animation");
+    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID,"entity/mini_ev/mini_ev.animation_controllers");
     //属性参数
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
