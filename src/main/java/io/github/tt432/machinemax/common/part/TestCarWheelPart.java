@@ -13,8 +13,8 @@ public class TestCarWheelPart extends AbstractWheelPart {
     //模型资源参数
     public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/mini_ev.png");
     public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_wheel");
-    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_wheel.animation");
-    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_wheel.animation_controllers");
+    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev.animation");
+    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev.animation_controllers");
     //属性参数
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
@@ -38,7 +38,7 @@ public class TestCarWheelPart extends AbstractWheelPart {
 
         dgeoms[0] = OdeHelper.createCylinder(WHEEL_RADIUS, WHEEL_WIDTH);//创建一个平面朝向Z正方向的圆柱体
         dgeoms[0].setBody(dbody);//碰撞体绑定到运动体
-        dgeoms[0].setOffsetQuaternion(DQuaternion.fromEulerDegrees(0, 90, 0));//默认情况下为右前轮
+        dgeoms[0].setOffsetQuaternion(DQuaternion.fromEulerDegrees(0, 90, 0));//默认创建的是一个立着的圆柱，转一下
         dgeoms[0].setOffsetPosition(-0.8D / 16, 0, 0);//对齐碰撞体形状与模型形状
     }
 
