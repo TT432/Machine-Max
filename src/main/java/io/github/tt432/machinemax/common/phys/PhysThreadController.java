@@ -18,7 +18,6 @@ import static io.github.tt432.machinemax.MachineMax.MOD_ID;
 public class PhysThreadController {
 
     public static PhysThread physThread;
-    public static LocalPhysThread localPhysThread;
 
     @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class events{

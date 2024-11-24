@@ -10,7 +10,7 @@ public abstract class AbstractWheelPart extends AbstractPart {
     public AbstractWheelPart(BasicEntity entity) {
         super(entity);
         dbody.setFiniteRotationMode(true);
-        dbody.setGyroscopicMode(false);
+//        dbody.setGyroscopicMode(false);
         PART_TYPE = partTypes.WHEEL;
     }
 }

@@ -5,7 +5,7 @@
 			"loop": true,
 			"bones": {
 				"Wheel": {
-					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y", "q.part_rel_rot_z"],
+					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y+180", "q.part_rel_rot_z"],
 					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
 				}
 			}

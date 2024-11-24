@@ -40,31 +40,31 @@ public class TestCarChassisPart extends AbstractPart {
             switch(i){
                 case 0://右前轮
                     this.childrenPartSlots.set(0,new SteeringWheelPartSlot(this,"right_front_wheel",50000,1000));
-                    this.childrenPartSlots.get(0).setChildPartAttachPos(new DVector3(17.0569/16, 0.7075/16, -19.0756/16));
+                    this.childrenPartSlots.get(0).setChildPartAttachPos(new DVector3(-17.0569/16, 0.7075/16, 19.0756/16));
                     this.childrenPartSlots.get(0).setChildPartAttachRot(DQuaternion.fromEulerDegrees(0,0,0));
                     this.childrenPartSlots.get(0).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 1://左前轮
                     this.childrenPartSlots.set(1,new SteeringWheelPartSlot(this,"left_front_wheel",50000,1000));
-                    this.childrenPartSlots.get(1).setChildPartAttachPos(new DVector3(-17.0569/16, 0.7075/16, -19.0756/16));
+                    this.childrenPartSlots.get(1).setChildPartAttachPos(new DVector3(17.0569/16, 0.7075/16, 19.0756/16));
                     this.childrenPartSlots.get(1).setChildPartAttachRot(DQuaternion.fromEulerDegrees(0,180,0));
                     this.childrenPartSlots.get(1).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 2://左后轮
-                    this.childrenPartSlots.set(2,new SteeringWheelPartSlot(this,"left_back_wheel",50000,1000));
-                    this.childrenPartSlots.get(2).setChildPartAttachPos(new DVector3(-17.0569/16, 0.7075/16, 26.9244/16));
+                    this.childrenPartSlots.set(2,new WheelPartSlot(this,"left_back_wheel",50000,1000));
+                    this.childrenPartSlots.get(2).setChildPartAttachPos(new DVector3(17.0569/16, 0.7075/16, -26.9244/16));
                     this.childrenPartSlots.get(2).setChildPartAttachRot(DQuaternion.fromEulerDegrees(0,180,0));
                     this.childrenPartSlots.get(2).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 3://右后轮
-                    this.childrenPartSlots.set(3,new SteeringWheelPartSlot(this,"right_back_wheel",50000,1000));
-                    this.childrenPartSlots.get(3).setChildPartAttachPos(new DVector3(17.0569/16, 0.7075/16, 26.9244/16));
+                    this.childrenPartSlots.set(3,new WheelPartSlot(this,"right_back_wheel",50000,1000));
+                    this.childrenPartSlots.get(3).setChildPartAttachPos(new DVector3(-17.0569/16, 0.7075/16, -26.9244/16));
                     this.childrenPartSlots.get(3).setChildPartAttachRot(DQuaternion.fromEulerDegrees(0,0,0));
                     this.childrenPartSlots.get(3).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 4://车壳
                     this.childrenPartSlots.set(4,new HullPartSlot(this, "hull"));
-                    this.childrenPartSlots.get(4).setChildPartAttachPos(new DVector3(0, 10D/16, 4D/16));
+                    this.childrenPartSlots.get(4).setChildPartAttachPos(new DVector3(0, 10D/16, -4D/16));
                     this.childrenPartSlots.get(4).setChildPartAttachRot(DQuaternion.fromEulerDegrees(0,0,0));
                     this.childrenPartSlots.get(4).attachPart(new TestCarHullPart(this.getAttachedEntity()));
                     break;

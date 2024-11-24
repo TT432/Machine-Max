@@ -3,7 +3,9 @@ package io.github.tt432.machinemax.common.entity.entity;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.controller.CarController;
+import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +32,11 @@ public class TestCarEntity extends BasicEntity {
     @Override
     public void tick() {
         super.tick();
+        if(this.getFirstPassenger() instanceof Player p){
+            DVector3 v = corePart.dbody.getLinearVel().copy();
+            corePart.dbody.vectorFromWorld(v,v);
+            p.displayClientMessage(Component.literal("速度:"+ String.format("%.2f",v.get2()*3.6) + "km/h"),true);
+        }
         this.level().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), 0, 0, 0);
     }
 
