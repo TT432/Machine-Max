@@ -6,8 +6,11 @@ import io.github.tt432.eyelib.molang.mapping.api.MolangMapping;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
+import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
+import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -27,7 +30,7 @@ public final class MMMolangQuery {
         return entityFloat(scope, e -> (e instanceof BasicEntity) ? (((BasicEntity) e).getZRot()) : (0));
     }
 
-    //TODO:作用域为部件的位姿信息Molang
+    //TODO:作用域为部件的位姿信息Molang，暂时无效
     @MolangFunction(value = "part_rel_pos_x", description = "部件相对父部件的相对x坐标(m)")
     public static float part_rel_pos_x(MolangScope scope) {
         return partFloat(scope, p -> {
@@ -77,7 +80,12 @@ public final class MMMolangQuery {
     public static float part_rel_rot_x(MolangScope scope) {
         return entityFloat(scope, e -> {
             if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
+                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
+                rot1.eqMul(rotT,rot1);
+                DQuaternion dq=new DQuaternion();
+                Rotation.dQfromR(dq,rot1);
+                DVector3 ang = dq.toEulerDegrees();
                 return (float) ang.get0();
             }else return 0F;
         });
@@ -86,20 +94,29 @@ public final class MMMolangQuery {
     public static float part_rel_rot_y(MolangScope scope) {
         return entityFloat(scope, e -> {
             if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
+                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
+                rot1.eqMul(rotT,rot1);
+                DQuaternion dq=new DQuaternion();
+                Rotation.dQfromR(dq,rot1);
+                DVector3 ang = dq.toEulerDegrees();
                 return (float) ang.get1();
             }else return 0F;
         });
     }
     @MolangFunction(value = "part_rel_rot_z", description = "roll 角度（z rot）")
     public static float part_rel_rot_z(MolangScope scope) {
-//        return entityFloat(scope, e -> {
-//            if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-//                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
-//                return (float) ang.get2();
-//            }else return 0F;
-//        });
-        return entityFloat(scope, e->(45F));
+        return entityFloat(scope, e -> {
+            if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
+                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
+                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
+                rot1.eqMul(rotT,rot1);
+                DQuaternion dq=new DQuaternion();
+                Rotation.dQfromR(dq,rot1);
+                DVector3 ang = dq.toEulerDegrees();
+                return (float) ang.get2();
+            }else return 0F;
+        });
     }
     @FunctionalInterface
     interface ToBooleanFunction<K> {

@@ -1,6 +1,10 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
+import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.utils.MMMath;
 import io.github.tt432.machinemax.utils.control.PDController;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.DAMotorJoint;
@@ -27,8 +31,14 @@ public class CarController extends PhysController {
 
     @Override
     public void applyAllEffects() {
+//        AbstractPartSlot slot;
+//        slot =controlledEntity.corePart.childrenPartSlots.get(0);
+//        ((DHinge2Joint)slot.joints.getFirst()).addTorques(0,-10*rawMoveInput[2]);
+//        slot =controlledEntity.corePart.childrenPartSlots.get(1);
+//        ((DHinge2Joint)slot.joints.getFirst()).addTorques(0,-10*rawMoveInput[2]);
         drive();
         steer();
+        for (int i = 0; i < 4; i++) controlledEntity.corePart.childrenPartSlots.get(i).getChildPart().dbody.setFiniteRotationAxis(0,0,0);
         super.applyAllEffects();
     }
 
@@ -38,15 +48,11 @@ public class CarController extends PhysController {
         DHinge2Joint joint;
         joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(0).joints.getFirst();
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
-        joint.setParamLoStop(-Math.PI / 4);//限制轮胎转角
-        joint.setParamHiStop(Math.PI / 4);
-        joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(3).joints.getFirst();
+        joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(1).joints.getFirst();
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
-        joint.setParamLoStop(-Math.PI / 4);//限制轮胎转角
-        joint.setParamHiStop(Math.PI / 4);
         for (int i = 0; i < 4; i++) {
             joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(i).joints.getFirst();
-            //joint.addTorques(0, brake*MMMath.sigmoidSignum(abs(joint.getAngle1Rate())/10));//刹车制动力
+            joint.addTorques(0, brake* MMMath.sigmoidSignum(abs(joint.getAngle1Rate())/10));//刹车制动力
         }
     }
 
@@ -58,25 +64,25 @@ public class CarController extends PhysController {
             hinge = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(0).joints.getFirst();
             motor = (DAMotorJoint) controlledEntity.corePart.childrenPartSlots.get(i).joints.get(1);
             controlledEntity.corePart.childrenPartSlots.get(i).getChildPart().dbody.setFiniteRotationAxis(0,0,0);
-            double m = PDController.PD(1,1,turning_input*PI/4,-hinge.getAngle1(),0,-hinge.getAngle1Rate());
-            motor.setParamVel(-m);
+            //TODO:由转弯半径计算最大轮胎转角
+            double m = PDController.PD(1,1,turning_input*PI/5,hinge.getAngle1(),0,hinge.getAngle1Rate());
+            motor.setParamVel(m);
         }
     }
 
     private void engineControl() {//发动机输出计算
-        controlledEntity.corePart.dbody.getLinearVel();
         //目标输出功率
         double target_power = MAX_POWER * rawMoveInput[2] / 100;
         double target_brake;
-        DVector3 v = (DVector3) controlledEntity.corePart.dbody.getLinearVel();
+        DVector3 v = controlledEntity.corePart.dbody.getLinearVel().copy();
         controlledEntity.corePart.dbody.vectorFromWorld(v, v);
-        if (-v.get2() >= -0.1 && rawMoveInput[2] > 0) {//未在后退时按w则前进
+        if (v.get2() >= -0.1 && rawMoveInput[2] > 0) {//未在后退时按w则前进
             target_brake = 0;
-        } else if (-v.get2() > 0 && rawMoveInput[2] < 0) {//前进时按s则刹车
+        } else if (v.get2() > 0 && rawMoveInput[2] < 0) {//前进时按s则刹车
             target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
-        } else if (-v.get2() <= 0.1 && rawMoveInput[2] < 0) {//未在前进时按s则后退
+        } else if (v.get2() <= 0.1 && rawMoveInput[2] < 0) {//未在前进时按s则后退
             target_brake = 0;
-        } else if (-v.get2() < 0 && rawMoveInput[2] > 0) {//后退时按w则刹车
+        } else if (v.get2() < 0 && rawMoveInput[2] > 0) {//后退时按w则刹车
             target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
         } else if ((abs(v.get2()) <= 0.05 && rawMoveInput[2] == 0) || moveInputConflict[2] == 1) {//无输入且低速，或输入冲突时刹车
             target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
@@ -96,11 +102,10 @@ public class CarController extends PhysController {
     }
 
     private void rudderControl() {//转角计算
-        //TODO:考虑时间步长
-        if (rawMoveInput[4] > 0 || (rawMoveInput[4] == 0 && turning_input < -0.05)) {
-            turning_input = clamp(turning_input + 0.05F, -STEER_T, STEER_T);
-        } else if (rawMoveInput[4] < 0 || turning_input > 0.05) {
-            turning_input = clamp(turning_input - 0.05F, -STEER_T, STEER_T);
+        if (rawMoveInput[4] > 0 || (rawMoveInput[4] == 0 && turning_input < -PhysThread.STEP)) {
+            turning_input = clamp(turning_input + PhysThread.STEP/STEER_T, -1, 1);
+        } else if (rawMoveInput[4] < 0 || turning_input > PhysThread.STEP) {
+            turning_input = clamp(turning_input - PhysThread.STEP/STEER_T, -1, 1);
         } else {
             turning_input = 0F;
         }

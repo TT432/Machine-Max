@@ -10,12 +10,12 @@ import net.minecraft.resources.ResourceLocation;
 
 public class TestCarHullPart extends AbstractPart {
     //模型资源参数
-//    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/mini_ev.png");
-//    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull");
-    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/kv2.png");
-    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/kv2/kv2_turret");
-    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev.animation");
-    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev.animation_controllers");
+    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/mini_ev.png");
+    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull");
+//    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/kv2.png");
+//    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/kv2/kv2_turret");
+    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull.animation");
+    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull.animation_controllers");
     //属性参数
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
@@ -35,11 +35,11 @@ public class TestCarHullPart extends AbstractPart {
 
         dgeoms[0] = OdeHelper.createBox(40D / 16, 21D / 16, 72D / 16);
         dgeoms[0].setBody(dbody);
-        dgeoms[0].setOffsetPosition(0, 3D / 16, 4D / 16);//对齐碰撞体形状与模型形状
+        dgeoms[0].setOffsetPosition(0, 3D / 16, -4D / 16);//对齐碰撞体形状与模型形状
 
         dgeoms[1] = OdeHelper.createBox(40D / 16, 14D / 16, 50D / 16);
         dgeoms[1].setBody(dbody);
-        dgeoms[1].setOffsetPosition(0, 20.5D / 16, 14D / 16);//对齐碰撞体形状与模型形状
+        dgeoms[1].setOffsetPosition(0, 20.5D / 16, -14D / 16);//对齐碰撞体形状与模型形状
     }
 
     @Override

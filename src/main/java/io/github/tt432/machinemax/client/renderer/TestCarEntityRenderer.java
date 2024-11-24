@@ -36,11 +36,12 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
         pPoseStack.mulPose(Axis.YN.rotationDegrees((float) heading.get1()));//将模型朝向与实体朝向相匹配
         pPoseStack.mulPose(Axis.XP.rotationDegrees((float) heading.get0()));//俯仰
         pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) heading.get2()));//滚转
-        RenderType renderType = RenderType.entitySolid(pEntity.corePart.getTexture());
+        RenderType renderType;
         AnimationComponent animationComponent;
         BoneRenderInfos infos;
         RenderParams renderParams;
         for (AbstractPart part : pEntity.corePart) {//遍历根部件及其所有子孙部件
+            renderType = RenderType.entitySolid(part.getTexture());
             animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
             animationComponent.setup(part.getAniController(), part.getAnimation());
             infos = BrAnimator.tickAnimation(animationComponent,
@@ -67,7 +68,7 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
                         renderParams,
                         part.attachedSlot.locatorName, //在子部件所连接的槽位的对应locator处
                         BrModelLoader.getModel(part.getModel()), //渲染子部件模型
-                        BoneRenderInfos.EMPTY
+                        infos
                 );
             }
         }

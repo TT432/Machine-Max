@@ -14,7 +14,7 @@ public class PhysThread extends Thread {
     public static volatile DSpace space;
     public static volatile DJointGroup contactGroup;
     public static volatile boolean isPaused = false;
-    public static final long step = 10;//物理线程计算步长(毫秒)
+    public static final long STEP = 10;//物理线程计算步长(毫秒)
     public static volatile long time = 0;
     @Override
     public void run() {//物理计算的主线程
@@ -40,7 +40,7 @@ public class PhysThread extends Thread {
             long startTime = System.nanoTime();//记录开始时间
             step(isPaused);//推进物理模拟计算进程
             long duration = (System.nanoTime() - startTime) / 1000000;//计算物理线程执行用时，并转换为毫秒
-            long sleepTime = step - duration;
+            long sleepTime = STEP - duration;
             if (sleepTime < 1) sleepTime = 1;
             //MachineMax.LOGGER.info("Execute time:"+duration);
             try {
@@ -67,7 +67,7 @@ public class PhysThread extends Thread {
             applyAllControllers(space);
             renderSpace.collide(null, nearCallback);//碰撞检测
             space.collide(null, nearCallback);//碰撞检测
-            world.quickStep((double) step / 1000);
+            world.quickStep((double) STEP / 1000);
         }
         contactGroup.empty();//碰撞处理完成后移除所有碰撞点约束
         renderSpace.handleGeomAddAndRemove();//增删待增删的碰撞体
@@ -106,7 +106,7 @@ public class PhysThread extends Thread {
         for (int i = 0; i < contactNum; i++) {
             DContact contact = contacts.get(i);
             contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1;
-            contact.surface.mu = 5000;
+            contact.surface.mu = 50000;
             contact.surface.rho = 0.01;
             contact.surface.bounce = 0.0001;
             contact.surface.bounce_vel = 0.1;

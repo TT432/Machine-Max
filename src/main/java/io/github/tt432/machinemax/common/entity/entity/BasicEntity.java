@@ -1,23 +1,17 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.Collections;
 
@@ -49,14 +43,8 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
     @Setter
     @Getter
     private float ZRot;
-    //同步坐标数据
-    protected static final EntityDataAccessor<Vector3f> PHYS_POS = SynchedEntityData.defineId(BasicEntity.class, EntityDataSerializers.VECTOR3);
-    protected static final EntityDataAccessor<Vector3f> PHYS_SPD_L = SynchedEntityData.defineId(BasicEntity.class, EntityDataSerializers.VECTOR3);
-    //同步旋转数据
-    protected static final EntityDataAccessor<Quaternionf> PHYS_ROT = SynchedEntityData.defineId(BasicEntity.class, EntityDataSerializers.QUATERNION);
-    protected static final EntityDataAccessor<Vector3f> PHYS_SPD_A = SynchedEntityData.defineId(BasicEntity.class, EntityDataSerializers.VECTOR3);
 
-    public enum controlMode{
+    public enum controlMode {
         GROUND,
         SHIP,
         PLANE,
@@ -67,56 +55,6 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
         super(entityType, level);
         noPhysics = true;
         physPosSyncTick = 0;
-    }
-
-    //注册其他需要同步的信息
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(PHYS_POS, new Vector3f(0, 0, 0));
-        builder.define(PHYS_SPD_L, new Vector3f(0, 0, 0));
-        builder.define(PHYS_ROT, new Quaternionf(0, 0, 0, 1));
-        builder.define(PHYS_SPD_A, new Vector3f(0, 0, 0));
-        super.defineSynchedData(builder);
-    }
-
-    //同步信息发生更新时的处理
-    @Override
-    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
-        if (PHYS_POS.equals(key)) {//位置同步
-            if (this.level().isClientSide()) {
-//                physPosSyncTick = 1;//将位置同步均分到10ticks
-                physSyncDeltaPos = new DVector3(
-                        entityData.get(PHYS_POS).x,
-                        entityData.get(PHYS_POS).y,
-                        entityData.get(PHYS_POS).z);
-                posError = physSyncDeltaPos.copy();
-//                this.setPos(physSyncDeltaPos);
-            }
-        } else if (PHYS_SPD_L.equals(key)) {
-            if (this.level().isClientSide()) {
-                physSyncDeltaSpdL = new DVector3(
-                        entityData.get(PHYS_SPD_L).x,
-                        entityData.get(PHYS_SPD_L).y,
-                        entityData.get(PHYS_SPD_L).z);
-//                this.controller.setLinearVelEnqueue(physSyncDeltaSpdL);
-            }
-        } else if (PHYS_ROT.equals(key)) {//姿态同步
-            if (this.level().isClientSide()) {
-                //physRotSyncTick = 20;//将姿态同步过程均分到20ticks
-                Quaternionf physRot = entityData.get(PHYS_ROT);
-                physSyncDeltaRot = new DQuaternion(physRot.w, physRot.x, physRot.y, physRot.z);
-//                this.setRot(physSyncDeltaRot);
-            }
-        } else if (PHYS_SPD_A.equals(key)) {
-            if (this.level().isClientSide()) {
-                physSyncDeltaSpdA = new DVector3(
-                        entityData.get(PHYS_SPD_A).x,
-                        entityData.get(PHYS_SPD_A).y,
-                        entityData.get(PHYS_SPD_A).z);
-//                controller.setAngularVelEnqueue(physSyncDeltaSpdA);
-            }
-        }
-        super.onSyncedDataUpdated(key);
     }
 
     @Override
@@ -130,13 +68,10 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
         }
         this.syncPoseToMainThread();//将实体位姿与物理计算结果同步
         if (!this.level().isClientSide()) {//服务端限定内容
-            if (tickCount % 20 == 0) syncPoseToClient();//每秒更新一次需要同步的位姿
+
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
-            //syncPoseFromServer();//将客户端实体位姿与服务端同步
-            DVector3 v1 =corePart.dbody.getQuaternion().toEulerDegrees();
-            DVector3 v2 =corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
-            MachineMax.LOGGER.info("error: " + (v2.sub(v1)));
+
         }
         super.tick();
     }
@@ -150,39 +85,9 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
             DQuaternion dq = (DQuaternion) corePart.dbody.getQuaternion();
             DVector3 heading = dq.toEulerDegrees();
             setXRot((float) heading.get0());
-            setYRot((float) heading.get1()+180);
+            setYRot((float) heading.get1());
             setZRot((float) heading.get2());
             this.setBoundingBox(this.makeBoundingBox());
-        }
-    }
-
-    /**
-     * 仅在服务端可用
-     * <p>
-     * 将服务端物理体的位姿信息更新到相应同步变量中
-     */
-    protected void syncPoseToClient() {
-        DVector3 pos = (DVector3) this.corePart.dbody.getPosition();//获取位置信息
-        entityData.set(PHYS_POS, new Vector3f((float) pos.get0(), (float) pos.get1(), (float) pos.get2()));
-        DVector3 lSpd = (DVector3) this.corePart.dbody.getLinearVel();//获取线速度信息
-        entityData.set(PHYS_SPD_L, new Vector3f((float) lSpd.get0(), (float) lSpd.get1(), (float) lSpd.get2()));
-        DQuaternion rot = (DQuaternion) this.corePart.dbody.getQuaternion();
-        entityData.set(PHYS_ROT, new Quaternionf(rot.get1(), rot.get2(), rot.get3(), rot.get0()));
-        DVector3 aSpd = (DVector3) this.corePart.dbody.getAngularVel();//获取角速度信息
-        entityData.set(PHYS_SPD_A, new Vector3f((float) aSpd.get0(), (float) aSpd.get1(), (float) aSpd.get2()));
-    }
-
-    protected void syncPoseFromServer() {
-        if (physRotSyncTick > 0) {//姿态同步
-            physRotSyncTick--;
-            //TODO
-            this.setRot(physSyncDeltaRot);
-        }
-        if (physPosSyncTick > 0) {//位置同步
-            physPosSyncTick--;
-            DVector3 pos = (DVector3) this.corePart.dbody.getPosition();
-            //pos.add(physSyncDeltaPos);
-            this.setPos(pos.add(physSyncDeltaPos));
         }
     }
 
@@ -231,7 +136,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
         double totalMass = this.corePart.dmass.getMass();//获取根部件质量
         DVector3 massCentre = this.corePart.dbody.getPosition().reScale(totalMass);//获取根部件质心位置，并以质量为权重
         for (AbstractPart part : this.corePart) {
-            if(part!=this.corePart){
+            if (part != this.corePart) {
                 massCentre.add(part.dbody.getPosition().reScale(part.dmass.getMass()));
                 totalMass += part.dmass.getMass();//计算总重
             }
