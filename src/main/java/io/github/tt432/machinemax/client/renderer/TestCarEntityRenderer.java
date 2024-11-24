@@ -8,10 +8,8 @@ import io.github.tt432.eyelib.capability.component.AnimationComponent;
 import io.github.tt432.eyelib.client.ClientTickHandler;
 import io.github.tt432.eyelib.client.animation.BrAnimator;
 import io.github.tt432.eyelib.client.loader.BrModelLoader;
-import io.github.tt432.eyelib.client.render.RenderHelper;
 import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.bone.BoneRenderInfos;
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
@@ -39,11 +37,12 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
         pPoseStack.mulPose(Axis.XP.rotationDegrees((float) heading.get0()));//俯仰
         pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) heading.get2()));//滚转
         RenderType renderType = RenderType.entitySolid(pEntity.corePart.getTexture());
-        AnimationComponent animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
-        animationComponent.setup(pEntity.corePart.getAniController(), pEntity.corePart.getAnimation());
+        AnimationComponent animationComponent;
         BoneRenderInfos infos;
         RenderParams renderParams;
         for (AbstractPart part : pEntity.corePart) {//遍历根部件及其所有子孙部件
+            animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
+            animationComponent.setup(part.getAniController(), part.getAnimation());
             infos = BrAnimator.tickAnimation(animationComponent,
                     RenderData.getComponent(pEntity).getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数
@@ -64,7 +63,7 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
                         infos
                 );
             } else {//渲染子部件
-                part.father_part.renderHelper.renderOnLocator(
+                part.fatherPart.renderHelper.renderOnLocator(
                         renderParams,
                         part.attachedSlot.locatorName, //在子部件所连接的槽位的对应locator处
                         BrModelLoader.getModel(part.getModel()), //渲染子部件模型

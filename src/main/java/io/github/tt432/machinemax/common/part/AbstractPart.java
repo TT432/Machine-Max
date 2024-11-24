@@ -27,13 +27,13 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
 
     public partTypes PART_TYPE;//部件类型
     //模块化属性
-    public AbstractPart father_part;//连接的上级部件
+    public AbstractPart fatherPart;//连接的上级部件
     public AbstractPartSlot attachedSlot;//此部件被安装于的槽位
-    public DVector3 attach_point = new DVector3(0, 0, 0);//本部件重心与父节点连接点的相对位置，即坐标原点与被连接点的相对位置
+    public DVector3 attachPoint = new DVector3(0, 0, 0);//本部件重心与父节点连接点的相对位置，即坐标原点与被连接点的相对位置
     protected int PART_SLOT_NUM = 0;//此部件的身体部件及武器装备槽位数
     protected int MOD_SLOT_NUM = 0;//此部件的主被动模块槽位数
-    public List<AbstractPartSlot> children_parts;//连接的子代部件
-    public List<BasicModuleSlot> modules;//安装的各类主被动模块
+    public List<AbstractPartSlot> childrenPartSlots;//连接的子代部件槽
+    public List<BasicModuleSlot> moduleSlots;//安装的各类主被动模块槽位
 
     public enum partTypes {//部件分类，常用于判断该部件是否能够安装到指定槽位
         ARMOR,//装甲板
@@ -78,6 +78,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     class DFIterator implements Iterator<AbstractPart> {
         int index = 0;
         boolean first = true;
+
         @Override
         public boolean hasNext() {
             if (first) return true;
@@ -86,7 +87,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
             }
             int index0 = index;
             if (index0 < PART_SLOT_NUM) {//按顺序读取槽位，检查槽位状态
-                if (AbstractPart.this.children_parts.get(index0).hasPart()) {
+                if (AbstractPart.this.childrenPartSlots.get(index0).hasPart()) {
                     return true;
                 } else {//若槽位是空槽，跳过此槽位检查下一槽位
                     index++;
@@ -99,12 +100,12 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
 
         @Override
         public AbstractPart next() {
-            if(first){//首先返回部件本身
-                first=false;
+            if (first) {//首先返回部件本身
+                first = false;
                 return AbstractPart.this;
             }
             index++;
-            return AbstractPart.this.children_parts.get(index - 1).getChildPart();
+            return AbstractPart.this.childrenPartSlots.get(index - 1).getChildPart();
         }
     }
 

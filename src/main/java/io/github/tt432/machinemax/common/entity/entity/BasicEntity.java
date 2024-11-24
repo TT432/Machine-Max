@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
@@ -135,7 +134,9 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
             //syncPoseFromServer();//将客户端实体位姿与服务端同步
-//            MachineMax.LOGGER.info("error: " + (posError.copy().sub(corePart.dbody.getPosition())).length());
+            DVector3 v1 =corePart.dbody.getQuaternion().toEulerDegrees();
+            DVector3 v2 =corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+            MachineMax.LOGGER.info("error: " + (v2.sub(v1)));
         }
         super.tick();
     }
@@ -149,7 +150,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
             DQuaternion dq = (DQuaternion) corePart.dbody.getQuaternion();
             DVector3 heading = dq.toEulerDegrees();
             setXRot((float) heading.get0());
-            setYRot((float) heading.get1());
+            setYRot((float) heading.get1()+180);
             setZRot((float) heading.get2());
             this.setBoundingBox(this.makeBoundingBox());
         }

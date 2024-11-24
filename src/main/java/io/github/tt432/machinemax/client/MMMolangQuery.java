@@ -3,8 +3,10 @@ package io.github.tt432.machinemax.client;
 import io.github.tt432.eyelib.molang.MolangScope;
 import io.github.tt432.eyelib.molang.mapping.api.MolangFunction;
 import io.github.tt432.eyelib.molang.mapping.api.MolangMapping;
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +24,7 @@ public final class MMMolangQuery {
 
     @MolangFunction(value = "roll", description = "roll 角度（z rot）")
     public static float roll(MolangScope scope) {
-        return entityFloat(scope, e -> (e instanceof TestCarEntity) ? (((TestCarEntity) e).getZRot()) : (0));
+        return entityFloat(scope, e -> (e instanceof BasicEntity) ? (((BasicEntity) e).getZRot()) : (0));
     }
 
     //TODO:作用域为部件的位姿信息Molang
@@ -30,9 +32,9 @@ public final class MMMolangQuery {
     public static float part_rel_pos_x(MolangScope scope) {
         return partFloat(scope, p -> {
             if (p instanceof AbstractPart) {
-                if (p.father_part != null) {
+                if (p.fatherPart != null) {
                     DVector3 result = new DVector3(0, 0, 0);
-                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    p.fatherPart.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
                     return (float) result.get0();//返回x值
                 } else {
                     return 0F;
@@ -45,9 +47,9 @@ public final class MMMolangQuery {
     public static float part_rel_pos_y(MolangScope scope) {
         return partFloat(scope, p -> {
             if (p instanceof AbstractPart) {
-                if (p.father_part != null) {
+                if (p.fatherPart != null) {
                     DVector3 result = new DVector3(0, 0, 0);
-                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    p.fatherPart.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
                     return (float) result.get1();//返回y值
                 } else {
                     return 0F;
@@ -60,9 +62,9 @@ public final class MMMolangQuery {
     public static float part_rel_pos_z(MolangScope scope) {
         return partFloat(scope, p -> {
             if (p instanceof AbstractPart) {
-                if (p.father_part != null) {
+                if (p.fatherPart != null) {
                     DVector3 result = new DVector3(0, 0, 0);
-                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    p.fatherPart.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
                     return (float) result.get2();//返回z值
                 } else {
                     return 0F;
@@ -70,7 +72,35 @@ public final class MMMolangQuery {
             } else return 0F;
         });
     }
-    //TODO:部件相对父部件的旋转
+    //TODO:部件相对父部件的旋转，下为临时代用，作用域全实体，检测右前轮姿态
+    @MolangFunction(value = "part_rel_rot_x", description = "pitch 角度（x rot）")
+    public static float part_rel_rot_x(MolangScope scope) {
+        return entityFloat(scope, e -> {
+            if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
+                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+                return (float) ang.get0();
+            }else return 0F;
+        });
+    }
+    @MolangFunction(value = "part_rel_rot_y", description = "yaw 角度（y rot）")
+    public static float part_rel_rot_y(MolangScope scope) {
+        return entityFloat(scope, e -> {
+            if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
+                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+                return (float) ang.get1();
+            }else return 0F;
+        });
+    }
+    @MolangFunction(value = "part_rel_rot_z", description = "roll 角度（z rot）")
+    public static float part_rel_rot_z(MolangScope scope) {
+//        return entityFloat(scope, e -> {
+//            if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
+//                DVector3 ang = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegrees();
+//                return (float) ang.get2();
+//            }else return 0F;
+//        });
+        return entityFloat(scope, e->(45F));
+    }
     @FunctionalInterface
     interface ToBooleanFunction<K> {
         boolean apply(K key);

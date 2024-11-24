@@ -1,14 +1,11 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.*;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Arrays;
 
 /**
  * 此类为实体的控制器原型
@@ -147,7 +144,7 @@ public class PhysController {
                 part.dbody.setRotation(rot.eqMul(newRot, rot));//叠加调整矩阵，旋转至新方向
                 //调整子部件相对根部件的位置
                 DVector3 pos = new DVector3();
-                part.father_part.dbody.getRelPointPos(part.attachedSlot.getChildPartAttachPos(), pos);//获取部件连接点的绝对坐标
+                part.fatherPart.dbody.getRelPointPos(part.attachedSlot.getChildPartAttachPos(), pos);//获取部件连接点的绝对坐标
                 //TODO:令部件连接点不强制为部件重心位置
                 part.dbody.setPosition(pos);//移动子部件
             }

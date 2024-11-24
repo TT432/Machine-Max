@@ -8,7 +8,6 @@ import io.github.tt432.machinemax.utils.physics.ode.DJoint;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ abstract public class AbstractPartSlot {
             MachineMax.LOGGER.error("Failed to attach the part, because the part doesn't match the slot's condition!");
         } else {
             this.childPart = part;
-            part.father_part = this.slotOwnerPart;
+            part.fatherPart = this.slotOwnerPart;
             part.attachedSlot = this;
             DVector3 pos = new DVector3();//临时变量
             this.slotOwnerPart.dbody.vectorToWorld(this.childPartAttachPos, pos);//获取连接点在世界坐标系下的位置
@@ -64,7 +63,7 @@ abstract public class AbstractPartSlot {
      */
     public void detachPart() {
         if (hasPart()) {
-            this.childPart.father_part = null;
+            this.childPart.fatherPart = null;
             this.childPart = null;
             //TODO:若断开的子部件不存在对应的运动体，则为其创建一个
             detachJoint();
