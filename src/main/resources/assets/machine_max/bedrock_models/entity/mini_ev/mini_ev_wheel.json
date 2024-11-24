@@ -16,7 +16,7 @@
 					"pivot": [0, 0, 0]
 				},
 				{
-					"name": "RightFrontWheel",
+					"name": "Wheel",
 					"parent": "Root",
 					"pivot": [-0.0069, -0.00249, -0.0056],
 					"cubes": [
@@ -36,7 +36,7 @@
 				},
 				{
 					"name": "Neilun6",
-					"parent": "RightFrontWheel",
+					"parent": "Wheel",
 					"pivot": [-3.8949, -0.62749, -0.0056],
 					"cubes": [
 						{"origin": [-1.7199, -4.52749, -4.5056], "size": [3.2, 9, 9], "uv": [119, 135], "mirror": true},

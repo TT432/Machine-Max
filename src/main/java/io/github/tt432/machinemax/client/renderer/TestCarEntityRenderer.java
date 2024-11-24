@@ -41,10 +41,11 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
         RenderType renderType = RenderType.entitySolid(pEntity.corePart.getTexture());
         AnimationComponent animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
         animationComponent.setup(pEntity.corePart.getAniController(), pEntity.corePart.getAnimation());
-        var infos = BrAnimator.tickAnimation(animationComponent,
-                RenderData.getComponent(pEntity).getScope(), ClientTickHandler.getTick() + pPartialTick);
+        BoneRenderInfos infos;
         RenderParams renderParams;
         for (AbstractPart part : pEntity.corePart) {//遍历根部件及其所有子孙部件
+            infos = BrAnimator.tickAnimation(animationComponent,
+                    RenderData.getComponent(pEntity).getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数
                     pEntity,
                     pPoseStack.last().copy(),

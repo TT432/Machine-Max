@@ -38,8 +38,8 @@ public class TestCarWheelPart extends AbstractWheelPart {
 
         dgeoms[0] = OdeHelper.createCylinder(WHEEL_RADIUS, WHEEL_WIDTH);//创建一个平面朝向Z正方向的圆柱体
         dgeoms[0].setBody(dbody);//碰撞体绑定到运动体
-        dgeoms[0].setOffsetQuaternion(DQuaternion.fromEulerDegrees(0, 90, 0));//默认情况下为左前轮
-        dgeoms[0].setOffsetPosition(0.8D / 16, 0, 0);//对齐碰撞体形状与模型形状
+        dgeoms[0].setOffsetQuaternion(DQuaternion.fromEulerDegrees(0, 90, 0));//默认情况下为右前轮
+        dgeoms[0].setOffsetPosition(-0.8D / 16, 0, 0);//对齐碰撞体形状与模型形状
     }
 
     @Override

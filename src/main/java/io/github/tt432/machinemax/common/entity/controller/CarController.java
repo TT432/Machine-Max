@@ -26,8 +26,8 @@ public class CarController extends PhysController {
 
     @Override
     public void applyAllEffects() {
-//        drive();
-//        steer();
+        drive();
+        steer();
         super.applyAllEffects();
     }
 

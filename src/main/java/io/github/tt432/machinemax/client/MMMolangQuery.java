@@ -24,22 +24,53 @@ public final class MMMolangQuery {
     public static float roll(MolangScope scope) {
         return entityFloat(scope, e -> (e instanceof TestCarEntity) ? (((TestCarEntity) e).getZRot()) : (0));
     }
+
     //TODO:作用域为部件的位姿信息Molang
-    @MolangFunction(value = "part_rel_pos_x", description = "部件相对父部件的相对x坐标")
+    @MolangFunction(value = "part_rel_pos_x", description = "部件相对父部件的相对x坐标(m)")
     public static float part_rel_pos_x(MolangScope scope) {
         return partFloat(scope, p -> {
             if (p instanceof AbstractPart) {
-                if(p.father_part!=null){
+                if (p.father_part != null) {
                     DVector3 result = new DVector3(0, 0, 0);
-                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);
-                    return (float) result.get0();
-                }else {
+                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    return (float) result.get0();//返回x值
+                } else {
                     return 0F;
                 }
             } else return 0F;
         });
     }
 
+    @MolangFunction(value = "part_rel_pos_y", description = "部件相对父部件的相对y坐标(m)")
+    public static float part_rel_pos_y(MolangScope scope) {
+        return partFloat(scope, p -> {
+            if (p instanceof AbstractPart) {
+                if (p.father_part != null) {
+                    DVector3 result = new DVector3(0, 0, 0);
+                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    return (float) result.get1();//返回y值
+                } else {
+                    return 0F;
+                }
+            } else return 0F;
+        });
+    }
+
+    @MolangFunction(value = "part_rel_pos_z", description = "部件相对父部件的相对z坐标(m)")
+    public static float part_rel_pos_z(MolangScope scope) {
+        return partFloat(scope, p -> {
+            if (p instanceof AbstractPart) {
+                if (p.father_part != null) {
+                    DVector3 result = new DVector3(0, 0, 0);
+                    p.father_part.dbody.getPosRelPoint(p.dbody.getPosition(), result);//计算相对父部件的位移
+                    return (float) result.get2();//返回z值
+                } else {
+                    return 0F;
+                }
+            } else return 0F;
+        });
+    }
+    //TODO:部件相对父部件的旋转
     @FunctionalInterface
     interface ToBooleanFunction<K> {
         boolean apply(K key);
