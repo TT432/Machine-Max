@@ -21,8 +21,10 @@
  *************************************************************************/
 package io.github.tt432.machinemax.utils.physics.math;
 
+import org.joml.Math;
 
-import static io.github.tt432.machinemax.utils.physics.ode.internal.Common.M_PI;
+import static io.github.tt432.machinemax.utils.physics.ode.internal.libccd.CCDVec3.M_PI;
+
 
 /**
  * A quaternion consists of four numbers, [w, x, y, z].
@@ -400,11 +402,11 @@ public class DQuaternion implements DQuaternionC {
 	}
 
 	@Override
-	public DVector3 toEuler() {
+	public DVector3 toEulerXYZ() {
 		DVector3 angles = new DVector3();
 		DQuaternion q = new DQuaternion(this);
 		q.safeNormalize4();
-
+		//XYZ顺序(大概)
 		// roll (x-axis rotation)
 		double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
 		double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
@@ -424,8 +426,42 @@ public class DQuaternion implements DQuaternionC {
 	}
 
 	@Override
-	public DVector3 toEulerDegrees() {
-		return toEuler().eqToDegrees();
+	public DVector3 toEulerDegreesXYZ() {
+		return toEulerXYZ().eqToDegrees();
+	}
+
+	@Override
+	public DVector3 toEulerZXY() {
+		DVector3 angles = new DVector3();
+		DQuaternion q = new DQuaternion(this);
+		q.safeNormalize4();
+		//ZXY顺序
+		angles.set0(Math.safeAsin(2.0D * (q.w * q.x + q.y * q.z)));
+		angles.set1(Math.atan2(q.w * q.y - q.x * q.z, 0.5D - q.y * q.y - q.x * q.x));
+		angles.set2(Math.atan2(q.w * q.z - q.x * q.y, 0.5D - q.z * q.z - q.x * q.x));
+		return angles;
+	}
+
+	@Override
+	public DVector3 toEulerDegreesZXY() {
+		return toEulerZXY().eqToDegrees();
+	}
+
+	@Override
+	public DVector3 toEulerZYX() {
+		DVector3 angles = new DVector3();
+		DQuaternion q = new DQuaternion(this);
+		q.safeNormalize4();
+		//ZYX顺序(Blockbench顺序)
+		angles.set0(Math.atan2(q.y * q.z + q.w * q.x, 0.5D - q.x * q.x + q.y * q.y));
+		angles.set1(Math.safeAsin(-2.0D * (q.x * q.z - q.w * q.y)));
+		angles.set2(Math.atan2(q.x * q.y + q.w * q.z, 0.5D - q.y * q.y - q.z * q.z));
+		return angles;
+	}
+
+	@Override
+	public DVector3 toEulerDegreesZYX() {
+		return toEulerZYX().eqToDegrees();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
@@ -71,7 +72,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
 
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
-
+//            MachineMax.LOGGER.info("rot: " + corePart.dbody.getQuaternion().copy().toEulerDegreesZXY());
         }
         super.tick();
     }
@@ -81,9 +82,10 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
      */
     public void syncPoseToMainThread() {
         if (corePart != null) {//将实体位姿与物理计算结果同步
-            this.setPosRaw(corePart.dbody.getPosition().get0(), corePart.dbody.getPosition().get1(), corePart.dbody.getPosition().get2());
-            DQuaternion dq = (DQuaternion) corePart.dbody.getQuaternion();
-            DVector3 heading = dq.toEulerDegrees();
+            DVector3 pos = corePart.dbody.getPosition().copy();
+            this.setPosRaw(pos.get0(), pos.get1(), pos.get2());
+            DQuaternion dq = corePart.dbody.getQuaternion().copy();
+            DVector3 heading = dq.toEulerDegreesZXY();
             setXRot((float) heading.get0());
             setYRot((float) heading.get1());
             setZRot((float) heading.get2());
@@ -121,7 +123,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
 
     public void setRot(DQuaternion q) {
         if (this.getController() != null) controller.setRotationEnqueue(q);
-        DVector3 ang = q.toEulerDegrees();
+        DVector3 ang = q.toEulerDegreesZXY();
         setXRot((float) ang.get0());
         setYRot((float) ang.get1());
         setZRot((float) ang.get2());

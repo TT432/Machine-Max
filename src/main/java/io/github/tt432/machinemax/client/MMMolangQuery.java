@@ -8,7 +8,6 @@ import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
-import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import net.minecraft.world.entity.Entity;
@@ -85,7 +84,7 @@ public final class MMMolangQuery {
                 rot1.eqMul(rotT,rot1);
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegrees();
+                DVector3 ang = dq.toEulerDegreesZYX();
                 return (float) ang.get0();
             }else return 0F;
         });
@@ -99,7 +98,7 @@ public final class MMMolangQuery {
                 rot1.eqMul(rotT,rot1);
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegrees();
+                DVector3 ang = dq.toEulerDegreesZYX();
                 return (float) ang.get1();
             }else return 0F;
         });
@@ -113,7 +112,7 @@ public final class MMMolangQuery {
                 rot1.eqMul(rotT,rot1);
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegrees();
+                DVector3 ang = dq.toEulerDegreesZYX();
                 return (float) ang.get2();
             }else return 0F;
         });

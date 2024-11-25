@@ -39,7 +39,7 @@ public class MMEntityRenderer extends LivingEntityRenderer<BasicEntity, EntityMo
         var corePart = entity.corePart;
         if (corePart != null && corePart.dbody != null) {//若实体已指定部件，且部件已指定运动体，则根据运动体姿态控制实体旋转
             DQuaternion dq = ((DQuaternion) entity.corePart.dbody.getQuaternion());
-            DVector3 heading = dq.toEulerDegrees();
+            DVector3 heading = dq.toEulerDegreesZYX();
             //Quaternionf q = new Quaternionf(dq.get0(),dq.get1(),dq.get2(),dq.get3());
             poseStack.pushPose();
             poseStack.mulPose(Axis.YN.rotationDegrees((float) heading.get1()));//将模型朝向与实体朝向相匹配

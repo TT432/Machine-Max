@@ -32,12 +32,12 @@ public class TestCarEntity extends BasicEntity {
     @Override
     public void tick() {
         super.tick();
-        if(this.getFirstPassenger() instanceof Player p){
+        if (this.level().isClientSide() && this.getFirstPassenger() instanceof Player p) {
             DVector3 v = corePart.dbody.getLinearVel().copy();
-            corePart.dbody.vectorFromWorld(v,v);
-            p.displayClientMessage(Component.literal("速度:"+ String.format("%.2f",v.get2()*3.6) + "km/h"),true);
+            corePart.dbody.vectorFromWorld(v, v);
+            p.displayClientMessage(Component.literal("速度:" + String.format("%.2f", v.get2() * 3.6) + "km/h"), true);
+            this.level().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), 0, 0, 0);
         }
-        this.level().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), 0, 0, 0);
     }
 
     @Override

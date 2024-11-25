@@ -75,16 +75,40 @@ public interface DQuaternionC {
 	double get3();
 
 	/**
-	 * @return Euler angles (radians) derived from this quaternion.
+	 * @return Euler angles (radians) derived from this quaternion in X-Y-Z order.
 	 */
 	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
-    DVector3 toEuler();
+	DVector3 toEulerXYZ();
 
 	/**
-	 * @return Euler angles (degrees) derived from this quaternion.
+	 * @return Euler angles (degrees) derived from this quaternion in X-Y-Z order.
 	 */
 	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
-    DVector3 toEulerDegrees();
+	DVector3 toEulerDegreesXYZ();
+
+	/**
+	 * @return Euler angles (radians) derived from this quaternion in Z-X-Y order.
+	 */
+	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
+	DVector3 toEulerZXY();
+
+	/**
+	 * @return Euler angles (degrees) derived from this quaternion in Z-X-Y order.
+	 */
+	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
+	DVector3 toEulerDegreesZXY();
+
+	/**
+	 * @return Euler angles (radians) derived from this quaternion in Z-Y-X order.
+	 */
+	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
+	DVector3 toEulerZYX();
+
+	/**
+	 * @return Euler angles (degrees) derived from this quaternion in Z-Y-X order.
+	 */
+	@Deprecated // TODO deprecated, to be removed in 0.6.0. Consider using DRotation.dRFromEulerAngles
+	DVector3 toEulerDegreesZYX();
 
 	/**
 	 * @return A mutable copy of this object.

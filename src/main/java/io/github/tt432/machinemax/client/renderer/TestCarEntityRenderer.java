@@ -12,6 +12,7 @@ import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.bone.BoneRenderInfos;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.utils.physics.math.DQuaternionC;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,6 +20,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
 
@@ -30,12 +33,15 @@ public class TestCarEntityRenderer extends EntityRenderer<TestCarEntity> {
     public void render(TestCarEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
         if (pEntity.corePart == null) return;
-        DVector3 heading = pEntity.corePart.dbody.getQuaternion().toEulerDegrees();
+        DQuaternionC dq = pEntity.corePart.dbody.getQuaternion().copy();
+        Quaternionf q = new Quaternionf(dq.get1(), dq.get2(), dq.get3(), dq.get0());
+        Vector3f heading = new Vector3f();
+        q.getEulerAnglesZXY(heading);
         pPoseStack.pushPose();
-        //TODO:调整坐标系，使其变为后z+右x+上y+
-        pPoseStack.mulPose(Axis.YN.rotationDegrees((float) heading.get1()));//将模型朝向与实体朝向相匹配
-        pPoseStack.mulPose(Axis.XP.rotationDegrees((float) heading.get0()));//俯仰
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) heading.get2()));//滚转
+//        pPoseStack.mulPose(Axis.YN.rotationDegrees((float) heading.get1()));//将模型朝向与实体朝向相匹配
+//        pPoseStack.mulPose(Axis.XP.rotationDegrees((float) heading.get0()));//俯仰
+//        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) heading.get2()));//滚转
+        pPoseStack.mulPose(q);
         RenderType renderType;
         AnimationComponent animationComponent;
         BoneRenderInfos infos;
