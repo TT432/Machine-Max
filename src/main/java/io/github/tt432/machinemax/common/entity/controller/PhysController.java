@@ -42,23 +42,44 @@ public class PhysController {
      * 将力、力矩、速度、角速度、位置、姿态等数据施加于各个运动体
      */
     public void applyAllEffects() {
-        //物理模拟线程将会每计算帧调用一次此方法，因此应在这里写入所有要附加于运动体的力与力矩
-        if (rotNeedsUpdate) {
-            applySetRotation();
-            rotNeedsUpdate = false;
+        if (controlledEntity != null && !controlledEntity.isRemoved()) {
+            //物理模拟线程将会每计算帧调用一次此方法，因此应在这里写入所有要附加于运动体的力与力矩
+            //一般性的力与力矩
+            applyAeroDynamicForces();
+            //传送等情形的处理
+            if (rotNeedsUpdate) {
+                applySetRotation();
+                rotNeedsUpdate = false;
+            }
+            if (posNeedsUpdate) {
+                applySetPosition();
+                posNeedsUpdate = false;
+            }
+            if (aVelNeedsUpdate) {
+                applySetAngularVel();
+                aVelNeedsUpdate = false;
+            }
+            if (lVelNeedsUpdate) {
+                applySetLinearVel();
+                lVelNeedsUpdate = false;
+            }
         }
-        if (posNeedsUpdate) {
-            applySetPosition();
-            posNeedsUpdate = false;
+    }
+
+    protected void applyAeroDynamicForces() {
+        if (controlledEntity.corePart != null) {
+            for (AbstractPart part : controlledEntity.corePart) {
+                DVector3 F = new DVector3(-0.5,-0.5,-0.5);
+                DVector3 cf = part.getAerodynamicForceCoef(part);
+                DVector3 v = part.dbody.getLinearVel().copy();
+                part.dbody.vectorFromWorld(v,v);
+                v.scale(v.eqAbs());
+                F.scale(v);
+                F.scale(cf);
+                part.dbody.addRelForceAtRelPos(F, part.airDragCentre);
+            }
         }
-        if (aVelNeedsUpdate) {
-            applySetAngularVel();
-            aVelNeedsUpdate = false;
-        }
-        if (lVelNeedsUpdate) {
-            applySetLinearVel();
-            lVelNeedsUpdate = false;
-        }
+
     }
 
     /**

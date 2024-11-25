@@ -81,4 +81,39 @@ public class TestCarHullPart extends AbstractPart {
     public ResourceLocation getAniController() {
         return PART_ANI_CONTROLLER;
     }
+
+    @Override
+    public DVector3 getAerodynamicForceCoef(AbstractPart part) {
+        //气动力相关系数
+        double BASIC_AIRDRAG_COEF_ZP=10;//空气阻力系数(前向)，一般较小
+        double BASIC_AIRDRAG_COEF_ZN=10;//空气阻力系数(后向)，一般较小
+        double BASIC_AIRDRAG_COEF_XP=10;//空气阻力系数(左向)
+        double BASIC_AIRDRAG_COEF_XN=10;//空气阻力系数(右向)
+        double BASIC_AIRDRAG_COEF_YP=10;//空气阻力系数(上向)
+        double BASIC_AIRDRAG_COEF_YN=0;//空气阻力系数(下向)
+        double BASIC_AIRLIFT_COEF_Z =1;//空气升力系数(前向)，形状带来的额外升力
+        double BASIC_AIRLIFT_COEF_X =0;//空气升力系数(水平向)，一般为0
+        double BASIC_AIRLIFT_COEF_Y =0;//空气升力系数(垂向)，一般为0
+        DVector3 coef=new DVector3(BASIC_AIRLIFT_COEF_X,BASIC_AIRLIFT_COEF_Y,BASIC_AIRLIFT_COEF_Z);
+        DVector3 vAbs = new DVector3();
+        part.dbody.getRelPointVel(part.airDragCentre, vAbs);//获取升力作用点的绝对速度
+        DVector3 vRel = new DVector3();
+        part.dbody.vectorFromWorld(vAbs, vRel);//绝对速度转换为相对速度
+        if(vRel.get0()>0){
+            coef.add0(BASIC_AIRDRAG_COEF_XP);
+        } else {
+            coef.add0(BASIC_AIRDRAG_COEF_XN);
+        }
+        if(vRel.get1()>0){
+            coef.add1(BASIC_AIRDRAG_COEF_YP);
+        } else {
+            coef.add1(BASIC_AIRDRAG_COEF_YN);
+        }
+        if(vRel.get2()>0){
+            coef.add2(BASIC_AIRDRAG_COEF_ZP);
+        } else {
+            coef.add2(BASIC_AIRDRAG_COEF_ZN);
+        }
+        return coef;
+    }
 }

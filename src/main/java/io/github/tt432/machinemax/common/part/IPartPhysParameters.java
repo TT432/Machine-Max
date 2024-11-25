@@ -46,12 +46,12 @@ public interface IPartPhysParameters {
      */
     default DVector3 getHydrodynamicForceCoef(AbstractPart part) {
         //水动力相关系数
-        double BASIC_WATERDRAG_COEF_ZP=1;//水阻力系数(前向)
-        double BASIC_WATERDRAG_COEF_ZN=1;//水阻力系数(后向)
-        double BASIC_WATERDRAG_COEF_XP=1;//水阻力系数(左向)
-        double BASIC_WATERDRAG_COEF_XN=1;//水阻力系数(右向)
-        double BASIC_WATERDRAG_COEF_YP=1;//水阻力系数(上向)
-        double BASIC_WATERDRAG_COEF_YN=1;//水阻力系数(下向)
+        double BASIC_WATERDRAG_COEF_ZP=1000*800;//水阻力系数(前向)
+        double BASIC_WATERDRAG_COEF_ZN=1000*800;//水阻力系数(后向)
+        double BASIC_WATERDRAG_COEF_XP=1000*800;//水阻力系数(左向)
+        double BASIC_WATERDRAG_COEF_XN=1000*800;//水阻力系数(右向)
+        double BASIC_WATERDRAG_COEF_YP=1000*800;//水阻力系数(上向)
+        double BASIC_WATERDRAG_COEF_YN=1000*800;//水阻力系数(下向)
         double BASIC_WATERLIFT_COEF_Z =0;//水升力系数(前向)
         double BASIC_WATERLIFT_COEF_X =0;//水升力系数(水平向)
         double BASIC_WATERLIFT_COEF_Y =0;//水升力系数(垂向)

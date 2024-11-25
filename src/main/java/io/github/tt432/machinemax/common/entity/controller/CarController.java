@@ -22,7 +22,7 @@ public class CarController extends PhysController {
     public double MAX_BRAKE_POWER = 3000;//最大单轮刹车力矩3000Nm
     public double ENG_ACC = 0.05D;//引擎加速系数
     public double ENG_DEC = 0.15D;//引擎减速系数
-    public double STEER_T = 0.5D;//达到满舵所需时间
+    public double STEER_T = 0.25D;//达到满舵所需时间
     public double MIN_TURNING_R = 5;//最小转弯半径
 
     public double power = 0D;//推进功率
