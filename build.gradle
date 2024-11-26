@@ -90,7 +90,14 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
+// Enable the Jar-in-Jar system for your mod
+jarJar.enable()
 
+// Configure the 'jarJar' task
+// 'all' is the default classifier
+tasks.named('jarJar') {
+    // ...
+}
 dependencies {
     // Specify the version of Minecraft to use.
     // Depending on the plugin applied there are several options. We will assume you applied the userdev plugin as shown above.
@@ -101,7 +108,7 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     implementation "io.github.tt432:eyelib:21.1.5"//基岩版模型、动画、控制器支持
-
+    jarJar(group: 'io.github.tt432', name: 'eyelib', version: '[21.1.5,22.0)')
     implementation "org.openjdk.jmh:jmh-core:1.19"
 
     implementation "org.openjdk.jmh:jmh-generator-annprocess:1.19"
