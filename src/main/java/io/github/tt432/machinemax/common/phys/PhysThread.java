@@ -9,13 +9,13 @@ import static io.github.tt432.machinemax.utils.physics.ode.OdeConstants.*;
 import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnectedExcluding;
 
 public class PhysThread extends Thread {
-    public static volatile DWorld world;
-    public static volatile DSpace renderSpace;
-    public static volatile DSpace space;
-    public static volatile DJointGroup contactGroup;
-    public static volatile boolean isPaused = false;
+    public volatile DWorld world;
+    public volatile DSpace space;
+    public volatile DJointGroup contactGroup;
+    public volatile boolean isPaused = false;
     public static final long STEP = 10;//物理线程计算步长(毫秒)
-    public static volatile long time = 0;
+    public volatile long time = 0;
+
     @Override
     public void run() {//物理计算的主线程
         isPaused = false;
@@ -31,10 +31,8 @@ public class PhysThread extends Thread {
         world.setQuickStepW(1.3);
         world.setContactMaxCorrectingVel(20);
         //TODO:区分碰撞空间(常规)，命中判定空间(弹头刀刃等放进来)和自体碰撞空间(头发布料等有物理没碰撞的放进来)
-        renderSpace = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责客户端物体的碰撞
         space = OdeHelper.createHashSpace();//碰撞空间，用于容纳各类碰撞体（大概），负责服务端物体的碰撞
         contactGroup = OdeHelper.createJointGroup();
-        OdeHelper.createPlane(renderSpace, 0, 1, 0, -60);//创造碰撞平面
         OdeHelper.createPlane(space, 0, 1, 0, -60);//创造碰撞平面
         while (!isInterrupted()) {//物理线程主循环
             long startTime = System.nanoTime();//记录开始时间
@@ -48,7 +46,6 @@ public class PhysThread extends Thread {
             } catch (InterruptedException e) {
                 MachineMax.LOGGER.info("Stopping phys thread...");
                 contactGroup.destroy();
-                renderSpace.destroy();
                 space.destroy();
                 world.destroy();
                 break;
@@ -63,17 +60,14 @@ public class PhysThread extends Thread {
      */
     public void step(boolean paused) {
         if (!paused) {
-            applyAllControllers(renderSpace);
             applyAllControllers(space);
-            renderSpace.collide(null, nearCallback);//碰撞检测
             space.collide(null, nearCallback);//碰撞检测
             world.quickStep((double) STEP / 1000);
         }
         contactGroup.empty();//碰撞处理完成后移除所有碰撞点约束
-        renderSpace.handleGeomAddAndRemove();//增删待增删的碰撞体
         space.handleGeomAddAndRemove();
         world.handleBodyRemove();//删除待删除的运动体
-        time=System.nanoTime();
+        time = System.nanoTime();
     }
 
     private DGeom.DNearCallback nearCallback = new DGeom.DNearCallback() {
@@ -106,7 +100,7 @@ public class PhysThread extends Thread {
         for (int i = 0; i < contactNum; i++) {
             DContact contact = contacts.get(i);
             contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1_N | dContactSoftCFM;
-            contact.surface.mu = 1000;
+            contact.surface.mu = 2000;
             contact.surface.rho = 0.01;
             contact.surface.bounce = 0.0001;
             contact.surface.bounce_vel = 0.1;

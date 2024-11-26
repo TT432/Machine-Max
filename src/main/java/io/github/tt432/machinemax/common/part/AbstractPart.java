@@ -5,6 +5,7 @@ import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.common.phys.PhysThreadController;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.*;
@@ -68,7 +69,8 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public AbstractPart(BasicEntity attachedEntity) {
         this.attachedEntity = attachedEntity;
         dmass = OdeHelper.createMass();
-        dbody = OdeHelper.createBody(PhysThread.world, this);
+        if(!attachedEntity.level().isClientSide()) dbody = OdeHelper.createBody(PhysThreadController.physThread.world, this);
+        else dbody = OdeHelper.createBody(PhysThreadController.localPhysThread.world, this);
     }
 
     public Iterator<AbstractPart> iterator() {
@@ -112,11 +114,11 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public void addAllGeomsToSpace() {
         if (this.attachedEntity.level().isClientSide) {
             for (DGeom geom : dgeoms) {
-                PhysThread.renderSpace.geomAddEnQueue(geom);
+                PhysThreadController.localPhysThread.space.geomAddEnQueue(geom);
             }
         } else {
             for (DGeom geom : dgeoms) {
-                PhysThread.space.geomAddEnQueue(geom);
+                PhysThreadController.physThread.space.geomAddEnQueue(geom);
             }
         }
     }
@@ -124,17 +126,17 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public void removeAllGeomsInSpace() {
         if (this.attachedEntity.level().isClientSide) {
             for (DGeom geom : dgeoms) {
-                PhysThread.renderSpace.geomRemoveEnQueue(geom);
+                PhysThreadController.localPhysThread.space.geomRemoveEnQueue(geom);
             }
         } else {
             for (DGeom geom : dgeoms) {
-                PhysThread.space.geomRemoveEnQueue(geom);
+                PhysThreadController.physThread.space.geomRemoveEnQueue(geom);
             }
         }
     }
 
     public void removeBodyInWorld() {
-        PhysThread.world.bodyRemoveEnQueue(this.dbody);
+        dbody.getWorld().bodyRemoveEnQueue(this.dbody);
     }
 
     /**
