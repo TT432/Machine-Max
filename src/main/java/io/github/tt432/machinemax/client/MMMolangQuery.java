@@ -6,13 +6,13 @@ import io.github.tt432.eyelib.molang.mapping.api.MolangMapping;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.TestCarWheelPart;
 import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.joml.Matrix3d;
 
 import java.util.function.Function;
 
@@ -80,12 +80,17 @@ public final class MMMolangQuery {
     public static float part_rel_rot_x(MolangScope scope) {
         return entityFloat(scope, e -> {
             if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
-                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
-                rot1.eqMul(rotT,rot1);
+                TestCarWheelPart part = (TestCarWheelPart) ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart();
+                DMatrix3 temp = new DMatrix3();
+                DMatrix3 rot1 = new DMatrix3();
+                rot1.eqMul(//计算部件相对父部件旋转
+                        part.fatherPart.dbody.getRotation().copy().reTranspose(),
+                        part.dbody.getRotation().copy());
+                Rotation.dRFromEulerAngles(temp,180,0,0);
+                rot1.eqMul(temp,rot1);//绕X轴旋转180°以匹配Blockbench旋转坐标系(X左Y下Z后)
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegreesZYX();
+                DVector3 ang = dq.toEulerDegreesZYX();//Blockbench欧拉角旋转顺序
                 return (float) ang.get0();
             }else return 0F;
         });
@@ -94,12 +99,17 @@ public final class MMMolangQuery {
     public static float part_rel_rot_y(MolangScope scope) {
         return entityFloat(scope, e -> {
             if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
-                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
-                rot1.eqMul(rotT,rot1);
+                TestCarWheelPart part = (TestCarWheelPart) ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart();
+                DMatrix3 temp = new DMatrix3();
+                DMatrix3 rot1 = new DMatrix3();
+                rot1.eqMul(//计算部件相对父部件旋转
+                        part.fatherPart.dbody.getRotation().copy().reTranspose(),
+                        part.dbody.getRotation().copy());
+                Rotation.dRFromEulerAngles(temp,180,0,0);
+                rot1.eqMul(temp,rot1);//绕X轴旋转180°以匹配Blockbench旋转坐标系(X左Y下Z后)
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegreesZYX();
+                DVector3 ang = dq.toEulerDegreesZYX();//Blockbench欧拉角旋转顺序
                 return (float) ang.get1();
             }else return 0F;
         });
@@ -108,12 +118,17 @@ public final class MMMolangQuery {
     public static float part_rel_rot_z(MolangScope scope) {
         return entityFloat(scope, e -> {
             if(e instanceof TestCarEntity && ((TestCarEntity) e).corePart != null){
-                DMatrix3 rotT = ((TestCarEntity) e).corePart.dbody.getRotation().copy().reTranspose();
-                DMatrix3 rot1 = ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
-                rot1.eqMul(rotT,rot1);
+                TestCarWheelPart part = (TestCarWheelPart) ((TestCarEntity) e).corePart.childrenPartSlots.get(0).getChildPart();
+                DMatrix3 temp = new DMatrix3();
+                DMatrix3 rot1 = new DMatrix3();
+                rot1.eqMul(//计算部件相对父部件旋转
+                        part.fatherPart.dbody.getRotation().copy().reTranspose(),
+                        part.dbody.getRotation().copy());
+                Rotation.dRFromEulerAngles(temp,180,0,0);
+                rot1.eqMul(temp,rot1);//绕X轴旋转180°以匹配Blockbench旋转坐标系(X左Y下Z后)
                 DQuaternion dq=new DQuaternion();
                 Rotation.dQfromR(dq,rot1);
-                DVector3 ang = dq.toEulerDegreesZYX();
+                DVector3 ang = dq.toEulerDegreesZYX();//Blockbench欧拉角旋转顺序
                 return (float) ang.get2();
             }else return 0F;
         });

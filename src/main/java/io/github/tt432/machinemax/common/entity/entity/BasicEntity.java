@@ -66,13 +66,7 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
 
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
-            DMatrix3 rotT = corePart.dbody.getRotation().copy().reTranspose();
-            DMatrix3 rot1 = corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
-            rot1.eqMul(rotT,rot1);
-            DQuaternion dq=new DQuaternion();
-            Rotation.dQfromR(dq,rot1);
-            MachineMax.LOGGER.info("rot: " + dq.toEulerDegreesXYZ());
-            MachineMax.LOGGER.info(" xrot: " + getXRot() + " yrot: " + getYRot() + " zrot: " + getZRot());
+
         }
         super.tick();
     }

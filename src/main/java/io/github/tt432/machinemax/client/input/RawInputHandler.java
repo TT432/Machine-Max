@@ -2,10 +2,8 @@ package io.github.tt432.machinemax.client.input;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.network.KeyInputMapping;
-import io.github.tt432.machinemax.network.payload.MoveInputPayload;
+import io.github.tt432.machinemax.network.payload.MovementInputPayload;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -92,7 +90,7 @@ public class RawInputHandler {
                     (byte) (rot_x_conflict),
                     (byte) (rot_y_conflict),
                     (byte) (rot_z_conflict)};
-            PacketDistributor.sendToServer(new MoveInputPayload(id, moveInputs, moveInputConflicts));
+            PacketDistributor.sendToServer(new MovementInputPayload(id, moveInputs, moveInputConflicts));
         }
     }
 

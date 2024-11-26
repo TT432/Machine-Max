@@ -105,8 +105,8 @@ public class PhysThread extends Thread {
         DContactBuffer contacts = new DContactBuffer(contactNum);   // up to MAX_CONTACTS contacts per box-box
         for (int i = 0; i < contactNum; i++) {
             DContact contact = contacts.get(i);
-            contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1 | dContactSoftCFM;
-            contact.surface.mu = 2000;
+            contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1_N | dContactSoftCFM;
+            contact.surface.mu = 1000;
             contact.surface.rho = 0.01;
             contact.surface.bounce = 0.0001;
             contact.surface.bounce_vel = 0.1;

@@ -33,12 +33,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
         if (pEntity.corePart == null) return;
         DQuaternionC dq = pEntity.corePart.dbody.getQuaternion().copy();
         Quaternionf q = new Quaternionf(dq.get1(), dq.get2(), dq.get3(), dq.get0());
-        Vector3f heading = new Vector3f();
-        q.getEulerAnglesZYX(heading);
         pPoseStack.pushPose();
-//        pPoseStack.mulPose(Axis.YN.rotationDegrees((float) heading.get1()));//将模型朝向与实体朝向相匹配
-//        pPoseStack.mulPose(Axis.XP.rotationDegrees((float) heading.get0()));//俯仰
-//        pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) heading.get2()));//滚转
         pPoseStack.mulPose(q);
         RenderType renderType;
         AnimationComponent animationComponent;
