@@ -3,8 +3,10 @@ package io.github.tt432.machinemax.common.entity.entity;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
 import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
+import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
+public abstract class BasicEntity extends LivingEntity implements IMMEntityAttribute {
 
     @Setter
     @Getter
@@ -28,13 +30,6 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
     @Setter
     @Getter
     private volatile boolean controllerHandled;//控制器是否已在单帧物理计算中生效
-    private int physPosSyncTick;
-    private int physRotSyncTick;
-    private DVector3 physSyncDeltaPos;
-    private DVector3 physSyncDeltaSpdL;
-    private DQuaternion physSyncDeltaRot;
-    private DVector3 physSyncDeltaSpdA;
-    private DVector3 posError = new DVector3();
     private int lerpSteps;
     private double lerpX;
     private double lerpY;
@@ -55,7 +50,6 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
     public BasicEntity(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
         noPhysics = true;
-        physPosSyncTick = 0;
     }
 
     @Override
@@ -72,7 +66,13 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
 
             //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
         } else {//客户端限定内容
-//            MachineMax.LOGGER.info("rot: " + corePart.dbody.getQuaternion().copy().toEulerDegreesZXY());
+            DMatrix3 rotT = corePart.dbody.getRotation().copy().reTranspose();
+            DMatrix3 rot1 = corePart.childrenPartSlots.get(0).getChildPart().dbody.getRotation().copy();
+            rot1.eqMul(rotT,rot1);
+            DQuaternion dq=new DQuaternion();
+            Rotation.dQfromR(dq,rot1);
+            MachineMax.LOGGER.info("rot: " + dq.toEulerDegreesXYZ());
+            MachineMax.LOGGER.info(" xrot: " + getXRot() + " yrot: " + getYRot() + " zrot: " + getZRot());
         }
         super.tick();
     }
@@ -87,7 +87,7 @@ public class BasicEntity extends LivingEntity implements IMMEntityAttribute {
             DQuaternion dq = corePart.dbody.getQuaternion().copy();
             DVector3 heading = dq.toEulerDegreesZXY();
             setXRot((float) heading.get0());
-            setYRot((float) heading.get1());
+            setYRot(-(float) heading.get1());
             setZRot((float) heading.get2());
             this.setBoundingBox(this.makeBoundingBox());
         }

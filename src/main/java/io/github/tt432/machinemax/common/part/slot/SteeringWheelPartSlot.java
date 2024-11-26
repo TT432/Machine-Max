@@ -30,8 +30,6 @@ public class SteeringWheelPartSlot extends AbstractPartSlot {
         ((DHinge2Joint) joints.getFirst()).setAxes(0, 1, 0, 1, 0, 0);
         ((DHinge2Joint) joints.getFirst()).setParamLoStop(-PI/3);//限制轮胎转角
         ((DHinge2Joint) joints.getFirst()).setParamHiStop(PI/3);
-//        ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0);//限制轮胎转角
-//        ((DHinge2Joint) joints.getFirst()).setParamHiStop(0);
         //设置转向驱动
         joints.add(OdeHelper.createAMotorJoint(part.dbody.getWorld()));
         joints.get(1).attach(slotOwnerPart.dbody, part.dbody);

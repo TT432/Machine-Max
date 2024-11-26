@@ -67,7 +67,7 @@ public class Rotation extends Matrix {
 
 
 	public static void dRFromEulerAngles (DMatrix3 R, double phi, double theta, double psi)
-	{
+	{//ZYX
 		double sphi,cphi,stheta,ctheta,spsi,cpsi;
 		//dAASSERT (R);
 		sphi = dSin(phi);

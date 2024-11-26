@@ -4,9 +4,12 @@
 		"part": {
 			"loop": true,
 			"bones": {
-				"Wheel": {
-					"rotation": ["q.part_rel_rot_x", "q.part_rel_rot_y+180", "q.part_rel_rot_z"],
+				"Root": {
+					"rotation": [0, "q.part_rel_rot_y+180", "q.part_rel_rot_z"],
 					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+				},
+				"Wheel": {
+					"rotation": ["q.part_rel_rot_x", 0,0]
 				}
 			}
 		}

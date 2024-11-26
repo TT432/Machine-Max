@@ -19,7 +19,7 @@ public class CarController extends PhysController {
     public double MAX_FORWARD_RPM;//最大前进发动机转速，自动计算，取决于最大前进速度
     public double MAX_BACKWARD_RPM;//最大倒车发动机转速，自动计算，取决于最大倒车速度
     public double IDLE_RPM;//发动机待机转速，决定起步加减速能力
-    public double MAX_BRAKE_POWER = 3000;//最大单轮刹车力矩3000Nm
+    public double MAX_BRAKE_POWER = 5000;//最大单轮刹车力矩5000Nm
     public double ENG_ACC = 0.05D;//引擎加速系数
     public double ENG_DEC = 0.15D;//引擎减速系数
     public double STEER_T = 0.25D;//达到满舵所需时间

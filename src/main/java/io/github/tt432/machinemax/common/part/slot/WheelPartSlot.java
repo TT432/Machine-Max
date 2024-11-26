@@ -23,7 +23,7 @@ public class WheelPartSlot extends AbstractPartSlot {
         DVector3 pos = new DVector3();
         slotOwnerPart.dbody.getRelPointPos(childPartAttachPos, pos);
         ((DHinge2Joint) joints.getFirst()).setAnchor(pos);
-        ((DHinge2Joint) joints.getFirst()).setAxes(0, -1, 0, -1, 0, 0);
+        ((DHinge2Joint) joints.getFirst()).setAxes(0, 1, 0, 1, 0, 0);
         ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0);//限制轮胎转角
         ((DHinge2Joint) joints.getFirst()).setParamHiStop(0);
         //设置减震器属性

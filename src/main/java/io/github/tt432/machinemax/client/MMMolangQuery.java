@@ -12,6 +12,7 @@ import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Matrix3d;
 
 import java.util.function.Function;
 

@@ -18,12 +18,6 @@ import java.util.function.Supplier;
 public class MMEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, MachineMax.MOD_ID);
     //以下为注册的实体列表
-    //基本方块
-    public static final Supplier<EntityType<BasicEntity>> BASIC_ENTITY =
-            ENTITIES.register("basic_entity",
-                    () -> EntityType.Builder.of(BasicEntity::new, MobCategory.MISC)
-                            .sized(1f,1f)
-                            .build("basic_entity"));
     //测试用车辆
     public static final Supplier<EntityType<TestCarEntity>> TEST_CAR_ENTITY =
             ENTITIES.register("test_car",
