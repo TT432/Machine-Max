@@ -3,10 +3,14 @@ package io.github.tt432.machinemax.common.phys;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.utils.data.BodiesSyncData;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.github.tt432.machinemax.utils.physics.ode.OdeConstants.*;
 import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnectedExcluding;
@@ -14,6 +18,7 @@ import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnecte
 abstract public class AbstractPhysThread extends Thread {
     public final Level level;//物理计算线程与每个维度绑定，即每个维度都有一个物理计算线程
     public final DWorld world;//容纳所有碰撞体与运动体的世界
+    public Map<Integer, BodiesSyncData> syncData = HashMap.newHashMap(100);//用于同步的线程内所有运动体位姿速度数据
     public volatile DSpace space;
     public volatile DJointGroup contactGroup;
     public volatile boolean isPaused = false;

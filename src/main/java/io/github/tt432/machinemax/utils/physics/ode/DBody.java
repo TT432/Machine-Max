@@ -72,6 +72,7 @@ public interface DBody {
      * @return 运动体的ID
      */
     int getId();
+    void setId(int id);
 
     AbstractPart getAttachedPart();
 

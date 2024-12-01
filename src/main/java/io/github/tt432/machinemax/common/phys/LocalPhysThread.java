@@ -1,15 +1,19 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.utils.data.BodiesSyncData;
+import io.github.tt432.machinemax.utils.physics.ode.DBody;
+import io.github.tt432.machinemax.utils.physics.ode.internal.DxBody;
 import net.minecraft.world.level.Level;
+
+import java.util.Iterator;
 
 public class LocalPhysThread extends AbstractPhysThread {
 
+    public volatile boolean needSync = false;
     LocalPhysThread(Level level) {
         super(level);
     }
-
-    //TODO:一个数组/链表，储存世界物理体快照(位置、姿态、速度、角速度)
 
     @Override
     public void run() {//物理计算的主线程
@@ -34,8 +38,26 @@ public class LocalPhysThread extends AbstractPhysThread {
 
     @Override
     protected void regularStep(boolean paused) {
-        //TODO:如有同步数据包，同步全世界物体的位姿速度
+        if (needSync) {
+            syncBodies();
+            needSync = false;
+        }
         super.regularStep(paused);
-        //TODO:更新全世界物理体的快照信息
+    }
+    /**
+     * 更新本维度内每个运动体的位置、姿态、速度和角速度
+     */
+    protected void syncBodies() {
+        long startTime = System.nanoTime();//记录开始时间
+        for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//遍历线程内所有运动体
+            DxBody b = (DxBody) it.next();
+            if (syncData.get(b.getId()) != null) {//若同步数据包内包含对应运动体的信息
+                BodiesSyncData data = syncData.get(b.getId());
+                b.setPosition(data.pos());//同步位置
+                b.setQuaternion(data.rot());//同步姿态
+                b.setLinearVel(data.lVel());//同步线速度
+                b.setAngularVel(data.aVel());//同步角速度
+            }
+        }
     }
 }

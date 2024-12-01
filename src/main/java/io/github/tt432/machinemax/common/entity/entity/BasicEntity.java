@@ -9,21 +9,28 @@ import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.extensions.IEntityExtension;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+import net.neoforged.neoforge.network.payload.AdvancedAddEntityPayload;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.Collections;
+import java.util.function.Consumer;
 
-public abstract class BasicEntity extends LivingEntity implements IMMEntityAttribute {
+public abstract class BasicEntity extends LivingEntity implements IMMEntityAttribute, IEntityWithComplexSpawn {
 
     @Setter
     @Getter
@@ -32,7 +39,7 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
     @Getter
     private controlMode mode = BasicEntity.controlMode.GROUND;//采用的控制模式，决定接收的按键输入方案
     public AbstractPart corePart;//实体连接的核心部件
-    public int bodyCount;
+    public int bodyCount;//实体曾安装过的运动体总数量，用于生成运动体ID
     @Setter
     @Getter
     private volatile boolean controllerHandled;//控制器是否已在单帧物理计算中生效
@@ -56,7 +63,7 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
     public BasicEntity(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
         noPhysics = true;
-        bodyCount=0;
+        bodyCount = 0;
     }
 
     @Override
@@ -70,7 +77,7 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
         }
         this.syncPoseToMainThread();//将实体位姿与物理计算结果同步
         if (!this.level().isClientSide()) {//服务端限定内容
-            //MachineMax.LOGGER.info("enabled?: " + corePart.dbody.isEnabled());
+//            MachineMax.LOGGER.info("Server ID: " + this.getId());
         } else {//客户端限定内容
 
         }
@@ -204,9 +211,29 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
 
-    private void tickLerp() {
-        if (this.isControlledByLocalInstance()) {
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+    /**
+     * 将部件运动体ID写入实体生成数据包
+     * @param buffer 实体生成数据包 The packet data stream
+     */
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
+        for(AbstractPart part : corePart){
+            if(part.dbody!=null){
+                buffer.writeInt(part.dbody.getId());
+            }
+        }
+    }
+
+    /**
+     * 从实体生成数据包读取部件运动体ID并更新
+     * @param additionalData 实体生成数据包 The packet data stream
+     */
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+        for(AbstractPart part : corePart){
+            if(part.dbody!=null){
+                part.dbody.setId(additionalData.readInt());
+            }
         }
     }
 

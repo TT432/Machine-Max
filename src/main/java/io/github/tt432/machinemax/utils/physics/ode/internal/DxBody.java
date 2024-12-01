@@ -95,7 +95,7 @@ public class DxBody extends DObject implements DBody{
     private BasicEntity attachedEntity;//此运动体所属的实体
     //	  public dxJointNode firstjoint;	// list of attached joints
     //TODO
-    public int ID;    //body's id, used for identifying
+    private int ID;    //运动体的id，用于识别 body's id, used for identifying
     public final Ref<DxJointNode> firstjoint = new Ref<>();    // list of attached joints
     //unsigned
     int flags;            // some dxBodyFlagXXX flags
@@ -1667,6 +1667,11 @@ public class DxBody extends DObject implements DBody{
     @Override
     public int getId() {
         return this.ID;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.ID=id;
     }
 
 }
