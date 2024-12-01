@@ -4,7 +4,6 @@ import io.github.tt432.eyelib.client.render.RenderHelper;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
-import io.github.tt432.machinemax.common.phys.PhysThread;
 import io.github.tt432.machinemax.common.phys.PhysThreadController;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
@@ -69,15 +68,19 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public AbstractPart(BasicEntity attachedEntity) {
         this.attachedEntity = attachedEntity;
         dmass = OdeHelper.createMass();
-        if(!attachedEntity.level().isClientSide()) dbody = OdeHelper.createBody(PhysThreadController.physThread.world, this);
-        else dbody = OdeHelper.createBody(PhysThreadController.localPhysThread.world, this);
+        if (!attachedEntity.level().isClientSide())
+            dbody = OdeHelper.createBody(PhysThreadController.physThread.world, this);
+        else {
+            dbody = OdeHelper.createBody(PhysThreadController.localPhysThread.world, this);
+        }
     }
 
+    @Override
     public Iterator<AbstractPart> iterator() {
-        return new DFIterator();
+        return new PartIterator();
     }
 
-    class DFIterator implements Iterator<AbstractPart> {
+    class PartIterator implements Iterator<AbstractPart> {
         int index = 0;
         boolean first = true;
 

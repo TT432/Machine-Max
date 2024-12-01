@@ -1,14 +1,10 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
-import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.utils.MMMath;
-import io.github.tt432.machinemax.utils.control.PDController;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.DAMotorJoint;
-import io.github.tt432.machinemax.utils.physics.ode.DBody;
 import io.github.tt432.machinemax.utils.physics.ode.DHinge2Joint;
 
 import static java.lang.Math.*;
@@ -19,7 +15,7 @@ public class CarController extends PhysController {
     public double MAX_FORWARD_RPM;//最大前进发动机转速，自动计算，取决于最大前进速度
     public double MAX_BACKWARD_RPM;//最大倒车发动机转速，自动计算，取决于最大倒车速度
     public double IDLE_RPM;//发动机待机转速，决定起步加减速能力
-    public double MAX_BRAKE_POWER = 5000;//最大单轮刹车力矩5000Nm
+    public double MAX_BRAKE_POWER = 3000;//最大单轮刹车力矩3000Nm
     public double ENG_ACC = 0.05D;//引擎加速系数
     public double ENG_DEC = 0.15D;//引擎减速系数
     public double STEER_T = 0.25D;//达到满舵所需时间
@@ -52,7 +48,7 @@ public class CarController extends PhysController {
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
         for (int i = 0; i < 4; i++) {
             joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(i).joints.getFirst();
-            joint.addTorques(0, brake * MMMath.sigmoidSignum(abs(joint.getAngle1Rate())));//刹车制动力
+            joint.addTorques(0, -brake * MMMath.sigmoidSignum(abs(joint.getAngle1Rate())));//刹车制动力
         }
     }
 
@@ -102,10 +98,10 @@ public class CarController extends PhysController {
     }
 
     private void rudderControl() {//转角计算
-        if (rawMoveInput[4] > 0 || (rawMoveInput[4] == 0 && turning_input < -PhysThread.STEP)) {
-            turning_input = clamp(turning_input + PhysThread.STEP / STEER_T, -1, 1);
-        } else if (rawMoveInput[4] < 0 || turning_input > PhysThread.STEP) {
-            turning_input = clamp(turning_input - PhysThread.STEP / STEER_T, -1, 1);
+        if (rawMoveInput[4] > 0 || (rawMoveInput[4] == 0 && turning_input < -AbstractPhysThread.STEP_SIZE)) {
+            turning_input = clamp(turning_input + AbstractPhysThread.STEP_SIZE / STEER_T, -1, 1);
+        } else if (rawMoveInput[4] < 0 || turning_input > AbstractPhysThread.STEP_SIZE) {
+            turning_input = clamp(turning_input - AbstractPhysThread.STEP_SIZE / STEER_T, -1, 1);
         } else {
             turning_input = 0F;
         }

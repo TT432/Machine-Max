@@ -33,6 +33,7 @@ import static io.github.tt432.machinemax.utils.physics.ode.internal.Common.dSqrt
 import static io.github.tt432.machinemax.utils.physics.ode.internal.Common.dUASSERT;
 import static io.github.tt432.machinemax.utils.physics.ode.internal.ErrorHandler.dMessage;
 
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.DBody;
@@ -57,7 +58,10 @@ import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.B
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.alloc_block_fn_t;
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.free_block_fn_t;
 import io.github.tt432.machinemax.utils.physics.ode.internal.processmem.DxUtil.shrink_block_fn_t;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -74,7 +78,6 @@ public class DxWorld extends DBase implements DWorld {
     //	  dxJoint firstjoint;		// joint linked list
     public int nb;            // number of bodies and joints in lists
     public int nj;
-    public int idCount;    //使用过的id数量
     DVector3 gravity;        // gravity vector (m/s/s)
     private double global_erp;        // global error reduction parameter
     double global_cfm;        // global constraint force mixing parameter
@@ -86,7 +89,9 @@ public class DxWorld extends DBase implements DWorld {
     public dxContactParameters contactp;
     dxDampingParameters dampingp; // damping parameters
     double max_angular_speed;      // limit the angular velocity to this magnitude
-
+    @Getter
+    @Setter
+    int maxEntityBodies;//每个实体可附着的最大运动体数量，默认256
     public Queue<DBody> bodysToBeRemoved = new LinkedList<>();//将要统一被从物理线程移除的运动体
 
     private Object userdata;
@@ -113,7 +118,6 @@ public class DxWorld extends DBase implements DWorld {
         firstjoint.set(null);
         nb = 0;
         nj = 0;
-        idCount = 0;
         global_erp = Objects_H.dWORLD_DEFAULT_GLOBAL_ERP;
         global_cfm = Objects_H.dWORLD_DEFAULT_GLOBAL_CFM;
         adis = null;
@@ -124,6 +128,7 @@ public class DxWorld extends DBase implements DWorld {
         contactp = null;
         dampingp = null;
         max_angular_speed = dInfinity;
+        maxEntityBodies = 256;
         userdata = 0;
 
         //dSetZero (gravity, 4);
@@ -279,7 +284,6 @@ public class DxWorld extends DBase implements DWorld {
     //
     //	    return result;
     //	}
-
 
     boolean dWorldStep(double stepsize) {
         dUASSERT(stepsize > 0, "stepsize must be > 0");
@@ -840,6 +844,38 @@ public class DxWorld extends DBase implements DWorld {
     public void handleBodyRemove() {
         while (!bodysToBeRemoved.isEmpty()) {
             (bodysToBeRemoved.remove()).destroy();
+        }
+    }
+
+    @Override
+    public Iterator<DBody> getBodyIterator() {
+        return new BodyIterator();
+    }
+
+    private class BodyIterator implements Iterator<DBody> {
+        DxBody current;
+        boolean first;
+
+        public BodyIterator() {
+            if (firstbody.get() != null) {
+                current = firstbody.get();
+                first = true;
+            } else first = false;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (first) return true;
+            return current != null && current.getNext() != null;
+        }
+
+        @Override
+        public DBody next() {
+            if (first) {//首先返回部件本身
+                first = false;
+                return current;
+            } else current = (DxBody) current.getNext();
+            return current;
         }
     }
 
