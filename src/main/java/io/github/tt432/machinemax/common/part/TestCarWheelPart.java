@@ -19,7 +19,7 @@ public class TestCarWheelPart extends AbstractWheelPart {
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
     //物理参数
-    public static final double BASIC_MASS = 5;
+    public static final double BASIC_MASS = 30;
     public static final DVector3C airDragCentre = new DVector3(-0.1, 0, 0);//空气阻力/升力作用点(相对重心位置)
     public static final DVector3C waterDragCentre = new DVector3(-0.1, 0, 0);//水阻力/升力作用点(相对重心位置)
 

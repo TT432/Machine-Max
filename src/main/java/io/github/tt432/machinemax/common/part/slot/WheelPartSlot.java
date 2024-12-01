@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.common.part.slot;
 
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.common.phys.PhysThread;
+import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.ode.*;
 
@@ -27,8 +27,8 @@ public class WheelPartSlot extends AbstractPartSlot {
         ((DHinge2Joint) joints.getFirst()).setParamLoStop(-0);//限制轮胎转角
         ((DHinge2Joint) joints.getFirst()).setParamHiStop(0);
         //设置减震器属性
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) PhysThread.STEP / 1000 * kp) / (((double) PhysThread.STEP / 1000 * kp) + kd));
-        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1 / (((double) PhysThread.STEP / 1000 * kp) + kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionERP(((double) AbstractPhysThread.STEP_SIZE / 1000 * kp) / (((double) AbstractPhysThread.STEP_SIZE / 1000 * kp) + kd));
+        ((DHinge2Joint) joints.getFirst()).setParamSuspensionCFM(1 / (((double) AbstractPhysThread.STEP_SIZE / 1000 * kp) + kd));
     }
 
     @Override

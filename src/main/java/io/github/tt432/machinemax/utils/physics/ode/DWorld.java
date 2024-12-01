@@ -26,7 +26,10 @@ package io.github.tt432.machinemax.utils.physics.ode;
 
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
+import io.github.tt432.machinemax.utils.physics.ode.internal.DxBody;
 import io.github.tt432.machinemax.utils.physics.ode.threading.task.TaskExecutor;
+
+import java.util.Iterator;
 
 /**
  * The world object is a container for rigid bodies and joints. Objects in
@@ -604,4 +607,9 @@ public interface DWorld {
 	 * 每一仿真步应调用一次以保证及时对运动体进行处理
 	 */
 	void handleBodyRemove();
+
+	/**
+	 * @return 一个获取世界内所有运动体的遍历器。An iterator over all bodies associated in this world.
+	 */
+	Iterator<DBody> getBodyIterator();
 }

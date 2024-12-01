@@ -1027,7 +1027,7 @@ public interface DBody {
     DGeom getNextGeom(DGeom geom);
 
     /**
-     * @return an iterator over all geoms associated with with body.
+     * @return an iterator over all geoms associated with body.
      */
     Iterator<DGeom> getGeomIterator();
 

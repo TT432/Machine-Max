@@ -38,6 +38,7 @@ import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dQM
 import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dQfromR;
 import static io.github.tt432.machinemax.utils.physics.ode.internal.Rotation.dRfromQ;
 
+import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.utils.physics.math.*;
 import io.github.tt432.machinemax.utils.physics.ode.*;
@@ -49,15 +50,19 @@ import io.github.tt432.machinemax.utils.physics.ode.internal.Objects_H.DxPosR;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Objects_H.DxPosRC;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Objects_H.dxAutoDisable;
 import io.github.tt432.machinemax.utils.physics.ode.internal.Objects_H.dxDampingParameters;
+import lombok.Getter;
+import lombok.Setter;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
 /**
  * rigid body (dynamics object).
  */
-public class DxBody extends DObject implements DBody {
+public class DxBody extends DObject implements DBody{
 
     // some body flags
 
@@ -84,10 +89,13 @@ public class DxBody extends DObject implements DBody {
     static final int dxBodyAngularDamping = 64;    // use angular damping
     static final int dxBodyMaxAngularSpeed = 128;    // use maximum angular speed
     private static final int dxBodyGyroscopic = 256;    // use gyroscopic term
-    private AbstractPart attachedPart;//此运动体所属的实体
+    @Setter
+    @Getter
+    private AbstractPart attachedPart;//此运动体所属的部件
+    private BasicEntity attachedEntity;//此运动体所属的实体
     //	  public dxJointNode firstjoint;	// list of attached joints
     //TODO
-    public final int ID;    //body's id, used for identifying
+    public int ID;    //body's id, used for identifying
     public final Ref<DxJointNode> firstjoint = new Ref<>();    // list of attached joints
     //unsigned
     int flags;            // some dxBodyFlagXXX flags
@@ -120,21 +128,8 @@ public class DxBody extends DObject implements DBody {
     private final dxDampingParameters dampingp = new dxDampingParameters(); // damping parameters, depends on flags
     double max_angular_speed;      // limit the angular velocity to this magnitude
 
-    /**
-     * 应当仅在服务端被调用
-     * @param world
-     */
     protected DxBody(DxWorld world) {
         super(world);
-        world.idCount++;
-        this.ID = world.idCount;
-    }
-    //TODO:如何保证客户端和服务端生成的运动体拥有相同的id？
-    @OnlyIn(Dist.CLIENT)
-    protected DxBody(DxWorld world, int id) {
-        super(world);
-        world.idCount++;
-        this.ID = id;
     }
 
     DxWorld dBodyGetWorld() {
@@ -199,9 +194,14 @@ public class DxBody extends DObject implements DBody {
         return b;
     }
 
-    public static DxBody dBodyCreate(DxWorld w, AbstractPart p) {
+    public static DxBody dBodyCreate(DxWorld w, @Nullable AbstractPart p) {
         DxBody b = dBodyCreate(w);
-        b.attachedPart = p;
+        if (p != null) {
+            b.attachedPart = p;
+            b.attachedEntity = p.getAttachedEntity();
+            b.ID = b.attachedEntity.getId()*w.getMaxEntityBodies()+b.attachedEntity.bodyCount;
+            b.attachedEntity.bodyCount++;
+        }
         return b;
     }
 
@@ -1635,8 +1635,9 @@ public class DxBody extends DObject implements DBody {
 
     @Override
     public Iterator<DGeom> getGeomIterator() {
-        return new GeomIterator(geom);
+        return null;
     }
+
 
     @Override
     public void setMovedCallback(BodyMoveCallBack callback) {
@@ -1668,11 +1669,4 @@ public class DxBody extends DObject implements DBody {
         return this.ID;
     }
 
-    public AbstractPart getAttachedPart() {
-        return attachedPart;
-    }
-
-    public void setAttachedPart(AbstractPart part) {
-        this.attachedPart = part;
-    }
 }
