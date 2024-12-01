@@ -1,9 +1,7 @@
 package io.github.tt432.machinemax.mixin;
 
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
-import io.github.tt432.machinemax.mixin.ineterface.IMixinLevel;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.server.level.ServerLevel;
+import io.github.tt432.machinemax.mixin_interfaces.IMixinLevel;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

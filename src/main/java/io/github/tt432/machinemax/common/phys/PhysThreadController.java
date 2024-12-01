@@ -1,21 +1,17 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.mixin.ineterface.IMixinLevel;
+import io.github.tt432.machinemax.mixin_interfaces.IMixinLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ChunkTicketLevelUpdatedEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import static io.github.tt432.machinemax.MachineMax.MOD_ID;
 
 public class PhysThreadController {
-
-    public static AbstractPhysThread physThread;
-    public static AbstractPhysThread localPhysThread;
 
     @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class events {

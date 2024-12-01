@@ -1,4 +1,4 @@
-package io.github.tt432.machinemax.mixin.ineterface;
+package io.github.tt432.machinemax.mixin_interfaces;
 
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 

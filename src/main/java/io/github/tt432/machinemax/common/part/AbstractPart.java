@@ -5,6 +5,7 @@ import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.phys.PhysThreadController;
+import io.github.tt432.machinemax.mixin_interfaces.IMixinLevel;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
 import io.github.tt432.machinemax.utils.physics.math.DVector3C;
 import io.github.tt432.machinemax.utils.physics.ode.*;
@@ -68,11 +69,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public AbstractPart(BasicEntity attachedEntity) {
         this.attachedEntity = attachedEntity;
         dmass = OdeHelper.createMass();
-        if (!attachedEntity.level().isClientSide())
-            dbody = OdeHelper.createBody(PhysThreadController.physThread.world, this);
-        else {
-            dbody = OdeHelper.createBody(PhysThreadController.localPhysThread.world, this);
-        }
+        dbody = OdeHelper.createBody(((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().world, this);
     }
 
     @Override
@@ -115,26 +112,14 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     }
 
     public void addAllGeomsToSpace() {
-        if (this.attachedEntity.level().isClientSide) {
-            for (DGeom geom : dgeoms) {
-                PhysThreadController.localPhysThread.space.geomAddEnQueue(geom);
-            }
-        } else {
-            for (DGeom geom : dgeoms) {
-                PhysThreadController.physThread.space.geomAddEnQueue(geom);
-            }
+        for (DGeom geom : dgeoms) {
+            ((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().space.geomAddEnQueue(geom);
         }
     }
 
     public void removeAllGeomsInSpace() {
-        if (this.attachedEntity.level().isClientSide) {
-            for (DGeom geom : dgeoms) {
-                PhysThreadController.localPhysThread.space.geomRemoveEnQueue(geom);
-            }
-        } else {
-            for (DGeom geom : dgeoms) {
-                PhysThreadController.physThread.space.geomRemoveEnQueue(geom);
-            }
+        for (DGeom geom : dgeoms) {
+            ((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().space.geomRemoveEnQueue(geom);
         }
     }
 
