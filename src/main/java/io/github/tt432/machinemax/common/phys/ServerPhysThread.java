@@ -24,7 +24,7 @@ public class ServerPhysThread extends AbstractPhysThread {
         while (!isInterrupted()) {//物理线程主循环
             long startTime = System.nanoTime();//记录开始时间
             regularStep(isPaused);//推进物理模拟计算进程
-            if (step % 10 == 0) syncBodies();//每秒进行一次与客户端的位姿速度同步
+            if (step % 5 == 0) syncBodies();//每0.1秒进行一次与客户端的位姿速度同步
             long duration = (System.nanoTime() - startTime) / 1000000;//计算物理线程执行用时，并转换为毫秒
             long sleepTime = STEP_SIZE - duration;
             if (sleepTime < 1) sleepTime = 1;

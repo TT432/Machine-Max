@@ -1,6 +1,9 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
+import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.utils.MMMath;
 import io.github.tt432.machinemax.utils.physics.math.DVector3;
@@ -19,7 +22,7 @@ public class CarController extends PhysController {
     public double ENG_ACC = 0.05D;//引擎加速系数
     public double ENG_DEC = 0.15D;//引擎减速系数
     public double STEER_T = 0.25D;//达到满舵所需时间
-    public double MIN_TURNING_R = 5;//最小转弯半径
+    public double MIN_TURNING_R = 4;//最小转弯半径
 
     public double power = 0D;//推进功率
     public double brake = 0D;
@@ -56,12 +59,23 @@ public class CarController extends PhysController {
         rudderControl();
         DHinge2Joint hinge;
         DAMotorJoint motor;
-        for (int i = 0; i < 2; i++) {
-            hinge = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(0).joints.getFirst();
-            motor = (DAMotorJoint) controlledEntity.corePart.childrenPartSlots.get(i).joints.get(1);
-            controlledEntity.corePart.childrenPartSlots.get(i).getChildPart().dbody.setFiniteRotationAxis(0, 0, 0);
-            //TODO:由转弯半径分别计算各个轮胎的最大转角
-            double m2 = -turning_input * PI / 4 - hinge.getAngle1();
+        AbstractPartSlot slot;
+        for (int i = 0; i < 4; i++) {
+            slot = controlledEntity.corePart.childrenPartSlots.get(i);
+            hinge = (DHinge2Joint) slot.joints.getFirst();
+            motor = (DAMotorJoint) slot.joints.get(1);
+            slot.getChildPart().dbody.setFiniteRotationAxis(0, 0, 0);
+            double m2;
+            if(turning_input == 0||slot instanceof WheelPartSlot){//无转向输入，或不具备转向功能则维持前向
+                m2 = - hinge.getAngle1();
+            }else {//由转弯半径分别计算各个轮胎的最大转角(阿克曼转向)
+                double lr_half;
+                if(i==0||i==3) lr_half = 17.0569/16;
+                else lr_half = -17.0569/16;
+                lr_half*=signum(-turning_input);
+                double lwb = (19.0756+26.9244)/16;
+                m2 = atan(lwb/(MIN_TURNING_R/-turning_input+lr_half)) - hinge.getAngle1();
+            }
             motor.setParamVel(m2);
         }
     }
