@@ -9,15 +9,12 @@ import lombok.Setter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-
-public abstract class BasicEntity extends LivingEntity implements IMMEntityAttribute, IEntityWithComplexSpawn {
+public abstract class BasicEntity extends Entity implements IEntityWithComplexSpawn {
 
     @Setter
     @Getter
@@ -47,7 +44,7 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
         MECH
     }
 
-    public BasicEntity(EntityType<? extends LivingEntity> entityType, Level level) {
+    public BasicEntity(EntityType<? extends BasicEntity> entityType, Level level) {
         super(entityType, level);
         noPhysics = true;
         bodyCount = 0;
@@ -152,29 +149,9 @@ public abstract class BasicEntity extends LivingEntity implements IMMEntityAttri
     }
 
     @Override
-    public HumanoidArm getMainArm() {
-        return null;
-    }
-
-    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         this.remove(RemovalReason.KILLED);
         return true;
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return Collections.singleton(ItemStack.EMPTY);
-    }
-
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
-
     }
 
     @Override

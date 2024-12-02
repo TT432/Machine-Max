@@ -130,8 +130,8 @@ public class TestCarChassisPart extends AbstractPart {
         //气动力相关系数
         double BASIC_AIRDRAG_COEF_ZP=1;//空气阻力系数(前向)，一般较小
         double BASIC_AIRDRAG_COEF_ZN=1;//空气阻力系数(后向)，一般较小
-        double BASIC_AIRDRAG_COEF_XP=1;//空气阻力系数(左向)
-        double BASIC_AIRDRAG_COEF_XN=1;//空气阻力系数(右向)
+        double BASIC_AIRDRAG_COEF_XP=2;//空气阻力系数(左向)
+        double BASIC_AIRDRAG_COEF_XN=2;//空气阻力系数(右向)
         double BASIC_AIRDRAG_COEF_YP=0;//空气阻力系数(上向)
         double BASIC_AIRDRAG_COEF_YN=10;//空气阻力系数(下向)
         double BASIC_AIRLIFT_COEF_Z =0;//空气升力系数(前向)，形状带来的额外升力

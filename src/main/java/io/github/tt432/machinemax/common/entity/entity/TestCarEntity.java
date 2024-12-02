@@ -4,7 +4,9 @@ import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.controller.CarController;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +31,11 @@ public class TestCarEntity extends BasicEntity {
     }
 
     @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (this.level().isClientSide() && this.getFirstPassenger() instanceof Player p) {
@@ -37,6 +44,16 @@ public class TestCarEntity extends BasicEntity {
             p.displayClientMessage(Component.literal("速度:" + String.format("%.2f", v.get2() * 3.6) + "km/h"), true);
             this.level().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), 0, 0, 0);
         }
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag compound) {
+
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag compound) {
+
     }
 
     @Override

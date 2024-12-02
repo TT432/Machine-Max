@@ -128,7 +128,7 @@ abstract public class AbstractPhysThread extends Thread {
             } else {
                 contact.surface.mode = dContactBounce | dContactRolling;
                 contact.surface.mu = 5000;
-                contact.surface.rho = 0.01;
+                contact.surface.rho = 0.1;
                 contact.surface.bounce = 0.0001;
                 contact.surface.bounce_vel = 0.1;
             }

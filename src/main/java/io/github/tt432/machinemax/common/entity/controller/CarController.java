@@ -1,5 +1,6 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
@@ -17,7 +18,7 @@ public class CarController extends PhysController {
     public double MAX_FORWARD_RPM;//最大前进发动机转速，自动计算，取决于最大前进速度
     public double MAX_BACKWARD_RPM;//最大倒车发动机转速，自动计算，取决于最大倒车速度
     public double IDLE_RPM;//发动机待机转速，决定起步加减速能力
-    public double MAX_BRAKE_POWER = 3000;//最大单轮刹车力矩3000Nm
+    public double MAX_BRAKE_POWER = 2000;//最大单轮刹车力矩2000Nm
     public double ENG_ACC = 0.05D;//引擎加速系数
     public double ENG_DEC = 0.15D;//引擎减速系数
     public double STEER_T = 0.25D;//达到满舵所需时间
@@ -48,9 +49,11 @@ public class CarController extends PhysController {
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
         joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(1).joints.getFirst();
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
+        //刹车力
+        //TODO:检查刹车逻辑
         for (int i = 0; i < 4; i++) {
             joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(i).joints.getFirst();
-            joint.addTorques(0, -brake * MMMath.sigmoidSignum(abs(joint.getAngle1Rate())));//刹车制动力
+            joint.addTorques(0, brake * MMMath.sigmoidSignum(-3*joint.getAngle1Rate()));//刹车制动力
         }
     }
 
@@ -85,16 +88,16 @@ public class CarController extends PhysController {
         double target_brake;
         DVector3 v = controlledEntity.corePart.dbody.getLinearVel().copy();
         controlledEntity.corePart.dbody.vectorFromWorld(v, v);
-        if (v.get2() >= -0.1 && rawMoveInput[2] > 0) {//未在后退时按w则前进
+        if (v.get2() >= -0.5 && rawMoveInput[2] > 0) {//未在后退时按w则前进
             target_brake = 0;
         } else if (v.get2() > 0 && rawMoveInput[2] < 0) {//前进时按s则刹车
-            target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
-        } else if (v.get2() <= 0.1 && rawMoveInput[2] < 0) {//未在前进时按s则后退
+            target_brake = MAX_BRAKE_POWER * abs(rawMoveInput[2]) / 100;
+        } else if (v.get2() <= 0.5 && rawMoveInput[2] < 0) {//未在前进时按s则后退
             target_brake = 0;
         } else if (v.get2() < 0 && rawMoveInput[2] > 0) {//后退时按w则刹车
-            target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
-        } else if ((abs(v.get2()) <= 0.05 && rawMoveInput[2] == 0) || moveInputConflict[2] == 1) {//无输入且低速，或输入冲突时刹车
-            target_brake = MAX_BRAKE_POWER * rawMoveInput[2] / 100;
+            target_brake = MAX_BRAKE_POWER * abs(rawMoveInput[2]) / 100;
+        } else if ((abs(v.get2()) <= 0.5 && rawMoveInput[2] == 0) || moveInputConflict[2] == 1) {//无输入且低速，或输入冲突时刹车
+            target_brake = MAX_BRAKE_POWER;
         } else {//溜车
             target_brake = 0;
         }

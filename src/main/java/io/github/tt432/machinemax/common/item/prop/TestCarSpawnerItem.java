@@ -1,5 +1,6 @@
 package io.github.tt432.machinemax.common.item.prop;
 
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.MMEntities;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +21,7 @@ public class TestCarSpawnerItem extends Item {
             TestCarEntity car = new TestCarEntity(MMEntities.TEST_CAR_ENTITY.get(),level);
             car.setPos(player.getPosition(0));
             level.addFreshEntity(car);
+            MachineMax.LOGGER.info(player+" tried to place a test car.");
         }
         return super.use(level, player, usedHand);
     }

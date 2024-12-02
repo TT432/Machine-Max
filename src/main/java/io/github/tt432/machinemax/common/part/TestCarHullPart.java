@@ -86,10 +86,10 @@ public class TestCarHullPart extends AbstractPart {
     public DVector3 getAerodynamicForceCoef(AbstractPart part) {
         //气动力相关系数
         double BASIC_AIRDRAG_COEF_ZP=10;//空气阻力系数(前向)，一般较小
-        double BASIC_AIRDRAG_COEF_ZN=10;//空气阻力系数(后向)，一般较小
-        double BASIC_AIRDRAG_COEF_XP=10;//空气阻力系数(左向)
-        double BASIC_AIRDRAG_COEF_XN=10;//空气阻力系数(右向)
-        double BASIC_AIRDRAG_COEF_YP=10;//空气阻力系数(上向)
+        double BASIC_AIRDRAG_COEF_ZN=15;//空气阻力系数(后向)，一般较小
+        double BASIC_AIRDRAG_COEF_XP=20;//空气阻力系数(左向)
+        double BASIC_AIRDRAG_COEF_XN=20;//空气阻力系数(右向)
+        double BASIC_AIRDRAG_COEF_YP=20;//空气阻力系数(上向)
         double BASIC_AIRDRAG_COEF_YN=0;//空气阻力系数(下向)
         double BASIC_AIRLIFT_COEF_Z =1;//空气升力系数(前向)，形状带来的额外升力
         double BASIC_AIRLIFT_COEF_X =0;//空气升力系数(水平向)，一般为0

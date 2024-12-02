@@ -53,6 +53,7 @@ public class RawInputHandler {
                     //移动
                     if (KeyBinding.groundForwardKey.isDown() && KeyBinding.groundBackWardKey.isDown()) {
                         trans_z_conflict = 1;
+                        trans_z_input = 0;
                     }
                     else if (KeyBinding.groundForwardKey.isDown()) trans_z_input = 100;
                     else if (KeyBinding.groundBackWardKey.isDown()) trans_z_input = -100;
@@ -60,6 +61,7 @@ public class RawInputHandler {
                     //转向
                     if (KeyBinding.groundLeftwardKey.isDown() && KeyBinding.groundRightwardKey.isDown()) {
                         rot_y_conflict = 1;
+                        rot_y_input = 0;
                     }
                     else if (KeyBinding.groundLeftwardKey.isDown()) rot_y_input = 100;
                     else if (KeyBinding.groundRightwardKey.isDown()) rot_y_input = -100;
