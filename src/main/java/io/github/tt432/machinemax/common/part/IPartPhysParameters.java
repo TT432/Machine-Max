@@ -1,6 +1,6 @@
 package io.github.tt432.machinemax.common.part;
 
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
 
 public interface IPartPhysParameters {
     /**

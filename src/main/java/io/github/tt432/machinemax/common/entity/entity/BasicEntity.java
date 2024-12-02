@@ -1,34 +1,21 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
-import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
+import io.github.tt432.machinemax.util.physics.math.DQuaternion;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.extensions.IEntityExtension;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
-import net.neoforged.neoforge.network.payload.AdvancedAddEntityPayload;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.Collections;
-import java.util.function.Consumer;
 
 public abstract class BasicEntity extends LivingEntity implements IMMEntityAttribute, IEntityWithComplexSpawn {
 

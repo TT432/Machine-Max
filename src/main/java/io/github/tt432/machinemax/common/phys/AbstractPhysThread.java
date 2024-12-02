@@ -3,17 +3,17 @@ package io.github.tt432.machinemax.common.phys;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.utils.data.BodiesSyncData;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.*;
+import io.github.tt432.machinemax.util.data.BodiesSyncData;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.ode.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.tt432.machinemax.utils.physics.ode.OdeConstants.*;
-import static io.github.tt432.machinemax.utils.physics.ode.OdeHelper.areConnectedExcluding;
+import static io.github.tt432.machinemax.util.physics.ode.OdeConstants.*;
+import static io.github.tt432.machinemax.util.physics.ode.OdeHelper.areConnectedExcluding;
 
 abstract public class AbstractPhysThread extends Thread {
     public final Level level;//物理计算线程与每个维度绑定，即每个维度都有一个物理计算线程

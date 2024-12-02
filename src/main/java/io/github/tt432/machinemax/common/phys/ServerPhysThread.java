@@ -2,16 +2,14 @@ package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.network.payload.PhysSyncPayload;
-import io.github.tt432.machinemax.utils.data.BodiesSyncData;
-import io.github.tt432.machinemax.utils.physics.ode.DBody;
-import io.github.tt432.machinemax.utils.physics.ode.internal.DxBody;
+import io.github.tt432.machinemax.util.data.BodiesSyncData;
+import io.github.tt432.machinemax.util.physics.ode.DBody;
+import io.github.tt432.machinemax.util.physics.ode.internal.DxBody;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class ServerPhysThread extends AbstractPhysThread {
 

@@ -1,9 +1,9 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.utils.data.BodiesSyncData;
-import io.github.tt432.machinemax.utils.physics.ode.DBody;
-import io.github.tt432.machinemax.utils.physics.ode.internal.DxBody;
+import io.github.tt432.machinemax.util.data.BodiesSyncData;
+import io.github.tt432.machinemax.util.physics.ode.DBody;
+import io.github.tt432.machinemax.util.physics.ode.internal.DxBody;
 import net.minecraft.world.level.Level;
 
 import java.util.Iterator;

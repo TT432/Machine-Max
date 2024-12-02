@@ -1,16 +1,13 @@
 package io.github.tt432.machinemax.network.payload;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.utils.data.BodiesSyncData;
+import io.github.tt432.machinemax.util.data.BodiesSyncData;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaterniond;
-import org.joml.Vector3d;
 
 import java.util.HashMap;
 import java.util.Map;

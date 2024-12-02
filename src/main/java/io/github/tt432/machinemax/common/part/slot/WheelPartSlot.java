@@ -2,8 +2,8 @@ package io.github.tt432.machinemax.common.part.slot;
 
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.*;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.ode.*;
 
 public class WheelPartSlot extends AbstractPartSlot {
 

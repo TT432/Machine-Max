@@ -1,8 +1,8 @@
 package io.github.tt432.machinemax.common.part.slot;
 
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.utils.physics.ode.DFixedJoint;
-import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
+import io.github.tt432.machinemax.util.physics.ode.DFixedJoint;
+import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
 
 public class HullPartSlot extends AbstractPartSlot {
     public HullPartSlot(AbstractPart owner, String locator) {

@@ -1,9 +1,8 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.entity.controller.CarController;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

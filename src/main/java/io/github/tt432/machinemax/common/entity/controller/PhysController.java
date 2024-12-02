@@ -2,8 +2,8 @@ package io.github.tt432.machinemax.common.entity.controller;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.utils.physics.math.*;
-import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
+import io.github.tt432.machinemax.util.physics.math.*;
+import io.github.tt432.machinemax.util.physics.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
 

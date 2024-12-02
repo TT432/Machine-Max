@@ -1,14 +1,13 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
-import io.github.tt432.machinemax.utils.MMMath;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DAMotorJoint;
-import io.github.tt432.machinemax.utils.physics.ode.DHinge2Joint;
+import io.github.tt432.machinemax.util.MMMath;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.ode.DAMotorJoint;
+import io.github.tt432.machinemax.util.physics.ode.DHinge2Joint;
 
 import static java.lang.Math.*;
 

@@ -7,10 +7,10 @@ import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.common.part.TestCarWheelPart;
-import io.github.tt432.machinemax.utils.physics.math.DMatrix3;
-import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.internal.Rotation;
+import io.github.tt432.machinemax.util.physics.math.DMatrix3;
+import io.github.tt432.machinemax.util.physics.math.DQuaternion;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.ode.internal.Rotation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 

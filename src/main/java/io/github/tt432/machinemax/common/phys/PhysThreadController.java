@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.mixin_interfaces.IMixinLevel;
+import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

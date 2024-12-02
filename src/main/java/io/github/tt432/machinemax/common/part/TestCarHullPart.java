@@ -2,10 +2,10 @@ package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.math.DVector3C;
-import io.github.tt432.machinemax.utils.physics.ode.OdeHelper;
-import io.github.tt432.machinemax.utils.physics.ode.internal.DxGeom;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.math.DVector3C;
+import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
+import io.github.tt432.machinemax.util.physics.ode.internal.DxGeom;
 import net.minecraft.resources.ResourceLocation;
 
 public class TestCarHullPart extends AbstractPart {

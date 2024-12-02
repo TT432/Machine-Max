@@ -2,9 +2,9 @@ package io.github.tt432.machinemax.common.part.slot;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.utils.physics.math.DQuaternion;
-import io.github.tt432.machinemax.utils.physics.math.DVector3;
-import io.github.tt432.machinemax.utils.physics.ode.DJoint;
+import io.github.tt432.machinemax.util.physics.math.DQuaternion;
+import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.util.physics.ode.DJoint;
 import lombok.Getter;
 import lombok.Setter;
 
