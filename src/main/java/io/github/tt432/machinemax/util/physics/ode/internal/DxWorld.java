@@ -75,6 +75,7 @@ public class DxWorld extends DBase implements DWorld {
     //	 public dxBody firstbody;		// body linked list
     //	  dxJoint firstjoint;		// joint linked list
     public int nb;            // number of bodies and joints in lists
+    public int nbc;//世界中生成过的运动体数量
     public int nj;
     DVector3 gravity;        // gravity vector (m/s/s)
     private double global_erp;        // global error reduction parameter
@@ -87,9 +88,6 @@ public class DxWorld extends DBase implements DWorld {
     public dxContactParameters contactp;
     dxDampingParameters dampingp; // damping parameters
     double max_angular_speed;      // limit the angular velocity to this magnitude
-    @Getter
-    @Setter
-    int maxEntityBodies;//每个实体可附着的最大运动体数量，默认256
     public Queue<DBody> bodysToBeRemoved = new LinkedList<>();//将要统一被从物理线程移除的运动体
 
     private Object userdata;
@@ -115,6 +113,7 @@ public class DxWorld extends DBase implements DWorld {
         firstbody.set(null);
         firstjoint.set(null);
         nb = 0;
+        nbc = 0;
         nj = 0;
         global_erp = Objects_H.dWORLD_DEFAULT_GLOBAL_ERP;
         global_cfm = Objects_H.dWORLD_DEFAULT_GLOBAL_CFM;
@@ -126,7 +125,6 @@ public class DxWorld extends DBase implements DWorld {
         contactp = null;
         dampingp = null;
         max_angular_speed = dInfinity;
-        maxEntityBodies = 256;
         userdata = 0;
 
         //dSetZero (gravity, 4);

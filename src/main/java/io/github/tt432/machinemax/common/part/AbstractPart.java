@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.eyelib.client.render.RenderHelper;
+import io.github.tt432.machinemax.client.PartMolangScope;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
@@ -16,15 +17,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysParameters {
+    //渲染属性
+    public RenderHelper renderHelper;//渲染器，用于部件的渲染，无需操作
+    public PartMolangScope molangScope;//用于储存作用域为零部件本身的Molang变量
     //基础属性
     @Getter
     @Setter
     protected BasicEntity attachedEntity;//此部件附着的实体
-    public RenderHelper renderHelper;//渲染器，用于部件的渲染，无需操作
+    @Getter
+    protected static double BASIC_ARMOR = 0;//基础护甲
+    @Getter
+    protected static double BASIC_HEALTH = 1;//基础生命值
     @Getter
     @Setter
     protected double health = 1;//部件生命值
-
+    protected double maxHealth = 1;//部件生命值上限
     public partTypes PART_TYPE;//部件类型
     //模块化属性
     public AbstractPart fatherPart;//连接的上级部件
@@ -68,7 +75,8 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public AbstractPart(BasicEntity attachedEntity) {
         this.attachedEntity = attachedEntity;
         dmass = OdeHelper.createMass();
-        dbody = OdeHelper.createBody(((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().world, this);
+        dbody = OdeHelper.createBody(((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().world, this);
+        if (attachedEntity.level().isClientSide()) molangScope = new PartMolangScope(this);
     }
 
     @Override
@@ -112,13 +120,13 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
 
     public void addAllGeomsToSpace() {
         for (DGeom geom : dgeoms) {
-            ((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().space.geomAddEnQueue(geom);
+            ((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().space.geomAddEnQueue(geom);
         }
     }
 
     public void removeAllGeomsInSpace() {
         for (DGeom geom : dgeoms) {
-            ((IMixinLevel)attachedEntity.level()).machine_Max$getPhysThread().space.geomRemoveEnQueue(geom);
+            ((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().space.geomRemoveEnQueue(geom);
         }
     }
 
@@ -144,6 +152,13 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
      * @return 部件等效护甲(RHA mm)
      */
     abstract public double getArmor();
+
+    /**
+     * 获取部件基础等效护甲(RHA mm)
+     *
+     * @return 部件基础等效护甲(RHA mm)
+     */
+    abstract public double getBasicArmor();
 
     /**
      * 获取部件生命值上限

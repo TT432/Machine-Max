@@ -5,11 +5,11 @@
 			"loop": true,
 			"bones": {
 				"Root": {
-					"rotation": [0, "q.part_rel_rot_y+180", "q.part_rel_rot_z"],
-					"position": ["16*q.part_rel_pos_x", "16*q.part_rel_pos_y", "16*q.part_rel_pos_z"]
+					"rotation": ["variable.part_pitch", "variable.part_yaw+180", "variable.part_roll"],
+					"position": ["16*variable.part_rel_x", "16*variable.part_rel_y", "16*variable.part_rel_z"]
 				},
 				"Wheel": {
-					"rotation": ["q.part_rel_rot_x", 0,0]
+					"rotation": [0, 0, 0]
 				}
 			}
 		}

@@ -91,8 +91,7 @@ public class DxBody extends DObject implements DBody{
     private AbstractPart attachedPart;//此运动体所属的部件
     private BasicEntity attachedEntity;//此运动体所属的实体
     //	  public dxJointNode firstjoint;	// list of attached joints
-    //TODO
-    private int ID;    //运动体的id，用于识别 body's id, used for identifying
+    private int ID;    //运动体的id，用于识别 Body's id, used for identifying
     public final Ref<DxJointNode> firstjoint = new Ref<>();    // list of attached joints
     //unsigned
     int flags;            // some dxBodyFlagXXX flags
@@ -196,9 +195,8 @@ public class DxBody extends DObject implements DBody{
         if (p != null) {
             b.attachedPart = p;
             b.attachedEntity = p.getAttachedEntity();
-            //TODO:修改id生成逻辑，随世界运动提数量增加而增加，同步交由minecraft进行
-            b.ID = b.attachedEntity.getId()*w.getMaxEntityBodies()+b.attachedEntity.bodyCount;
-            b.attachedEntity.bodyCount++;
+            b.ID = w.nbc;
+            w.nbc++;
         }
         return b;
     }

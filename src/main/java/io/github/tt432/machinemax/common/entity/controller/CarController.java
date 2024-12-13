@@ -50,7 +50,7 @@ public class CarController extends PhysController {
         joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(1).joints.getFirst();
         joint.addTorques(0, -power / 2 / (abs(joint.getAngle1Rate()) + 2 * Math.PI));//电机驱动力
         //刹车力
-        //TODO:检查刹车逻辑
+        //TODO:改为设置滚动阻尼
         for (int i = 0; i < 4; i++) {
             joint = (DHinge2Joint) controlledEntity.corePart.childrenPartSlots.get(i).joints.getFirst();
             joint.addTorques(0, brake * MMMath.sigmoidSignum(-3*joint.getAngle1Rate()));//刹车制动力

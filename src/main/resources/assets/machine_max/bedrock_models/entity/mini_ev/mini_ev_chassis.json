@@ -24,12 +24,12 @@
 						"right_front_wheel_t_": [-17.0569, 0.7075, -19.0756],
 						"left_front_wheel_t_": {
 							"offset": [17.0569, 0.7075, -19.0756],
-							"rotation": [0, 180, 0]
+							"rotation": [0, 0, 0]
 						},
 						"right_back_wheel_t_": [-17.0569, 0.7075, 26.9244],
 						"left_back_wheel_t_": {
 							"offset": [17.0569, 0.7075, 26.9244],
-							"rotation": [0, 180, 0]
+							"rotation": [0, 0, 0]
 						}
 					}
 				},

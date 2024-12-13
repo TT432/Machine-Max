@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.util.data.BodiesSyncData;
 import io.github.tt432.machinemax.util.physics.ode.DBody;
 import io.github.tt432.machinemax.util.physics.ode.internal.DxBody;
@@ -21,6 +22,7 @@ public class LocalPhysThread extends AbstractPhysThread {
             long startTime = System.nanoTime();//记录开始时间
             //TODO:一个内部无sleep的while循环，用于根据服务器数据从数据包时间处开始快速迭代直到追上本地时间以修正误差
             regularStep(isPaused);//推进物理模拟计算进程
+            updateMolang();//更新用于渲染模型姿态位置的molang变量
             long duration = (System.nanoTime() - startTime) / 1000000;//计算物理线程执行用时，并转换为毫秒
             long sleepTime = STEP_SIZE - duration;
             if (sleepTime < 1) sleepTime = 1;
@@ -57,6 +59,15 @@ public class LocalPhysThread extends AbstractPhysThread {
                 b.setQuaternion(data.rot());//同步姿态
                 b.setLinearVel(data.lVel());//同步线速度
                 b.setAngularVel(data.aVel());//同步角速度
+            }
+        }
+    }
+    protected void updateMolang(){
+        for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//遍历线程内所有运动体
+            DxBody b = (DxBody) it.next();
+            AbstractPart part = b.getAttachedPart();
+            if (part!= null) {
+                part.molangScope.updatePhysMolang();
             }
         }
     }

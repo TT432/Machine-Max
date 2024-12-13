@@ -32,7 +32,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
         if (pEntity.corePart == null) return;
         DQuaternionC dq = pEntity.corePart.dbody.getQuaternion().copy();
         Quaternionf q = new Quaternionf(dq.get1(), dq.get2(), dq.get3(), dq.get0());
-        pPoseStack.pushPose();
+        pPoseStack.pushPose();//开始渲染
         pPoseStack.mulPose(q);
         RenderType renderType;
         AnimationComponent animationComponent;
@@ -43,7 +43,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
             animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
             animationComponent.setup(part.getAniController(), part.getAnimation());
             infos = BrAnimator.tickAnimation(animationComponent,
-                    RenderData.getComponent(pEntity).getScope(), ClientTickHandler.getTick() + pPartialTick);
+                    part.molangScope.getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数
                     pEntity,
                     pPoseStack.last().copy(),
@@ -70,7 +70,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
                 );
             }
         }
-        pPoseStack.popPose();
+        pPoseStack.popPose();//结束渲染
     }
 
     @Override

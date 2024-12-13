@@ -58,6 +58,11 @@ public class TestCarHullPart extends AbstractPart {
     }
 
     @Override
+    public double getBasicArmor() {
+        return BASIC_ARMOR;
+    }
+
+    @Override
     public double getMaxHealth() {
         return BASIC_HEALTH;
     }
