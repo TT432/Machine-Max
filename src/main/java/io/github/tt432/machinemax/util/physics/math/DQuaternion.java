@@ -22,6 +22,7 @@
 package io.github.tt432.machinemax.util.physics.math;
 
 import org.joml.Math;
+import org.joml.Quaternionf;
 
 import static io.github.tt432.machinemax.util.physics.ode.internal.libccd.CCDVec3.M_PI;
 
@@ -460,6 +461,7 @@ public class DQuaternion implements DQuaternionC {
 
     @Override
     public DVector3 toEulerZXY() {
+        //TODO：检查逻辑
         DVector3 angles = new DVector3();
         DQuaternion q = new DQuaternion(this);
         q.safeNormalize4();
@@ -475,13 +477,13 @@ public class DQuaternion implements DQuaternionC {
         return toEulerZXY().eqToDegrees();
     }
 
-    //	@Override
+    //    @Override
 //	public DVector3 toEulerZYX() {
 //		DVector3 angles = new DVector3();
 //		DQuaternion q = new DQuaternion(this);
 //		q.safeNormalize4();
 //		//ZYX顺序(Blockbench顺序)
-//		angles.set0(Math.atan2(q.y * q.z + q.w * q.x, 0.5D - q.x * q.x + q.y * q.y));
+//		angles.set0(Math.atan2(q.y * q.z + q.w * q.x, 0.5D - q.x * q.x - q.y * q.y));
 //		angles.set1(Math.safeAsin(-2.0D * (q.x * q.z - q.w * q.y)));
 //		angles.set2(Math.atan2(q.x * q.y + q.w * q.z, 0.5D - q.y * q.y - q.z * q.z));
 //		return angles;
@@ -491,42 +493,22 @@ public class DQuaternion implements DQuaternionC {
         DVector3 angles = new DVector3();
         DQuaternion q = new DQuaternion(this);
         q.safeNormalize4();
-
-        // 提取四元数的分量
-        double qx = q.x;
-        double qy = q.y;
-        double qz = q.z;
-        double qw = q.w;
-
-        // 计算 Z 轴旋转角度
-        double z = Math.atan2(qy * qz + qw * qx, 0.5D - qx * qx - qy * qy);
-
-        // 计算 Y 轴旋转角度
-        double y = Math.safeAsin(-2.0D * (qx * qz - qw * qy));
-
-        // 检测 Y 轴是否接近 ±90 度（奇异点）
-        if (Math.abs(y) > Math.toRadians(89.9)) {
-            // 奇异点附近，X 和 Z 旋转角度无法独立区分
-            // 使用不同的公式计算 X 和 Z 旋转角度
-            double x = 0;
-            if (Math.abs(y) > Math.toRadians(90.0)) {
-                // Y 轴超过 90 度，处理特殊情况
-                x = Math.atan2(qx * qz - qw * qy, 0.25D - 0.5D * (qy * qy + qz * qz));
-            } else {
-                x = Math.atan2(qx * qy - qw * qz, qx * qx + qw * qw - 0.5D);
-            }
-            angles.set0(0); // Z 轴旋转角度无法确定，设为 0
-            angles.set1(y);
-            angles.set2(x);
+        // ZYX顺序(Blockbench顺序)
+        double y_angle = Math.safeAsin(-2.0D * (q.x * q.z - q.w * q.y));
+        if (Math.abs(y_angle) >= Math.PI / 2 - 1e-3) { // 检查是否接近奇异点
+            // 单独计算 Y 轴旋转，X 和 Z 轴旋转合并
+//            angles.set0(0); // 或者设为某个特定值
+//            angles.set1(y_angle);
+//            angles.set2(Math.atan2(q.x * q.y + q.w * q.z, q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
+            angles.set0(Math.atan2(q.y * q.z + q.w * q.x, q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
+            angles.set1(y_angle);
+            angles.set2(0); // Z轴旋转设为0
         } else {
-            // 正常情况
-            // 计算 X 轴旋转角度
-            double x = Math.atan2(qx * qy + qw * qz, 0.5D - qy * qy - qz * qz);
-            angles.set0(z);
-            angles.set1(y);
-            angles.set2(x);
+            // 正常情况下的计算
+            angles.set0(Math.atan2(q.y * q.z + q.w * q.x, 0.5D - q.x * q.x - q.y * q.y));
+            angles.set1(y_angle);
+            angles.set2(Math.atan2(q.x * q.y + q.w * q.z, 0.5D - q.y * q.y - q.z * q.z));
         }
-
         return angles;
     }
 

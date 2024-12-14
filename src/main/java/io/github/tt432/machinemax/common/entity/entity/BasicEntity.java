@@ -1,5 +1,7 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
+import io.github.tt432.eyelib.capability.EyelibAttachableData;
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.util.physics.math.DQuaternion;
@@ -57,13 +59,16 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
                 setPos(this.getX(), this.getY(), this.getZ());//将所有部件的位置同步到物理计算线程
                 setRot(this.getXRot(), this.getYRot(), this.getZRot());//将所有部件的姿态同步到物理计算线程
                 for (AbstractPart part : this.corePart) part.addAllGeomsToSpace();//将所有部件添加进碰撞空间
+                if(this.level().isClientSide()){
+                    for (AbstractPart part : this.corePart) part.molangScope.getScope().setParent(part.getAttachedEntity().getData(EyelibAttachableData.RENDER_DATA).getScope());
+                }
             }
         }
         this.syncPoseToMainThread();//将实体位姿与物理计算结果同步
         if (!this.level().isClientSide()) {//服务端限定内容
 //            MachineMax.LOGGER.info("Server ID: " + this.getId());
         } else {//客户端限定内容
-
+//            MachineMax.LOGGER.debug("rot:" + corePart.childrenPartSlots.get(0).getChildPart().dbody.getQuaternion().toEulerDegreesZYX());
         }
         super.tick();
     }

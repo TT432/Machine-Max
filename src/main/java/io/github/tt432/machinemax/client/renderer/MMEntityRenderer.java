@@ -42,6 +42,13 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
             renderType = RenderType.entitySolid(part.getTexture());
             animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();
             animationComponent.setup(part.getAniController(), part.getAnimation());
+            float tick = ClientTickHandler.getTick() + pPartialTick;
+            if(part.fatherPart!=null && part.attachedSlot.locatorName == "right_front_wheel"){
+//                System.out.println("startTick:"+cast(animationComponent.getAnimationData("part")));
+            }
+            //解决了部件的scope的parent为null的问题，是由于setParent时实体还没有完成创建
+            //TODO:但发现tickAnimation方法中的cast(component.getAnimationData(animation.name()))
+            //TODO:获得的data的startTick永远与当前tick相同
             infos = BrAnimator.tickAnimation(animationComponent,
                     part.molangScope.getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数
@@ -76,5 +83,9 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
     @Override
     public ResourceLocation getTextureLocation(BasicEntity entity) {
         return entity.corePart.getTexture();
+    }
+
+    private static <T> T cast(Object o) {
+        return (T) o;
     }
 }

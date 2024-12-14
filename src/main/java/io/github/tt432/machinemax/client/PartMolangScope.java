@@ -2,12 +2,14 @@ package io.github.tt432.machinemax.client;
 
 import io.github.tt432.eyelib.capability.EyelibAttachableData;
 import io.github.tt432.eyelib.molang.MolangScope;
+import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.util.physics.math.DMatrix3;
 import io.github.tt432.machinemax.util.physics.math.DQuaternion;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.ode.internal.Rotation;
 import lombok.Getter;
+import org.joml.Quaterniond;
 
 public class PartMolangScope {
 
@@ -27,11 +29,11 @@ public class PartMolangScope {
     @Getter
     private float z=0;
     @Getter
-    private float pitch=0;
+    private float pitch=0;//rotX
     @Getter
-    private float yaw=0;
+    private float yaw=0;//rotY
     @Getter
-    private float roll=0;
+    private float roll=0;//rotZ
 
     public PartMolangScope(AbstractPart part) {
         this.part = part;

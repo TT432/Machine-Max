@@ -66,7 +66,7 @@ public class LocalPhysThread extends AbstractPhysThread {
         for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//遍历线程内所有运动体
             DxBody b = (DxBody) it.next();
             AbstractPart part = b.getAttachedPart();
-            if (part!= null) {
+            if (part!= null && part.molangScope!= null) {
                 part.molangScope.updatePhysMolang();
             }
         }
