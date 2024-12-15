@@ -49,7 +49,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
             renderType = RenderType.entitySolid(part.getTexture());
             animationComponent = RenderData.getComponent(pEntity).getAnimationComponent();//获取已有的动画数据
             animationComponent.setup(part.getAniController(),part.getAnimation());
-            //问题：一个实体的RenderData的getAnimationComponent似乎只能包含一个动画和控制器文件中的内容？
+            //问题：一个实体的RenderData的getAnimationComponent似乎只能包含一个动画和控制器文件中的内容，且不能有效储存多个相同零件各自的动画控制器？
             //需求：同一实体，不同部件能够使用不同的动画和控制器，且动画控制器和动画跟随安装部件的变化而变化。
             //现在的实现：根据部件存储的ResourceLocation，每次渲染时setup各个部件的动画，但这会导致动画停留在0秒时刻，不播放。
             //TODO:可能的解决方案：给各个零部件attach一个RenderData，上面读取时读part的而不是实体的？
