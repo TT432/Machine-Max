@@ -5,7 +5,7 @@
 			"loop": true,
 			"bones": {
 				"Root": {
-					"rotation": ["q.anim_time*72", "q.anim_time*18", "q.anim_time*3.6"]
+					"rotation": ["0","0","0"]
 				}
 			}
 		}
