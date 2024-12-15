@@ -77,7 +77,7 @@ public class PartMolangScope {
         this.worldX = (float) result.get0();
         this.worldY = (float) result.get1();
         this.worldZ = (float) result.get2();
-        if (part.fatherPart == null) {//如果是根部件则不计算相对位置
+        if (part.fatherPart == null || part.dbody == null) {//如果是根部件则不计算相对位置
             this.x = 0;
             this.y = 0;
             this.z = 0;
@@ -91,7 +91,7 @@ public class PartMolangScope {
 
         DMatrix3 temp = new DMatrix3();
         DMatrix3 rot1 = new DMatrix3();
-        if (part.fatherPart != null) {
+        if (part.fatherPart != null && part.dbody !=null) {
             rot1.eqMul(//计算部件相对父部件旋转
                     part.fatherPart.dbody.getRotation().copy().reTranspose(),
                     part.dbody.getRotation().copy());

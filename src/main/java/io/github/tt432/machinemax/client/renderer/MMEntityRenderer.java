@@ -53,6 +53,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
             //需求：同一实体，不同部件能够使用不同的动画和控制器，且动画控制器和动画跟随安装部件的变化而变化。
             //现在的实现：根据部件存储的ResourceLocation，每次渲染时setup各个部件的动画，但这会导致动画停留在0秒时刻，不播放。
             //TODO:可能的解决方案：给各个零部件attach一个RenderData，上面读取时读part的而不是实体的？
+            //TODO:或者，干脆每个部件都作为一个独立实体？
             infos = BrAnimator.tickAnimation(animationComponent,
                     part.molangScope.getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数

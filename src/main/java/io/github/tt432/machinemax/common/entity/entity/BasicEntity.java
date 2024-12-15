@@ -25,7 +25,6 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
     @Getter
     private controlMode mode = BasicEntity.controlMode.GROUND;//采用的控制模式，决定接收的按键输入方案
     public AbstractPart corePart;//实体连接的核心部件
-    public int bodyCount;//实体曾安装过的运动体总数量，用于生成运动体ID
     @Setter
     @Getter
     private volatile boolean controllerHandled;//控制器是否已在单帧物理计算中生效
@@ -49,7 +48,6 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
     public BasicEntity(EntityType<? extends BasicEntity> entityType, Level level) {
         super(entityType, level);
         noPhysics = true;
-        bodyCount = 0;
     }
 
     @Override
