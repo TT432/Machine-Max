@@ -19,18 +19,18 @@ abstract public class AbstractPartSlot {
     @Getter
     private AbstractPart childPart;//槽位保存的子部件
     public String locatorName;//槽位对应的部件定位点名称，需和模型中的locator匹配
-    @Setter
     @Getter
-    protected DVector3 childPartAttachPos;//子代部件相对本部件质心的连接点位置
-    @Setter
+    final protected DVector3 childPartAttachPos;//子代部件相对本部件质心的连接点位置
     @Getter
-    protected DQuaternion childPartAttachRot;//子代部件相对本部件姿态的连接点姿态
+    final protected DQuaternion childPartAttachRot;//子代部件相对本部件姿态的连接点姿态
 
     public List<DJoint> joints = new ArrayList<>();//存储槽位包含的关节约束，以便访问
 
-    public AbstractPartSlot(AbstractPart owner, String locator) {
+    public AbstractPartSlot(AbstractPart owner, String locator, DVector3 attachPos, DQuaternion attachRot) {
         this.slotOwnerPart = owner;
         this.locatorName = locator;
+        this.childPartAttachPos = attachPos;
+        this.childPartAttachRot = attachRot;
     }
 
     /**

@@ -394,7 +394,7 @@ public class DQuaternion implements DQuaternionC {
         double sp = Math.sin(yaw * 0.5);
         double cy = Math.cos(roll * 0.5);
         double sy = Math.sin(roll * 0.5);
-
+        //ZYX顺序
         DQuaternion q = new DQuaternion();
         q.w = cr * cp * cy + sr * sp * sy;
         q.x = sr * cp * cy - cr * sp * sy;

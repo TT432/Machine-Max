@@ -7,7 +7,7 @@ import io.github.tt432.machinemax.common.part.AbstractPart;
  */
 public class UndefinedPartSlot extends AbstractPartSlot {
     public UndefinedPartSlot(AbstractPart owner) {
-        super(owner,null);
+        super(owner,null,null,null);
     }
 
     @Override

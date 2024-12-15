@@ -73,7 +73,7 @@ public class PhysController {
                 DVector3 cf = part.getAerodynamicForceCoef(part);
                 DVector3 v = part.dbody.getLinearVel().copy();
                 part.dbody.vectorFromWorld(v,v);
-                v.scale(v.eqAbs());
+                v.scale(v.copy().eqAbs());
                 F.scale(v);
                 F.scale(cf);
                 part.dbody.addRelForceAtRelPos(F, part.airDragCentre);

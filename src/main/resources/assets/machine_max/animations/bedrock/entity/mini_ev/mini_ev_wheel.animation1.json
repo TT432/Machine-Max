@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"part": {
+		"wheel": {
 			"loop": true,
 			"bones": {
 				"Root": {

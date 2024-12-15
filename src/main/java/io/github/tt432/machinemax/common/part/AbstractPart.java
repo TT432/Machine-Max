@@ -18,7 +18,6 @@ import java.util.List;
 
 public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysParameters {
     //渲染属性
-    public RenderHelper renderHelper;//渲染器，用于部件的渲染，无需操作
     public PartMolangScope molangScope;//用于储存作用域为零部件本身的Molang变量
     //基础属性
     @Getter

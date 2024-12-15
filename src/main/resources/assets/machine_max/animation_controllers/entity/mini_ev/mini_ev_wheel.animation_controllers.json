@@ -1,10 +1,10 @@
 {
 	"format_version": "1.19.0",
 	"animation_controllers": {
-		"part": {
+		"wheel": {
 			"states": {
 				"default": {
-					"animations": ["part"]
+					"animations": ["wheel"]
 				}
 			}
 		}

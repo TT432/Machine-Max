@@ -3,6 +3,7 @@ package io.github.tt432.machinemax.common.phys;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.AbstractWheelPart;
 import io.github.tt432.machinemax.util.data.BodiesSyncData;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.ode.*;
@@ -40,7 +41,7 @@ abstract public class AbstractPhysThread extends Thread {
     protected void init() {
         isPaused = false;
         MachineMax.LOGGER.info("New phys thread started!");
-        world.setGravity(0, -9.81, 0);//设置重力
+        world.setGravity(0, 0, 0);//设置重力
         world.setContactSurfaceLayer(0.01);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
         world.setERP(0.25);
         world.setCFM(0.00005);
@@ -106,29 +107,35 @@ abstract public class AbstractPhysThread extends Thread {
         for (int i = 0; i < contactNum; i++) {
             DContact contact = contacts.get(i);
             if (b1 != null && b1.getAttachedPart().PART_TYPE == AbstractPart.partTypes.WHEEL) {
-                contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1_N | dContactFDir1;
+                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactFDir1;
                 contact.surface.mu = 2000;
-                contact.surface.rho = 0.01;
+                contact.surface.mu2 = 1000;
+                contact.surface.rho = 1 + ((AbstractWheelPart) b1.getAttachedPart()).brakeTorque;
+                contact.surface.rho2 = 0.1;
+                contact.surface.rhoN = 0.1;
                 contact.surface.bounce = 0.0001;
                 contact.surface.bounce_vel = 0.1;
                 DVector3 vf = new DVector3();
-                b1.vectorToWorld(new DVector3(-1, 0, 0), vf);
+                b1.vectorToWorld(new DVector3(1, 0, 0), vf);
                 vf.cross(contact.geom.normal);
                 contact.fdir1.set(vf);
             } else if (b2 != null && b2.getAttachedPart().PART_TYPE == AbstractPart.partTypes.WHEEL) {
-                contact.surface.mode = dContactBounce | dContactRolling | dContactApprox1_N | dContactFDir1;
+                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactFDir1;
                 contact.surface.mu = 2000;
-                contact.surface.rho = 0.01;
+                contact.surface.mu2 = 1000;
+                contact.surface.rho = 1 + ((AbstractWheelPart) b2.getAttachedPart()).brakeTorque;
+                contact.surface.rho2 = 0.1;
+                contact.surface.rhoN = 0.1;
                 contact.surface.bounce = 0.0001;
                 contact.surface.bounce_vel = 0.1;
                 DVector3 vf = new DVector3();
-                b2.vectorToWorld(new DVector3(-1, 0, 0), vf);
+                b2.vectorToWorld(new DVector3(1, 0, 0), vf);
                 vf.cross(contact.geom.normal);
                 contact.fdir1.set(vf);
             } else {
                 contact.surface.mode = dContactBounce | dContactRolling;
                 contact.surface.mu = 5000;
-                contact.surface.rho = 0.1;
+                contact.surface.rho = 1;
                 contact.surface.bounce = 0.0001;
                 contact.surface.bounce_vel = 0.1;
             }

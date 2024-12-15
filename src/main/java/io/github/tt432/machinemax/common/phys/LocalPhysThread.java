@@ -50,7 +50,7 @@ public class LocalPhysThread extends AbstractPhysThread {
      * 更新本维度内每个运动体的位置、姿态、速度和角速度
      */
     protected void syncBodies() {
-        long startTime = System.nanoTime();//记录开始时间
+//        long startTime = System.nanoTime();//记录开始时间
         for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//遍历线程内所有运动体
             DxBody b = (DxBody) it.next();
             if (syncData.get(b.getId()) != null) {//若同步数据包内包含对应运动体的信息
@@ -61,6 +61,7 @@ public class LocalPhysThread extends AbstractPhysThread {
                 b.setAngularVel(data.aVel());//同步角速度
             }
         }
+//        System.out.println("Sync bodies time: " + (System.nanoTime() - startTime));
     }
     protected void updateMolang(){
         for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//遍历线程内所有运动体
