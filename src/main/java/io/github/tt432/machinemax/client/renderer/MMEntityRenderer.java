@@ -51,11 +51,6 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
             if (!animationComponent.serializable()) animationComponent.setup(
                     part.getAniController(),
                     part.getAnimation());
-            //TODO:车轮动画的startTick与当前tick相同，但偶尔也会是-1
-            float tick = ClientTickHandler.getTick() + pPartialTick;
-            //解决了部件的scope的parent为null的问题，是由于setParent时实体还没有完成创建
-            //TODO:但发现tickAnimation方法中的cast(component.getAnimationData(animation.name()))
-            //TODO:获得的data的车轮动画startTick永远与当前tick相同
             infos = BrAnimator.tickAnimation(animationComponent,
                     part.molangScope.getScope(), ClientTickHandler.getTick() + pPartialTick);
             renderParams = new RenderParams(//渲染参数
