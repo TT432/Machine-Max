@@ -41,25 +41,25 @@ public class TestCarChassisPart extends AbstractPart {
                 case 0://右前轮
                     this.childrenPartSlots.set(0, new SteeringWheelPartSlot(this, "right_front_wheel",
                             new DVector3(-17.0569 / 16, 0.7075 / 16, 19.0756 / 16),
-                            DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 100));
+                            DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 1000));
                     this.childrenPartSlots.get(0).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 1://左前轮
                     this.childrenPartSlots.set(1, new SteeringWheelPartSlot(this, "left_front_wheel",
                             new DVector3(17.0569 / 16, 0.7075 / 16, 19.0756 / 16),
-                            DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 100));
+                            DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 1000));
                     this.childrenPartSlots.get(1).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 2://左后轮
                     this.childrenPartSlots.set(2, new WheelPartSlot(this, "left_back_wheel",
                             new DVector3(17.0569 / 16, 0.7075 / 16, -26.9244 / 16),
-                            DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 100));
+                            DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 1000));
                     this.childrenPartSlots.get(2).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 3://右后轮
                     this.childrenPartSlots.set(3, new WheelPartSlot(this, "right_back_wheel",
                             new DVector3(-17.0569 / 16, 0.7075 / 16, -26.9244 / 16),
-                            DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 100));
+                            DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 1000));
                     this.childrenPartSlots.get(3).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
                     break;
                 case 4://车壳
@@ -133,12 +133,12 @@ public class TestCarChassisPart extends AbstractPart {
     @Override
     public DVector3 getAerodynamicForceCoef(AbstractPart part) {
         //气动力相关系数
-        double BASIC_AIRDRAG_COEF_ZP = 1;//空气阻力系数(前向)，一般较小
-        double BASIC_AIRDRAG_COEF_ZN = 1;//空气阻力系数(后向)，一般较小
-        double BASIC_AIRDRAG_COEF_XP = 2;//空气阻力系数(左向)
-        double BASIC_AIRDRAG_COEF_XN = 2;//空气阻力系数(右向)
-        double BASIC_AIRDRAG_COEF_YP = 0;//空气阻力系数(上向)
-        double BASIC_AIRDRAG_COEF_YN = 10;//空气阻力系数(下向)
+        double BASIC_AIRDRAG_COEF_ZP = 0.1;//空气阻力系数(前向)，一般较小
+        double BASIC_AIRDRAG_COEF_ZN = 0.1;//空气阻力系数(后向)，一般较小
+        double BASIC_AIRDRAG_COEF_XP = 0.2;//空气阻力系数(左向)
+        double BASIC_AIRDRAG_COEF_XN = 0.2;//空气阻力系数(右向)
+        double BASIC_AIRDRAG_COEF_YP = 0.4;//空气阻力系数(上向)
+        double BASIC_AIRDRAG_COEF_YN = 0.4;//空气阻力系数(下向)
         double BASIC_AIRLIFT_COEF_Z = 0;//空气升力系数(前向)，形状带来的额外升力
         double BASIC_AIRLIFT_COEF_X = 0;//空气升力系数(水平向)，一般为0
         double BASIC_AIRLIFT_COEF_Y = 0;//空气升力系数(垂向)，一般为0

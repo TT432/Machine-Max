@@ -3,20 +3,13 @@
 	"animations": {
 		"wheel": {
 			"loop": true,
-			"animation_length": 10,
 			"bones": {
 				"Root": {
-					"rotation": {
-						"0.0":[0,90,0],
-						"10.0":[7200,3600,360]
-					},
+					"rotation": ["variable.part_pitch", "variable.part_yaw+180", "variable.part_roll"],
 					"position": ["16*variable.part_rel_x", "16*variable.part_rel_y", "16*variable.part_rel_z"]
 				},
 				"Wheel": {
-					"rotation": {
-						"0.0":[0,0,45],
-						"10.0":[7200,3600,360]
-					}
+					"rotation": [0, 0, 0]
 				}
 			}
 		}

@@ -33,6 +33,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     protected double maxHealth = 1;//部件生命值上限
     public partTypes PART_TYPE;//部件类型
     //模块化属性
+    //TODO:模块脱落的血量阈值
     public AbstractPart fatherPart;//连接的上级部件
     public AbstractPartSlot attachedSlot;//此部件被安装于的槽位
     public DVector3 attachPoint = new DVector3(0, 0, 0);//本部件重心与父节点连接点的相对位置，即坐标原点与被连接点的相对位置

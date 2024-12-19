@@ -5,6 +5,7 @@ import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ChunkTicketLevelUpdatedEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -48,9 +49,18 @@ public class PhysThreadController {
 
         }
 
-        @SubscribeEvent//TODO:根据区块方块分布更新物理演算用地形碰撞
-        public static void phyThreadMapUpdate(ChunkTicketLevelUpdatedEvent event) {
+        @SubscribeEvent//加载区块时创建或加载地形碰撞箱
+        public static void phyThreadMapUpdate(ChunkEvent.Load event) {
+//            TerrainBuilder.build(event.getChunk());
+            //TODO:根据区块变化更新区块储存的Trimesh数据，以免无限创建新几何体导致内存溢出
+            //TODO:优化碰撞时间效率
+            //TODO:优化内存占用
+            //似乎没有必要了，现场创建Box的效果也不错
+        }
 
+        @SubscribeEvent//卸载区块时销毁地形碰撞箱，保存构造数据
+        public static void phyThreadMapUnload(ChunkEvent.Unload event) {
+            //TODO:随区块卸载销毁Trimesh几何体，但保留构造数据
         }
     }
 }

@@ -69,10 +69,11 @@ public class PhysController {
     protected void applyAeroDynamicForces() {
         if (controlledEntity.corePart != null) {
             for (AbstractPart part : controlledEntity.corePart) {
-                DVector3 F = new DVector3(-0.5,-0.5,-0.5);
+                DVector3 F = new DVector3(-0.5, -0.5, -0.5);
                 DVector3 cf = part.getAerodynamicForceCoef(part);
-                DVector3 v = part.dbody.getLinearVel().copy();
-                part.dbody.vectorFromWorld(v,v);
+                DVector3 v = new DVector3();
+                part.dbody.getRelPointVel(part.airDragCentre, v);//获取绝对速度
+                part.dbody.vectorFromWorld(v.copy(), v);//转为自体坐标系
                 v.scale(v.copy().eqAbs());
                 F.scale(v);
                 F.scale(cf);

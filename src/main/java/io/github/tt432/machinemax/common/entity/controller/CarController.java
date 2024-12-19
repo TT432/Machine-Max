@@ -10,13 +10,14 @@ import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.util.MMMath;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.ode.DAMotorJoint;
+import io.github.tt432.machinemax.util.physics.ode.DBody;
 import io.github.tt432.machinemax.util.physics.ode.DHinge2Joint;
 
 import static java.lang.Math.*;
 
 public class CarController extends PhysController {
     //TODO:把这些参数挪到其他地方
-    public double MAX_POWER = 20000;//最大总功率30kW
+    public double MAX_POWER = 30000;//最大总功率30kW
     public double MAX_FORWARD_RPM;//最大前进发动机转速，自动计算，取决于最大前进速度
     public double MAX_BACKWARD_RPM;//最大倒车发动机转速，自动计算，取决于最大倒车速度
     public double IDLE_RPM;//发动机待机转速，决定起步加减速能力
@@ -48,18 +49,24 @@ public class CarController extends PhysController {
         //驱动力
         AbstractPartSlot slot;
         DHinge2Joint joint;
-        slot = controlledEntity.corePart.childrenPartSlots.get(0);
-        joint = (DHinge2Joint) slot.joints.getFirst();
-        joint.addTorques(0, -power / 2 / (abs(joint.getBody(1).getAngularVel().get0()) + Math.PI/6));//电机驱动力
-        slot = controlledEntity.corePart.childrenPartSlots.get(1);
-        joint = (DHinge2Joint) slot.joints.getFirst();
-        joint.addTorques(0, -power / 2 / (abs(joint.getBody(1).getAngularVel().get0()) + Math.PI/6));//电机驱动力
+        DVector3 omega;
+        double torque;
+        for (int i = 1; i < 4; i++){
+            slot = controlledEntity.corePart.childrenPartSlots.get(i);
+            joint = (DHinge2Joint) slot.joints.getFirst();
+            omega = joint.getBody(1).getAngularVel().copy();//获取轮胎角速度
+            joint.getBody(1).vectorFromWorld(omega, omega);//转换为自体坐标
+            torque = -power / 2 / (abs(omega.get0()) + Math.PI/12);
+            joint.addTorques(0, torque);//电机驱动力
+        }
         //刹车力
         for (int i = 0; i < 4; i++) {
             slot = controlledEntity.corePart.childrenPartSlots.get(i);
-            joint = (DHinge2Joint) slot.joints.getFirst();
-//            double brake_torque = brake * MMMath.sigmoidSignum(joint.getBody(1).getAngularVel().get0()*signum(slot.getChildPartAttachPos().get0()));
-//            joint.addTorques(0, brake_torque);//刹车制动力矩
+//            joint = (DHinge2Joint) slot.joints.getFirst();
+//            omega = joint.getBody(1).getAngularVel().copy();//获取轮胎角速度
+//            joint.getBody(1).vectorFromWorld(omega, omega);//转换为自体坐标
+//            torque = brake * MMMath.sigmoidSignum(omega.get0()*signum(slot.getChildPartAttachPos().get0()));
+//            joint.addTorques(0, torque);//刹车制动力矩
             ((AbstractWheelPart)slot.getChildPart()).brakeTorque = brake;
         }
     }
@@ -94,8 +101,9 @@ public class CarController extends PhysController {
         //目标输出功率
         double target_power = MAX_POWER * rawMoveInput[2] / 100;
         double target_brake;
-        DVector3 v = controlledEntity.corePart.dbody.getLinearVel().copy();
-        controlledEntity.corePart.dbody.vectorFromWorld(v, v);
+        DVector3 vAbs = controlledEntity.corePart.dbody.getLinearVel().copy();
+        DVector3 v = new DVector3();
+        controlledEntity.corePart.dbody.vectorFromWorld(vAbs, v);
         if (v.get2() >= -0.5 && rawMoveInput[2] > 0 && moveInputConflict[2] == 0) {//未在后退时按w则前进
             target_brake = 0;
         } else if (v.get2() > 0 && rawMoveInput[2] < 0 && moveInputConflict[2] == 0) {//前进时按s则刹车
