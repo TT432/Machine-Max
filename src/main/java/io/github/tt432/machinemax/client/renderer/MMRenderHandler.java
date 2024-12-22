@@ -15,5 +15,6 @@ public class MMRenderHandler {
     @SubscribeEvent//注册每个实体渲染器
     public static void onEntityRendererRegistry(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(MMEntities.TEST_CAR_ENTITY.get(), MMEntityRenderer::new);
+        event.registerEntityRenderer(MMEntities.AE86_ENTITY.get(), MMEntityRenderer::new);
     }
 }

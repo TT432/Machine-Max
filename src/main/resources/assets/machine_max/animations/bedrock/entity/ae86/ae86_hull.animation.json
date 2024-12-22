@@ -1,0 +1,13 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"hull": {
+			"loop": true,
+			"bones": {
+				"Hull": {
+					"rotation": [0,0,0]
+				}
+			}
+		}
+	}
+}

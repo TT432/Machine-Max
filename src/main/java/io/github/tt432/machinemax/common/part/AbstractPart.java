@@ -1,6 +1,5 @@
 package io.github.tt432.machinemax.common.part;
 
-import io.github.tt432.eyelib.client.render.RenderHelper;
 import io.github.tt432.machinemax.client.PartMolangScope;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
@@ -124,7 +123,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
         }
     }
 
-    public void removeAllGeomsInSpace() {
+    public void removeAllGeomsFromSpace() {
         for (DGeom geom : dgeoms) {
             ((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().space.geomRemoveEnQueue(geom);
         }

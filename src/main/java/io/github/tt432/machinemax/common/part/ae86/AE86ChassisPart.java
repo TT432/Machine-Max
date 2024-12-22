@@ -1,8 +1,12 @@
-package io.github.tt432.machinemax.common.part;
+package io.github.tt432.machinemax.common.part.ae86;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.part.slot.*;
+import io.github.tt432.machinemax.common.part.AbstractPart;
+import io.github.tt432.machinemax.common.part.slot.HullPartSlot;
+import io.github.tt432.machinemax.common.part.slot.SteeringWheelPartSlot;
+import io.github.tt432.machinemax.common.part.slot.UndefinedPartSlot;
+import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
 import io.github.tt432.machinemax.util.physics.math.DQuaternion;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.math.DVector3C;
@@ -12,12 +16,12 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 
-public class TestCarChassisPart extends AbstractPart {
+public class AE86ChassisPart extends AbstractPart {
     //模型资源参数
-    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/mini_ev.png");
-    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_chassis");
-    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_chassis.animation");
-    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_chassis.animation_controllers");
+    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/ae86.png");
+    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_chassis");
+    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_chassis.animation");
+    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_chassis.animation_controllers");
     //属性参数
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
@@ -26,7 +30,7 @@ public class TestCarChassisPart extends AbstractPart {
     public static final DVector3C airDragCentre = new DVector3(0, 0, -0.1);//空气阻力/升力作用点(相对重心位置)
     public static final DVector3C waterDragCentre = new DVector3(0, 0, -0.1);//水阻力/升力作用点(相对重心位置)
 
-    public TestCarChassisPart(BasicEntity attachedEntity) {
+    public AE86ChassisPart(BasicEntity attachedEntity) {
         super(attachedEntity);
         //模块化参数
         PART_TYPE = partTypes.CORE;
@@ -40,49 +44,47 @@ public class TestCarChassisPart extends AbstractPart {
             switch (i) {
                 case 0://右前轮
                     this.childrenPartSlots.set(0, new SteeringWheelPartSlot(this, "right_front_wheel",
-                            new DVector3(-17.0569 / 16, 0.7075 / 16, 19.0756 / 16),
+                            new DVector3((double) -28 / 16, (double) -14 / 16, (double) 34 / 16),
                             DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 1000));
-                    this.childrenPartSlots.get(0).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
+                    this.childrenPartSlots.get(0).attachPart(new AE86WheelPart(this.getAttachedEntity()));
                     break;
                 case 1://左前轮
                     this.childrenPartSlots.set(1, new SteeringWheelPartSlot(this, "left_front_wheel",
-                            new DVector3(17.0569 / 16, 0.7075 / 16, 19.0756 / 16),
+                            new DVector3((double) 28 / 16, (double) -14 / 16, (double) 34 / 16),
                             DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 1000));
-                    this.childrenPartSlots.get(1).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
+                    this.childrenPartSlots.get(1).attachPart(new AE86WheelPart(this.getAttachedEntity()));
                     break;
                 case 2://左后轮
                     this.childrenPartSlots.set(2, new WheelPartSlot(this, "left_back_wheel",
-                            new DVector3(17.0569 / 16, 0.7075 / 16, -26.9244 / 16),
+                            new DVector3((double) 28 / 16, (double) -14 / 16, (double) -40 / 16),
                             DQuaternion.fromEulerDegrees(0, 180, 0), 50000, 1000));
-                    this.childrenPartSlots.get(2).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
+                    this.childrenPartSlots.get(2).attachPart(new AE86WheelPart(this.getAttachedEntity()));
                     break;
                 case 3://右后轮
                     this.childrenPartSlots.set(3, new WheelPartSlot(this, "right_back_wheel",
-                            new DVector3(-17.0569 / 16, 0.7075 / 16, -26.9244 / 16),
+                            new DVector3((double) -28 / 16, (double) -14 / 16, (double) -40 / 16),
                             DQuaternion.fromEulerDegrees(0, 0, 0), 50000, 1000));
-                    this.childrenPartSlots.get(3).attachPart(new TestCarWheelPart(this.getAttachedEntity()));
+                    this.childrenPartSlots.get(3).attachPart(new AE86WheelPart(this.getAttachedEntity()));
                     break;
                 case 4://车壳
                     this.childrenPartSlots.set(4, new HullPartSlot(this, "hull",
                             new DVector3(0, 10D / 16, -4D / 16),
                             DQuaternion.fromEulerDegrees(0, 0, 0)));
-                    this.childrenPartSlots.get(4).attachPart(new TestCarHullPart(this.getAttachedEntity()));
+                    this.childrenPartSlots.get(4).attachPart(new Ae86HullPart(this.getAttachedEntity()));
                     break;
                 default:
                     break;//什么也不做
             }
         }
         //构建物理碰撞模型
-        dmass.setBoxTotal(BASIC_MASS, 40D / 16, 6D / 16, 72D / 16);
+        dmass.setBoxTotal(BASIC_MASS, 40D / 16, 19D / 16, 103D / 16);
         dbody.setMass(dmass);
 
         dgeoms = new DxGeom[1];
 
-        dgeoms[0] = OdeHelper.createBox(40D / 16, 6D / 16, 72D / 16);
-        //dgeoms[0]=OdeHelper.createBox(40D/16,35D/16,72D/16);
+        dgeoms[0] = OdeHelper.createBox(40D / 16, 19D / 16, 103D / 16);
         dgeoms[0].setBody(dbody);
-        dgeoms[0].setOffsetPosition(0, (3.5D) / 16, 4D / 16);//对齐碰撞体形状与模型形状
-        //dgeoms[0].setOffsetPosition(0,(3.5D+35D/2)/16,-4D/16);//对齐碰撞体形状与模型形状
+        dgeoms[0].setOffsetPosition(0, -2.5D / 16, -2.5D / 16);//对齐碰撞体形状与模型形状
     }
 
     @Override

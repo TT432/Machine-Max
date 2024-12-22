@@ -110,7 +110,7 @@ dependencies {
     implementation "io.github.tt432:eyelib:21.1.5"//基岩版模型、动画、控制器支持
     jarJar(group: 'io.github.tt432', name: 'eyelib', version: '[21.1.5,22.0)')
     implementation "org.openjdk.jmh:jmh-core:1.19"
-
+    implementation files('libs/spark_core-1.21.1-1.067.jar')
     implementation "org.openjdk.jmh:jmh-generator-annprocess:1.19"
 
 }

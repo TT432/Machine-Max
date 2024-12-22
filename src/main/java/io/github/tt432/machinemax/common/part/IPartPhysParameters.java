@@ -9,12 +9,12 @@ public interface IPartPhysParameters {
      */
     default DVector3 getAerodynamicForceCoef(AbstractPart part) {
         //气动力相关系数
-        double BASIC_AIRDRAG_COEF_ZP=0.1;//空气阻力系数(前向)，一般较小
-        double BASIC_AIRDRAG_COEF_ZN=0.1;//空气阻力系数(后向)，一般较小
-        double BASIC_AIRDRAG_COEF_XP=0.1;//空气阻力系数(左向)
-        double BASIC_AIRDRAG_COEF_XN=0.1;//空气阻力系数(右向)
-        double BASIC_AIRDRAG_COEF_YP=0.1;//空气阻力系数(上向)
-        double BASIC_AIRDRAG_COEF_YN=0.1;//空气阻力系数(下向)
+        double BASIC_AIRDRAG_COEF_ZP=0.01;//空气阻力系数(前向)，一般较小
+        double BASIC_AIRDRAG_COEF_ZN=0.01;//空气阻力系数(后向)，一般较小
+        double BASIC_AIRDRAG_COEF_XP=0.01;//空气阻力系数(左向)
+        double BASIC_AIRDRAG_COEF_XN=0.01;//空气阻力系数(右向)
+        double BASIC_AIRDRAG_COEF_YP=0.01;//空气阻力系数(上向)
+        double BASIC_AIRDRAG_COEF_YN=0.01;//空气阻力系数(下向)
         double BASIC_AIRLIFT_COEF_Z =0;//空气升力系数(前向)，形状带来的额外升力
         double BASIC_AIRLIFT_COEF_X =0;//空气升力系数(水平向)，一般为0
         double BASIC_AIRLIFT_COEF_Y =0;//空气升力系数(垂向)，一般为0

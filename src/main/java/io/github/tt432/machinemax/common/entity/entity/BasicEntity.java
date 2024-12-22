@@ -158,15 +158,15 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
     }
 
     @Override
-    public void remove(RemovalReason reason) {
+    public void onRemovedFromLevel() {
         if (this.corePart != null) {
             for (AbstractPart part : this.corePart) {
                 part.dbody.enable();
-                part.removeAllGeomsInSpace();
+                part.removeAllGeomsFromSpace();
                 part.removeBodyInWorld();
             }
         }
-        super.remove(reason);
+        super.onRemovedFromLevel();
     }
 
     @Override

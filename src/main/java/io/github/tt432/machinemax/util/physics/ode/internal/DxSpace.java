@@ -591,7 +591,7 @@ public abstract class DxSpace extends DxGeom implements DSpace {
 	 */
 	public void handleGeomAddAndRemove(){
 		while(!geomsToBeRemoved.isEmpty()){
-			this.remove(geomsToBeRemoved.remove());
+			geomsToBeRemoved.remove().destroy();
 		}
 		while(!geomsToBeAdded.isEmpty()){
 			this.add(geomsToBeAdded.remove());

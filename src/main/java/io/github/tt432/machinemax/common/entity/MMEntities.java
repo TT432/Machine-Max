@@ -1,6 +1,7 @@
 package io.github.tt432.machinemax.common.entity;
 
 import io.github.tt432.machinemax.MachineMax;
+import io.github.tt432.machinemax.common.entity.entity.AE86Entity;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
 import net.minecraft.core.registries.Registries;
@@ -24,5 +25,11 @@ public class MMEntities {
                     () -> EntityType.Builder.of(TestCarEntity::new, MobCategory.MISC)
                             .sized(2f,2f)
                             .build("test_car"));
+    //测试用越野车辆
+    public static final Supplier<EntityType<AE86Entity>> AE86_ENTITY =
+            ENTITIES.register("ae86",
+                    () -> EntityType.Builder.of(AE86Entity::new, MobCategory.MISC)
+                            .sized(2f,2f)
+                            .build("ae86"));
     //以上为注册的实体列表
 }

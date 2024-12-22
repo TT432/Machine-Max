@@ -1,21 +1,20 @@
-package io.github.tt432.machinemax.common.part;
+package io.github.tt432.machinemax.common.part.ae86;
 
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.math.DVector3C;
 import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
 import io.github.tt432.machinemax.util.physics.ode.internal.DxGeom;
 import net.minecraft.resources.ResourceLocation;
 
-public class TestCarHullPart extends AbstractPart {
+public class Ae86HullPart extends AbstractPart {
     //模型资源参数
-    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/mini_ev.png");
-    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull");
-//    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/kv2.png");
-//    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/kv2/kv2_turret");
-    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull.animation");
-    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/mini_ev/mini_ev_hull.animation_controllers");
+    public static final ResourceLocation PART_TEXTURE = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "textures/entity/ae86.png");
+    public static final ResourceLocation PART_MODEL = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_hull");
+    public static final ResourceLocation PART_ANIMATION = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_hull.animation");
+    public static final ResourceLocation PART_ANI_CONTROLLER = ResourceLocation.fromNamespaceAndPath(MachineMax.MOD_ID, "entity/ae86/ae86_hull.animation_controllers");
     //属性参数
     public static final double BASIC_HEALTH = 20;
     public static final double BASIC_ARMOR = 1;
@@ -24,7 +23,7 @@ public class TestCarHullPart extends AbstractPart {
     public static final DVector3C airDragCentre = new DVector3(-0.1, 0, 0);//空气阻力/升力作用点(相对重心位置)
     public static final DVector3C waterDragCentre = new DVector3(-0.1, 0, 0);//水阻力/升力作用点(相对重心位置)
 
-    public TestCarHullPart(BasicEntity attachedEntity) {
+    public Ae86HullPart(BasicEntity attachedEntity) {
         super(attachedEntity);
         //模块化参数
         PART_TYPE = partTypes.HULL;
@@ -33,13 +32,13 @@ public class TestCarHullPart extends AbstractPart {
         dbody.setMass(dmass);
         dgeoms = new DxGeom[2];
 
-        dgeoms[0] = OdeHelper.createBox(40D / 16, 21D / 16, 72D / 16);
+        dgeoms[0] = OdeHelper.createBox(40D / 16, 16D / 16, 65D / 16);
         dgeoms[0].setBody(dbody);
-        dgeoms[0].setOffsetPosition(0, 3D / 16, -4D / 16);//对齐碰撞体形状与模型形状
+        dgeoms[0].setOffsetPosition(0, 1D / 16, -13.5D / 16);//对齐碰撞体形状与模型形状
 
-        dgeoms[1] = OdeHelper.createBox(40D / 16, 14D / 16, 50D / 16);
+        dgeoms[1] = OdeHelper.createBox(33D / 16, 16D / 16, 27D / 16);
         dgeoms[1].setBody(dbody);
-        dgeoms[1].setOffsetPosition(0, 20.5D / 16, -14D / 16);//对齐碰撞体形状与模型形状
+        dgeoms[1].setOffsetPosition(0, 8.8576D / 16, -7.5674D / 16);//对齐碰撞体形状与模型形状
     }
 
     @Override

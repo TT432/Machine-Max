@@ -10,12 +10,14 @@ import io.github.tt432.machinemax.util.physics.ode.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static io.github.tt432.machinemax.util.physics.ode.OdeConstants.*;
 import static io.github.tt432.machinemax.util.physics.ode.OdeHelper.areConnectedExcluding;
+import static io.github.tt432.machinemax.util.physics.ode.OdeMath.dxSafeNormalize3;
 
 abstract public class AbstractPhysThread extends Thread {
     public final Level level;//物理计算线程与每个维度绑定，即每个维度都有一个物理计算线程
@@ -45,7 +47,7 @@ abstract public class AbstractPhysThread extends Thread {
         isPaused = false;
         MachineMax.LOGGER.info("New phys thread started!");
         world.setGravity(0, -9.81, 0);//设置重力
-        world.setContactSurfaceLayer(0.01);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
+//        world.setContactSurfaceLayer(0.01);//最大陷入深度，有助于防止抖振(虽然本来似乎也没)
         world.setERP(0.3);
         world.setCFM(0.00005);
         world.setAutoDisableFlag(true);//设置静止物体自动休眠以节约性能
@@ -92,19 +94,19 @@ abstract public class AbstractPhysThread extends Thread {
         for (DGeom geom : space.getGeoms()) {
             if (geom.getBody() != null) {
                 DAABBC aabb = geom.getAABB();
-                int minX = (int) Math.floor(aabb.getMin0());
-                int maxX = (int) Math.ceil(aabb.getMax0());
+                int minX = (int) Math.floor(aabb.getMin0() - 1);
+                int maxX = (int) Math.ceil(aabb.getMax0()) + 1;
                 int minY = (int) Math.floor(aabb.getMin1());
                 int maxY = (int) Math.ceil(aabb.getMax1());
-                int minZ = (int) Math.floor(aabb.getMin2());
-                int maxZ = (int) Math.ceil(aabb.getMax2());
+                int minZ = (int) Math.floor(aabb.getMin2() - 1);
+                int maxZ = (int) Math.ceil(aabb.getMax2() + 1);
 
                 for (int x = minX; x <= maxX; x++) {
                     for (int y = minY; y <= maxY; y++) {
                         for (int z = minZ; z <= maxZ; z++) {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = level.getBlockState(pos);
-                            if (!state.isAir() && !state.canBeReplaced()) {
+                            if (!state.getCollisionShape(level, pos).isEmpty()) {
                                 // 如果块不是空气或可替换方块，记录方块的状态和坐标
                                 terrainCollisionBlocks.put(pos, state);
                             }
@@ -115,18 +117,18 @@ abstract public class AbstractPhysThread extends Thread {
         }
         int blockNum = terrainCollisionBlocks.size();
         if (blockNum > 0) {
-            if(terrainGeoms.size() < blockNum){//所需方块数量大于现有碰撞体数量时，创建新的碰撞体
+            if (terrainGeoms.size() < blockNum) {//所需方块数量大于现有碰撞体数量时，创建新的碰撞体
                 int i = blockNum - terrainGeoms.size();
                 DGeom[] geoms = new DGeom[i];
                 for (int j = 0; j < i; j++) {
                     geoms[j] = OdeHelper.createBox(space, 1, 1, 1);
-                    geoms[j].setPosition(0,-512,0);
+                    geoms[j].setPosition(0, -512, 0);
                     terrainGeoms.add(geoms[j]);
                 }
             }
             int i = 0;
-            for(BlockPos pos : terrainCollisionBlocks.keySet()){
-                terrainGeoms.get(i).setPosition(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5);
+            for (BlockPos pos : terrainCollisionBlocks.keySet()) {
+                terrainGeoms.get(i).setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 i++;
             }
         }
@@ -154,34 +156,39 @@ abstract public class AbstractPhysThread extends Thread {
         }
         int contactNum = 64;
         DContactBuffer contacts = new DContactBuffer(contactNum);   // up to MAX_CONTACTS contacts per box-box
-        for (int i = 0; i < contactNum; i++) {
+        int numc = OdeHelper.collide(o1, o2, contactNum, contacts.getGeomBuffer());
+        for (int i = 0; i <= numc; i++) {
             DContact contact = contacts.get(i);
             if (b1 != null && b1.getAttachedPart().PART_TYPE == AbstractPart.partTypes.WHEEL) {
-                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactFDir1;
-                contact.surface.mu = 4000;
-                contact.surface.mu2 = 1000;
-                contact.surface.rho = 1 + ((AbstractWheelPart) b1.getAttachedPart()).brakeTorque;
-                contact.surface.rho2 = 0.1;
-                contact.surface.rhoN = 0.1;
-                contact.surface.bounce = 0.0001;
-                contact.surface.bounce_vel = 0.1;
+                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactApprox1 | dContactFDir1;
                 DVector3 vf = new DVector3(0, 0, 1);
                 b1.vectorToWorld(new DVector3(1, 0, 0), vf);
                 vf.cross(contact.geom.normal);
+                dxSafeNormalize3(vf);
                 contact.fdir1.set(vf);
-            } else if (b2 != null && b2.getAttachedPart().PART_TYPE == AbstractPart.partTypes.WHEEL) {
-                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactFDir1;
-                contact.surface.mu = 4000;
-                contact.surface.mu2 = 1000;
-                contact.surface.rho = 1 + ((AbstractWheelPart) b2.getAttachedPart()).brakeTorque;
-                contact.surface.rho2 = 0.1;
-                contact.surface.rhoN = 0.1;
+                contact.surface.mu = 0.5;//侧向滑动摩擦系数
+                contact.surface.mu2 = 2;//前向滑动摩擦系数
+                contact.surface.rho = 0.01;//前向滚动摩擦系数
+                contact.surface.rho2 = 0.01;
+                contact.surface.rhoN = 0.01;
                 contact.surface.bounce = 0.0001;
                 contact.surface.bounce_vel = 0.1;
+
+            } else if (b2 != null && b2.getAttachedPart().PART_TYPE == AbstractPart.partTypes.WHEEL) {
+                contact.surface.mode = dContactMu2 | dContactBounce | dContactRolling | dContactApprox1 | dContactFDir1;
                 DVector3 vf = new DVector3(0, 0, 1);
                 b2.vectorToWorld(new DVector3(1, 0, 0), vf);
                 vf.cross(contact.geom.normal);
+                dxSafeNormalize3(vf);
                 contact.fdir1.set(vf);
+                contact.surface.mu = 0.5;//侧向滑动摩擦系数
+                contact.surface.mu2 = 2;//前向滑动摩擦系数
+                contact.surface.rho = 0.01;//前向滚动摩擦系数
+                contact.surface.rho2 = 0.01;
+                contact.surface.rhoN = 0.01;
+                contact.surface.bounce = 0.0001;
+                contact.surface.bounce_vel = 0.1;
+
             } else {
                 contact.surface.mode = dContactBounce | dContactRolling;
                 contact.surface.mu = 500;
@@ -190,7 +197,6 @@ abstract public class AbstractPhysThread extends Thread {
                 contact.surface.bounce_vel = 0.1;
             }
         }
-        int numc = OdeHelper.collide(o1, o2, contactNum, contacts.getGeomBuffer());
         if (numc != 0) {
             for (int i = 0; i < numc; i++) {
                 DJoint c = OdeHelper.createContactJoint(world, contactGroup, contacts.get(i));

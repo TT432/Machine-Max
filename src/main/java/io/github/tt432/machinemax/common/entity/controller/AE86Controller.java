@@ -1,37 +1,32 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.common.part.AbstractWheelPart;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.util.MMMath;
 import io.github.tt432.machinemax.util.physics.math.DVector3;
 import io.github.tt432.machinemax.util.physics.ode.DAMotorJoint;
-import io.github.tt432.machinemax.util.physics.ode.DBody;
 import io.github.tt432.machinemax.util.physics.ode.DHinge2Joint;
 
 import static java.lang.Math.*;
 
-public class CarController extends PhysController {
-    //TODO:把这些参数挪到其他地方
-    public double MAX_POWER = 30000;//最大总功率30kW
+public class AE86Controller extends PhysController {
+    public double MAX_POWER = 100000;//最大总功率100kW
     public double MAX_FORWARD_RPM;//最大前进发动机转速，自动计算，取决于最大前进速度
     public double MAX_BACKWARD_RPM;//最大倒车发动机转速，自动计算，取决于最大倒车速度
     public double IDLE_RPM;//发动机待机转速，决定起步加减速能力
-    public double MAX_BRAKE_POWER = 500;//最大单轮刹车力矩500Nm
-    public double ENG_ACC = 0.05D;//引擎加速系数
-    public double ENG_DEC = 0.15D;//引擎减速系数
+    public double MAX_BRAKE_POWER = 600;//最大单轮刹车力矩500Nm
+    public double ENG_ACC = 0.02D;//引擎加速系数
+    public double ENG_DEC = 0.05D;//引擎减速系数
     public double STEER_T = 0.25D;//达到满舵所需时间
-    public double MIN_TURNING_R = 4;//最小转弯半径
+    public double MIN_TURNING_R = 7;//最小转弯半径
 
     public double power = 0D;//推进功率
     public double brake = 0D;
     public double turning_input = 0D;
 
-    public CarController(BasicEntity entity) {
+    public AE86Controller(BasicEntity entity) {
         super(entity);
     }
 
@@ -51,12 +46,12 @@ public class CarController extends PhysController {
         DHinge2Joint joint;
         DVector3 omega;
         double torque;
-        for (int i = 1; i < 2; i++){
+        for (int i = 1; i < 4; i++){
             slot = controlledEntity.corePart.childrenPartSlots.get(i);
             joint = (DHinge2Joint) slot.joints.getFirst();
             omega = joint.getBody(1).getAngularVel().copy();//获取轮胎角速度
             joint.getBody(1).vectorFromWorld(omega, omega);//转换为自体坐标
-            torque = -power / 2 / (abs(omega.get0()) + Math.PI/12);
+            torque = -power / 4 / (abs(omega.get0()) + Math.PI/12);
             joint.addTorques(0, torque);//电机驱动力
         }
         //刹车力
@@ -86,10 +81,10 @@ public class CarController extends PhysController {
                 m2 = - hinge.getAngle1();
             }else {//由转弯半径分别计算各个轮胎的最大转角(阿克曼转向)
                 double lr_half;
-                if(i==0||i==3) lr_half = 17.0569/16;
-                else lr_half = -17.0569/16;
+                if(i==0||i==3) lr_half = (double) 28 /16;
+                else lr_half = (double) -28 /16;
                 lr_half*=signum(-turning_input);
-                double lwb = (19.0756+26.9244)/16;
+                double lwb = (double) (34 + 40) /16;
                 m2 = atan(lwb/(MIN_TURNING_R/-turning_input+lr_half)) - hinge.getAngle1();
             }
             motor.setParamVel(m2);

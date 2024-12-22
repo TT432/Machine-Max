@@ -44,6 +44,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
         AnimationComponent animationComponent;
         BoneRenderInfos infos;
         RenderParams renderParams;
+        //TODO:在renderOnLocator执行过程中且子部件中也有locator时，似乎locator列表会发生改变导致forEach期间报错
         RenderHelper renderHelper = Eyelib.getRenderHelper();
         for (AbstractPart part : pEntity.corePart) {//遍历根部件及其所有子孙部件
             renderType = RenderType.entitySolid(part.getTexture());
