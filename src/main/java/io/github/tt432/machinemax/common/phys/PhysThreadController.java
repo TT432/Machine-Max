@@ -1,7 +1,9 @@
 package io.github.tt432.machinemax.common.phys;
 
+import cn.solarmoon.spark_core.api.phys.thread.ClientPhysLevel;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -9,6 +11,7 @@ import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ChunkTicketLevelUpdatedEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.ode4j.ode.DGeom;
 
 import static io.github.tt432.machinemax.MachineMax.MOD_ID;
 

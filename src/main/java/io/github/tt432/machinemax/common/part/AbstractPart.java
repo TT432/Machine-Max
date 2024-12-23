@@ -1,16 +1,20 @@
 package io.github.tt432.machinemax.common.part;
 
+import cn.solarmoon.spark_core.api.phys.attached_body.AttachedBody;
 import io.github.tt432.machinemax.client.PartMolangScope;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.common.part.slot.BasicModuleSlot;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.math.DVector3C;
-import io.github.tt432.machinemax.util.physics.ode.*;
+import io.github.tt432.machinemax.util.formula.IPartPhysParameters;
+import org.ode4j.math.DVector3;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.resources.ResourceLocation;
+import org.ode4j.ode.DBody;
+import org.ode4j.ode.DGeom;
+import org.ode4j.ode.DMass;
+import org.ode4j.ode.OdeHelper;
 
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +25,7 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     //基础属性
     @Getter
     @Setter
-    protected BasicEntity attachedEntity;//此部件附着的实体
+    protected PartEntity attachedEntity;//此部件附着的实体
     @Getter
     protected static double BASIC_ARMOR = 0;//基础护甲
     @Getter
@@ -62,8 +66,8 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     ;
     /*物理运算相关参数*/
     //流体动力相关系数
-    public DVector3C airDragCentre = new DVector3(0, 0, 0);//空气阻力/升力作用点(相对重心位置)
-    public DVector3C waterDragCentre = new DVector3(0, 0, 0);//水阻力/升力作用点(相对重心位置)
+    public DVector3 airDragCentre = new DVector3(0, 0, 0);//空气阻力/升力作用点(相对重心位置)
+    public DVector3 waterDragCentre = new DVector3(0, 0, 0);//水阻力/升力作用点(相对重心位置)
     //TODO:浮力
     //TODO:摩擦力
     //TODO:不强制每个部件都有匹配的运动体，可令其直接附着于父部件的运动体上，减少运动体与约束的数量，提升稳定性
@@ -71,10 +75,11 @@ public abstract class AbstractPart implements Iterable<AbstractPart>, IPartPhysP
     public DMass dmass;//部件对应的质量与转动惯量
     public DGeom[] dgeoms;//部件对应的碰撞体组(可用多个碰撞体拼合出一个部件的碰撞体积)
 
-    public AbstractPart(BasicEntity attachedEntity) {
+    public AbstractPart(PartEntity attachedEntity) {
         this.attachedEntity = attachedEntity;
         dmass = OdeHelper.createMass();
-        dbody = OdeHelper.createBody(((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().world, this);
+        dbody = OdeHelper.createBody(((IMixinLevel) attachedEntity.level()).machine_Max$getPhysThread().world);
+        dbody.setOwner(this);
         if (attachedEntity.level().isClientSide()) molangScope = new PartMolangScope(this);
     }
 

@@ -1,23 +1,22 @@
 package io.github.tt432.machinemax.common.phys;
 
+import cn.solarmoon.spark_core.api.phys.PhysWorld;
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.common.part.AbstractWheelPart;
 import io.github.tt432.machinemax.util.data.BodiesSyncData;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.ode.*;
+import org.ode4j.math.DVector3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.ode4j.ode.*;
 
 import java.util.*;
 
-import static io.github.tt432.machinemax.util.physics.ode.OdeConstants.*;
-import static io.github.tt432.machinemax.util.physics.ode.OdeHelper.areConnectedExcluding;
-import static io.github.tt432.machinemax.util.physics.ode.OdeMath.dxSafeNormalize3;
+import static org.ode4j.ode.OdeConstants.*;
+import static org.ode4j.ode.OdeHelper.areConnectedExcluding;
+import static org.ode4j.ode.OdeMath.dxSafeNormalize3;
 
 abstract public class AbstractPhysThread extends Thread {
     public final Level level;//物理计算线程与每个维度绑定，即每个维度都有一个物理计算线程
@@ -30,6 +29,7 @@ abstract public class AbstractPhysThread extends Thread {
     public volatile boolean isPaused = false;
     public static final long STEP_SIZE = 20;//物理线程计算步长(毫秒)
     protected volatile int step = 0;//物理运算迭代运行的总次数
+    PhysWorld w = new PhysWorld(2L);
 
     AbstractPhysThread(Level level) {
         this.level = level;
@@ -70,8 +70,7 @@ abstract public class AbstractPhysThread extends Thread {
     protected void regularStep(boolean paused) {
         internalStep(paused);
         step++;
-        space.handleGeomAddAndRemove();//增删碰撞体
-        world.handleBodyRemove();//删除待删除的运动体
+        //TODO:处理几何体和运动体的增删
     }
 
     /**
@@ -81,7 +80,6 @@ abstract public class AbstractPhysThread extends Thread {
      */
     protected void internalStep(boolean paused) {
         if (!paused) {
-            applyAllControllers(space);
             addTerrainCollisionBoxes();//读取所有与Body绑定了的Geom周围的方块，为其添加碰撞盒
             space.collide(null, nearCallback);//碰撞检测
             world.quickStep((double) STEP_SIZE / 1000);
@@ -145,11 +143,11 @@ abstract public class AbstractPhysThread extends Thread {
         if (b1 != null && b2 != null && areConnectedExcluding(b1, b2, DJoint.class)) {
             return;
         }
-        BasicEntity e1;
-        BasicEntity e2;
+        PartEntity e1;
+        PartEntity e2;
         if (b1 != null && b2 != null) {
-            e1 = b1.getAttachedPart().getAttachedEntity();
-            e2 = b2.getAttachedPart().getAttachedEntity();
+            e1 = b1.getOwner().getAttachedEntity();
+            e2 = b2.getOwner().getAttachedEntity();
             if (e1 == e2) {
                 return;
             }
@@ -201,35 +199,6 @@ abstract public class AbstractPhysThread extends Thread {
             for (int i = 0; i < numc; i++) {
                 DJoint c = OdeHelper.createContactJoint(world, contactGroup, contacts.get(i));
                 c.attach(b1, b2);
-            }
-        }
-    }
-
-    /**
-     * 调用所有实体物理控制器，根据控制律使力与力矩作用于指定碰撞空间的运动体
-     *
-     * @param space 生效的碰撞空间
-     */
-    protected void applyAllControllers(@NotNull DSpace space) {
-        if (space.getNumGeoms() > 0) {
-            //应用控制器前，先重置其状态
-            for (DGeom g : space.getGeoms()) {//获取所有碰撞体
-                if (g.getBody() != null) {
-                    BasicEntity e = g.getBody().getAttachedPart().getAttachedEntity();//获取碰撞体所附着的运动体所附着的实体
-                    if (e.isControllerHandled()) {//若附着实体的控制器在上次循环中已生效
-                        e.setControllerHandled(false);//重置控制器状态
-                    }
-                }
-            }
-            //应用控制器各类效果
-            for (DGeom g : space.getGeoms()) {//获取所有碰撞体
-                if (g.getBody() != null) {
-                    BasicEntity e = g.getBody().getAttachedPart().getAttachedEntity();//获取碰撞体所附着的运动体所附着的实体
-                    if (!e.isControllerHandled() && e.getController() != null) {//若附着实体的控制器在本次循环中未生效
-                        e.getController().applyAllEffects();//根据控制律，为每个运动体施加相应的效果
-                        e.setControllerHandled(true);//标记此实体的控制器已处理
-                    }
-                }
             }
         }
     }

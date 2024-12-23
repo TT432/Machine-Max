@@ -1,10 +1,10 @@
 package io.github.tt432.machinemax.common.part.slot;
 
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.util.physics.math.DQuaternion;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.ode.DFixedJoint;
-import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
+import org.ode4j.math.DQuaternion;
+import org.ode4j.math.DVector3;
+import org.ode4j.ode.DFixedJoint;
+import org.ode4j.ode.OdeHelper;
 
 public class HullPartSlot extends AbstractPartSlot {
     public HullPartSlot(AbstractPart owner, String locator, DVector3 attachPos, DQuaternion attachRot) {

@@ -38,7 +38,6 @@ import static io.github.tt432.machinemax.util.physics.ode.internal.Rotation.dQMu
 import static io.github.tt432.machinemax.util.physics.ode.internal.Rotation.dQfromR;
 import static io.github.tt432.machinemax.util.physics.ode.internal.Rotation.dRfromQ;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
 import io.github.tt432.machinemax.util.physics.math.*;
 import io.github.tt432.machinemax.util.physics.ode.*;
@@ -89,7 +88,6 @@ public class DxBody extends DObject implements DBody{
     @Setter
     @Getter
     private AbstractPart attachedPart;//此运动体所属的部件
-    private BasicEntity attachedEntity;//此运动体所属的实体
     //	  public dxJointNode firstjoint;	// list of attached joints
     private int ID;    //运动体的id，用于识别 Body's id, used for identifying
     public final Ref<DxJointNode> firstjoint = new Ref<>();    // list of attached joints
@@ -194,7 +192,6 @@ public class DxBody extends DObject implements DBody{
         DxBody b = dBodyCreate(w);
         if (p != null) {
             b.attachedPart = p;
-            b.attachedEntity = p.getAttachedEntity();
             b.ID = w.nbc;
             w.nbc++;
         }

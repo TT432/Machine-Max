@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.client.input;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.network.payload.MovementInputPayload;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -40,7 +40,7 @@ public class RawInputHandler {
     public static void handleMoveInputs(ClientTickEvent.Post event) {
         var client = Minecraft.getInstance();
 
-        if (client.player != null && client.player.getVehicle() instanceof BasicEntity e) {
+        if (client.player != null && client.player.getVehicle() instanceof PartEntity e) {
             id = e.getId();
             int trans_x_conflict = 0;
             int trans_y_conflict = 0;

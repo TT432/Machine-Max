@@ -4,10 +4,10 @@ import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.block.MMBlockEntities;
 import io.github.tt432.machinemax.mixin_interface.IMixinBlockState;
 import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.ode.DHeightfieldData;
-import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
-import io.github.tt432.machinemax.util.physics.ode.internal.DxTrimeshHeightfield;
+import org.ode4j.math.DVector3;
+import org.ode4j.ode.DHeightfieldData;
+import org.ode4j.ode.OdeHelper;
+import org.ode4j.ode.internal.DxTrimeshHeightfield;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -62,12 +62,12 @@ public class RoadBaseBlockEntity extends BlockEntity {
     }
 
     public void loadHeightfield() {
-        ((IMixinLevel) Objects.requireNonNull(getLevel())).machine_Max$getPhysThread().space.geomAddEnQueue(heightfield);//卸载区块时从物理世界移除道路碰撞体
+//        ((IMixinLevel) Objects.requireNonNull(getLevel())).machine_Max$getPhysThread().space.geomAddEnQueue(heightfield);//卸载区块时从物理世界移除道路碰撞体
     }
 
     public void unloadHeightfield() {
         //卸载高度图时清除道路碰撞体，释放内存
-        ((IMixinLevel) Objects.requireNonNull(getLevel())).machine_Max$getPhysThread().space.geomRemoveEnQueue(heightfield);//卸载区块时从物理世界移除道路碰撞体
+//        ((IMixinLevel) Objects.requireNonNull(getLevel())).machine_Max$getPhysThread().space.geomRemoveEnQueue(heightfield);//卸载区块时从物理世界移除道路碰撞体
         MachineMax.LOGGER.info("RoadBaseBlockEntity unloadHeightfield");
     }
 

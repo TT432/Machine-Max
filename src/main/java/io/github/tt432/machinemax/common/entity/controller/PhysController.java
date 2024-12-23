@@ -1,11 +1,13 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.util.physics.math.*;
-import io.github.tt432.machinemax.util.physics.ode.internal.Rotation;
+import org.ode4j.math.*;
+import org.ode4j.ode.internal.Rotation;
 import lombok.Getter;
 import lombok.Setter;
+
+import static io.github.tt432.machinemax.util.formula.Dynamic.aerodynamicForce;
 
 /**
  * 此类为实体的控制器原型
@@ -20,7 +22,7 @@ public class PhysController {
 
     @Getter
     @Setter
-    protected BasicEntity controlledEntity;//此控制器控制的实体
+    protected PartEntity controlledEntity;//此控制器控制的实体
     @Setter
     protected byte[] rawMoveInput = new byte[6];//移动输入
     @Setter
@@ -34,7 +36,7 @@ public class PhysController {
     protected volatile boolean aVelNeedsUpdate = false;//是否需要更新角速度
     protected DVector3 aVelToApply;//新角速度
 
-    public PhysController(BasicEntity entity) {
+    public PhysController(PartEntity entity) {
         this.controlledEntity = entity;
     }
 
@@ -69,18 +71,10 @@ public class PhysController {
     protected void applyAeroDynamicForces() {
         if (controlledEntity.corePart != null) {
             for (AbstractPart part : controlledEntity.corePart) {
-                DVector3 F = new DVector3(-0.5, -0.5, -0.5);
-                DVector3 cf = part.getAerodynamicForceCoef(part);
-                DVector3 v = new DVector3();
-                part.dbody.getRelPointVel(part.airDragCentre, v);//获取绝对速度
-                part.dbody.vectorFromWorld(v.copy(), v);//转为自体坐标系
-                v.scale(v.copy().eqAbs());
-                F.scale(v);
-                F.scale(cf);
+                DVector3 F = aerodynamicForce(part);
                 part.dbody.addRelForceAtRelPos(F, part.airDragCentre);
             }
         }
-
     }
 
     /**

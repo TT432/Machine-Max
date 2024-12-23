@@ -1,13 +1,13 @@
 package io.github.tt432.machinemax.common.entity.controller;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.common.part.slot.AbstractPartSlot;
 import io.github.tt432.machinemax.common.part.slot.WheelPartSlot;
 import io.github.tt432.machinemax.common.phys.AbstractPhysThread;
 import io.github.tt432.machinemax.util.MMMath;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.ode.DAMotorJoint;
-import io.github.tt432.machinemax.util.physics.ode.DHinge2Joint;
+import org.ode4j.math.DVector3;
+import org.ode4j.ode.DAMotorJoint;
+import org.ode4j.ode.DHinge2Joint;
 
 import static java.lang.Math.*;
 
@@ -26,7 +26,7 @@ public class AE86Controller extends PhysController {
     public double brake = 0D;
     public double turning_input = 0D;
 
-    public AE86Controller(BasicEntity entity) {
+    public AE86Controller(PartEntity entity) {
         super(entity);
     }
 
@@ -70,7 +70,6 @@ public class AE86Controller extends PhysController {
         DHinge2Joint hinge;
         DAMotorJoint motor;
         AbstractPartSlot slot;
-        //TODO:排查高速下转向困难的原因
         for (int i = 0; i < 4; i++) {
             slot = controlledEntity.corePart.childrenPartSlots.get(i);
             hinge = (DHinge2Joint) slot.joints.getFirst();

@@ -1,6 +1,7 @@
-package io.github.tt432.machinemax.common.part;
+package io.github.tt432.machinemax.util.formula;
 
-import io.github.tt432.machinemax.util.physics.math.DVector3;
+import io.github.tt432.machinemax.common.part.AbstractPart;
+import org.ode4j.math.DVector3;
 
 public interface IPartPhysParameters {
     /**

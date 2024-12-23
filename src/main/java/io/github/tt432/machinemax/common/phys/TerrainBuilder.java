@@ -1,10 +1,9 @@
 package io.github.tt432.machinemax.common.phys;
 
 import io.github.tt432.machinemax.mixin_interface.IMixinLevel;
-import io.github.tt432.machinemax.util.physics.ode.DGeom;
-import io.github.tt432.machinemax.util.physics.ode.DTriMesh;
-import io.github.tt432.machinemax.util.physics.ode.DTriMeshData;
-import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
+import org.ode4j.ode.DTriMesh;
+import org.ode4j.ode.DTriMeshData;
+import org.ode4j.ode.OdeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
@@ -15,49 +14,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TerrainBuilder {
-
-    public static void build(ChunkAccess chunk) {
-        IMixinLevel level = (IMixinLevel) chunk.getLevel();
-        AbstractPhysThread thread;
-        DTriMeshData data = OdeHelper.createTriMeshData();
-        List<Integer> indices = new ArrayList<>();
-        List<Float> vertices = new ArrayList<>();
-        BlockPos chunkPos = new BlockPos(chunk.getPos().getMinBlockX(), 0, chunk.getPos().getMinBlockX());
-        if (level != null) thread = level.machine_Max$getPhysThread();
-        else return;
-        //遍历区块方块
-        for (int y = chunk.getMinBuildHeight(); y <= getHighestBlockY(chunk); y++) {
-            for (int x = 0; x <= 15; x++) {
-                for (int z = 0; z <= 15; z++) {
-                    BlockPos currentPos = new BlockPos(chunkPos.getX() + x, y, chunkPos.getZ() + z);
-                    BlockState blockState = chunk.getBlockState(currentPos);
-                    if (!blockState.isAir()) {
-                        // 检查与空气的相邻方向
-                        Direction[] airDirections = checkNeighborAir(chunk, currentPos);
-                        // 添加顶点和索引
-                        if (airDirections.length > 0)
-                            addFaceVerticesAndIndices(vertices, indices, currentPos, airDirections);
-                    }
-                }
-            }
-        }
-        // 构建三角网格
-        if (!vertices.isEmpty() && !indices.isEmpty()) {
-            //TODO:处理顶点和索引，将多个相邻共面三角形合并为单个三角形
-            //转换为对应类型的 float 数组
-            float[] verticesArray = new float[vertices.size()]; // 创建一个新的 float 数组
-            for (int i = 0; i < vertices.size(); i++)
-                verticesArray[i] = vertices.get(i); // 将 List 中的每个 Float 值添加到数组中
-            // 转换索引列表为 int 数组
-            int[] indicesArray = new int[indices.size()];
-            for (int i = 0; i < indices.size(); i++)
-                indicesArray[i] = indices.get(i); // 将 List 中的每个 Integer 值添加到 int 数组中
-            data.build(verticesArray, indicesArray);
-            data.preprocess();
-            DTriMesh triMesh = OdeHelper.createTriMesh(null, data, null, null);
-            thread.space.geomAddEnQueue(triMesh);
-        }
-    }
+//
+//    public static void build(ChunkAccess chunk) {
+//        IMixinLevel level = (IMixinLevel) chunk.getLevel();
+//        AbstractPhysThread thread;
+//        DTriMeshData data = OdeHelper.createTriMeshData();
+//        List<Integer> indices = new ArrayList<>();
+//        List<Float> vertices = new ArrayList<>();
+//        BlockPos chunkPos = new BlockPos(chunk.getPos().getMinBlockX(), 0, chunk.getPos().getMinBlockX());
+//        if (level != null) thread = level.machine_Max$getPhysThread();
+//        else return;
+//        //遍历区块方块
+//        for (int y = chunk.getMinBuildHeight(); y <= getHighestBlockY(chunk); y++) {
+//            for (int x = 0; x <= 15; x++) {
+//                for (int z = 0; z <= 15; z++) {
+//                    BlockPos currentPos = new BlockPos(chunkPos.getX() + x, y, chunkPos.getZ() + z);
+//                    BlockState blockState = chunk.getBlockState(currentPos);
+//                    if (!blockState.isAir()) {
+//                        // 检查与空气的相邻方向
+//                        Direction[] airDirections = checkNeighborAir(chunk, currentPos);
+//                        // 添加顶点和索引
+//                        if (airDirections.length > 0)
+//                            addFaceVerticesAndIndices(vertices, indices, currentPos, airDirections);
+//                    }
+//                }
+//            }
+//        }
+//        // 构建三角网格
+//        if (!vertices.isEmpty() && !indices.isEmpty()) {
+//            //TODO:处理顶点和索引，将多个相邻共面三角形合并为单个三角形
+//            //转换为对应类型的 float 数组
+//            float[] verticesArray = new float[vertices.size()]; // 创建一个新的 float 数组
+//            for (int i = 0; i < vertices.size(); i++)
+//                verticesArray[i] = vertices.get(i); // 将 List 中的每个 Float 值添加到数组中
+//            // 转换索引列表为 int 数组
+//            int[] indicesArray = new int[indices.size()];
+//            for (int i = 0; i < indices.size(); i++)
+//                indicesArray[i] = indices.get(i); // 将 List 中的每个 Integer 值添加到 int 数组中
+//            data.build(verticesArray, indicesArray);
+//            data.preprocess();
+//            DTriMesh triMesh = OdeHelper.createTriMesh(null, data, null, null);
+//            thread.space.geomAddEnQueue(triMesh);
+//        }
+//    }
 
     public static Direction[] checkNeighborAir(ChunkAccess chunk, BlockPos pos) {
         List<Direction> airDirections = new ArrayList<>();

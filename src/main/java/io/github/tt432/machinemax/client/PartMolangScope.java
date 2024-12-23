@@ -4,12 +4,11 @@ import io.github.tt432.eyelib.capability.EyelibAttachableData;
 import io.github.tt432.eyelib.molang.MolangScope;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.util.physics.math.DMatrix3;
-import io.github.tt432.machinemax.util.physics.math.DQuaternion;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.ode.internal.Rotation;
+import org.ode4j.math.DMatrix3;
+import org.ode4j.math.DQuaternion;
+import org.ode4j.math.DVector3;
+import org.ode4j.ode.internal.Rotation;
 import lombok.Getter;
-import org.joml.Quaterniond;
 
 public class PartMolangScope {
 
@@ -102,7 +101,7 @@ public class PartMolangScope {
         rot1.eqMul(temp, rot1);//绕X轴旋转180°以匹配Blockbench旋转坐标系(X左Y下Z后)
         DQuaternion dq = new DQuaternion();
         Rotation.dQfromR(dq, rot1);
-        DVector3 ang = dq.toEulerDegreesZYX();//Blockbench欧拉角旋转顺序
+        DVector3 ang = dq.toEulerDegrees();//Blockbench欧拉角旋转顺序
         this.pitch = (float) ang.get0();
         this.yaw = (float) ang.get1();
         this.roll = (float) ang.get2();

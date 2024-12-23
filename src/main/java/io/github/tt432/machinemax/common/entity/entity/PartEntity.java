@@ -1,11 +1,10 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
 import io.github.tt432.eyelib.capability.EyelibAttachableData;
-import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.common.entity.controller.PhysController;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.util.physics.math.DQuaternion;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
+import org.ode4j.math.DQuaternion;
+import org.ode4j.math.DVector3;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,14 +15,14 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BasicEntity extends Entity implements IEntityWithComplexSpawn {
+public abstract class PartEntity extends Entity implements IEntityWithComplexSpawn {
 
     @Setter
     @Getter
     private PhysController controller = new PhysController(this);//实体指定的控制器，默认为基础控制器
     @Setter
     @Getter
-    private controlMode mode = BasicEntity.controlMode.GROUND;//采用的控制模式，决定接收的按键输入方案
+    private controlMode mode = PartEntity.controlMode.GROUND;//采用的控制模式，决定接收的按键输入方案
     public AbstractPart corePart;//实体连接的核心部件
     @Setter
     @Getter
@@ -45,7 +44,7 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
         MECH
     }
 
-    public BasicEntity(EntityType<? extends BasicEntity> entityType, Level level) {
+    public PartEntity(EntityType<? extends PartEntity> entityType, Level level) {
         super(entityType, level);
         noPhysics = true;
     }
@@ -79,7 +78,7 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
             DVector3 pos = corePart.dbody.getPosition().copy();
             this.setPosRaw(pos.get0(), pos.get1(), pos.get2());
             DQuaternion dq = corePart.dbody.getQuaternion().copy();
-            DVector3 heading = dq.toEulerDegreesZXY();
+            DVector3 heading = dq.toEulerDegrees();
             setXRot((float) heading.get0());
             setYRot(-(float) heading.get1());
             setZRot((float) heading.get2());
@@ -117,7 +116,7 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
 
     public void setRot(DQuaternion q) {
         if (this.getController() != null) controller.setRotationEnqueue(q);
-        DVector3 ang = q.toEulerDegreesZXY();
+        DVector3 ang = q.toEulerDegrees();
         setXRot((float) ang.get0());
         setYRot((float) ang.get1());
         setZRot((float) ang.get2());
@@ -184,11 +183,11 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
      */
     @Override
     public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
-        for(AbstractPart part : corePart){
-            if(part.dbody!=null){
-                buffer.writeInt(part.dbody.getId());
-            }
-        }
+//        for(AbstractPart part : corePart){
+//            if(part.dbody!=null){
+//                buffer.writeInt(part.dbody.getId());
+//            }
+//        }
     }
 
     /**
@@ -197,11 +196,11 @@ public abstract class BasicEntity extends Entity implements IEntityWithComplexSp
      */
     @Override
     public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
-        for(AbstractPart part : corePart){
-            if(part.dbody!=null){
-                part.dbody.setId(additionalData.readInt());
-            }
-        }
+//        for(AbstractPart part : corePart){
+//            if(part.dbody!=null){
+//                part.dbody.setId(additionalData.readInt());
+//            }
+//        }
     }
 
     @Override

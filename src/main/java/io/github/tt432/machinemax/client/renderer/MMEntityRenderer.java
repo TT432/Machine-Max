@@ -7,15 +7,12 @@ import io.github.tt432.eyelib.capability.component.AnimationComponent;
 import io.github.tt432.eyelib.client.ClientTickHandler;
 import io.github.tt432.eyelib.client.animation.BrAnimator;
 import io.github.tt432.eyelib.client.loader.BrModelLoader;
-import io.github.tt432.eyelib.client.render.ModelRenderer;
 import io.github.tt432.eyelib.client.render.RenderHelper;
 import io.github.tt432.eyelib.client.render.RenderParams;
 import io.github.tt432.eyelib.client.render.bone.BoneRenderInfos;
-import io.github.tt432.eyelib.client.render.visitor.BuiltInBrModelRenderVisitors;
-import io.github.tt432.eyelib.client.render.visitor.ModelRenderVisitorList;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
 import io.github.tt432.machinemax.common.part.AbstractPart;
-import io.github.tt432.machinemax.util.physics.math.DQuaternionC;
+import org.ode4j.math.DQuaternionC;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -24,16 +21,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 
-import java.util.List;
-
-public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
+public class MMEntityRenderer extends EntityRenderer<PartEntity> {
 
     protected MMEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(BasicEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(PartEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
         if (pEntity.corePart == null) return;
         DQuaternionC dq = pEntity.corePart.dbody.getQuaternion().copy();
@@ -87,7 +82,7 @@ public class MMEntityRenderer extends EntityRenderer<BasicEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(BasicEntity entity) {
+    public ResourceLocation getTextureLocation(PartEntity entity) {
         return entity.corePart.getTexture();
     }
 

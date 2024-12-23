@@ -1,13 +1,8 @@
 package io.github.tt432.machinemax.common.entity;
 
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.common.entity.entity.TestCarEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 /**

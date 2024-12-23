@@ -1,7 +1,7 @@
 package io.github.tt432.machinemax.util.data;
 
-import io.github.tt432.machinemax.util.physics.math.DQuaternion;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
+import org.ode4j.math.DQuaternion;
+import org.ode4j.math.DVector3;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 

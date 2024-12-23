@@ -3,8 +3,8 @@ package io.github.tt432.machinemax.common.phys;
 import io.github.tt432.machinemax.MachineMax;
 import io.github.tt432.machinemax.network.payload.PhysSyncPayload;
 import io.github.tt432.machinemax.util.data.BodiesSyncData;
-import io.github.tt432.machinemax.util.physics.ode.DBody;
-import io.github.tt432.machinemax.util.physics.ode.internal.DxBody;
+import org.ode4j.ode.DBody;
+import org.ode4j.ode.internal.DxBody;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -42,12 +42,12 @@ public class ServerPhysThread extends AbstractPhysThread {
      * 将物理线程内所有运动体的位姿速度打包发送给本维度内所有玩家
      */
     protected void syncBodies() {
-        syncData.clear();
-        for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//记录本维度内每个运动体的位置、姿态、速度和角速度
-            DxBody b = (DxBody) it.next();
-            syncData.put(b.getId(), new BodiesSyncData(b.getPosition().copy(), b.getQuaternion().copy(), b.getLinearVel().copy(), b.getAngularVel().copy()));
-        }
-        if (!syncData.isEmpty())//维度存在运动体则将信息同步给维度内的玩家
-            PacketDistributor.sendToPlayersInDimension((ServerLevel) level, new PhysSyncPayload(step, syncData));
+//        syncData.clear();
+//        for (Iterator<DBody> it = world.getBodyIterator(); it.hasNext(); ) {//记录本维度内每个运动体的位置、姿态、速度和角速度
+//            DxBody b = (DxBody) it.next();
+//            syncData.put(b.getId(), new BodiesSyncData(b.getPosition().copy(), b.getQuaternion().copy(), b.getLinearVel().copy(), b.getAngularVel().copy()));
+//        }
+//        if (!syncData.isEmpty())//维度存在运动体则将信息同步给维度内的玩家
+//            PacketDistributor.sendToPlayersInDimension((ServerLevel) level, new PhysSyncPayload(step, syncData));
     }
 }

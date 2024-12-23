@@ -1,11 +1,11 @@
 package io.github.tt432.machinemax.common.part;
 
 import io.github.tt432.machinemax.MachineMax;
-import io.github.tt432.machinemax.common.entity.entity.BasicEntity;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
-import io.github.tt432.machinemax.util.physics.math.DVector3C;
-import io.github.tt432.machinemax.util.physics.ode.OdeHelper;
-import io.github.tt432.machinemax.util.physics.ode.internal.DxGeom;
+import io.github.tt432.machinemax.common.entity.entity.PartEntity;
+import org.ode4j.math.DVector3;
+import org.ode4j.math.DVector3C;
+import org.ode4j.ode.OdeHelper;
+import org.ode4j.ode.internal.DxGeom;
 import net.minecraft.resources.ResourceLocation;
 
 public class TestCarHullPart extends AbstractPart {
@@ -24,7 +24,7 @@ public class TestCarHullPart extends AbstractPart {
     public static final DVector3C airDragCentre = new DVector3(-0.1, 0, 0);//空气阻力/升力作用点(相对重心位置)
     public static final DVector3C waterDragCentre = new DVector3(-0.1, 0, 0);//水阻力/升力作用点(相对重心位置)
 
-    public TestCarHullPart(BasicEntity attachedEntity) {
+    public TestCarHullPart(PartEntity attachedEntity) {
         super(attachedEntity);
         //模块化参数
         PART_TYPE = partTypes.HULL;

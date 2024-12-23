@@ -1,10 +1,8 @@
 package io.github.tt432.machinemax.common.entity.entity;
 
 import io.github.tt432.machinemax.common.entity.controller.AE86Controller;
-import io.github.tt432.machinemax.common.entity.controller.CarController;
-import io.github.tt432.machinemax.common.part.TestCarChassisPart;
 import io.github.tt432.machinemax.common.part.ae86.AE86ChassisPart;
-import io.github.tt432.machinemax.util.physics.math.DVector3;
+import org.ode4j.math.DVector3;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,9 +17,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class AE86Entity extends BasicEntity {
+public class AE86Entity extends PartEntity {
 
-    public AE86Entity(EntityType<? extends BasicEntity> pEntityType, Level pLevel) {
+    public AE86Entity(EntityType<? extends PartEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.corePart = new AE86ChassisPart(this);
         this.setController(new AE86Controller(this));
